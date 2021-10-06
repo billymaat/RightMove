@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="RightMoveApp.UserControls.SearchParamsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RightMoveApp.UserControls"
+             xmlns:System="clr-namespace:System;assembly=System.Runtime"
+             xmlns:StyleAlias="clr-namespace:RightMove;assembly=RightMove"
+             xmlns:viewModel="clr-namespace:RightMoveApp.ViewModel"
+             xmlns:dataTypes="clr-namespace:RightMove.DataTypes;assembly=RightMove"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="uc">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="dataTypes:SortType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="0" Content="Search area"/>
+
+        <local:AutoCompleteComboBox Grid.Row="0" Grid.Column="1"
+                                       ItemsSource="{Binding ElementName=uc, Path=SearchString}" 
+                                       SelectedValue="{Binding ElementName=uc, Path=SearchParams.RegionLocation, Mode=TwoWay}"/>
+
+        <Label Grid.Column="0" Grid.Row="1" Content="Search radius"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
+                  ItemsSource="{Binding ElementName=uc, Path=RadiusEntries}" 
+                  SelectedValuePath="Key" 
+                  SelectedValue="{Binding ElementName=uc, Path=SearchParams.Radius, Mode=TwoWay}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Value}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Label Grid.Column="0" Grid.Row="2" Content="Price range (£)"/>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox Grid.Column="0" Grid.Row="0" Name="comboMinPrice" 
+                      ItemsSource="{Binding ElementName=uc, Path=Prices}" 
+                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MinPrice, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Label Grid.Column="1" Grid.Row="0" Content="to"/>
+            <ComboBox Grid.Column="2" Grid.Row="0" Name="comboMaxPrice"
+                      ItemsSource="{Binding ElementName=uc, Path=Prices}" 
+                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MaxPrice}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+        <Label Grid.Column="0" Grid.Row="3" Content="No. of bedrooms"/>
+        <Grid Grid.Column="1" Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox Grid.Column="0" Grid.Row="0" Name="comboMinBedrooms" 
+                      ItemsSource="{Binding ElementName=uc, Path=Bedrooms}"
+                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MinBedrooms, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox Grid.Column="3" Grid.Row="0" Name="comboMaxBedrooms" 
+                      ItemsSource="{Binding ElementName=uc, Path=Bedrooms}" 
+                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MaxBedrooms, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Label Grid.Column="1" Grid.Row="0" Content="to"/>
+        </Grid>
+        <Label Grid.Column="0" Grid.Row="4" Content="Sort Type"/>
+
+        <ComboBox Grid.Column="1" Grid.Row="4" Name="comboSort" 
+                          ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
+                          SelectedItem="{Binding ElementName=uc, Path=SearchParams.Sort, Mode=TwoWay}">
+        </ComboBox>
+    </Grid>
+
+</UserControl>
