@@ -16,6 +16,7 @@
     <Window.Resources>
     </Window.Resources>
     <Grid>
+        <!--resources for data grid-->
         <Grid.Resources>
             <Style TargetType="DataGridRow">
                 <Style.Triggers>
@@ -39,7 +40,6 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <!--<ColumnDefinition Width="Auto"/>-->
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -56,57 +56,58 @@
                 </controls:SearchParamsControl>
             </GroupBox>
             <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" Content="Search" Command="{Binding SearchAsyncCommand}"/>
-                <Grid  Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left">
-                        <DataGrid x:Name="listView" 
-                                  ItemsSource="{Binding Path=RightMoveList}" 
-                                  SelectedItem="{Binding Path=RightMoveSelectedItem}"
-                                  HorizontalGridLinesBrush="#6297C8"
-                                  VerticalGridLinesBrush="#6297C8"
-                                  IsReadOnly="True"
-                                  AlternationCount="2"
-                                  >
-                        <DataGrid.InputBindings>
-                            <KeyBinding Key="Right"
-                                    Command="{Binding NextImageCommand}"/>
-                            <KeyBinding Key="Left"
-                                    Command="{Binding PrevImageCommand}"/>
-                        </DataGrid.InputBindings>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding OpenLink}" 
-                                                   CommandParameter="{Binding Path=RightMoveSelectedItem}" 
-                                                   PassEventArgsToCommand="True" />
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateImages, Delay=3000}"
-                                                   CommandParameter="{Binding Path=RightMoveSelectedItem}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Open Link" 
-                                      Command="{Binding OpenLink}" 
-                                      CommandParameter="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                                <MenuItem Header="View Images" 
-                                      Command="{Binding LoadImageWindow}"
-                                      CommandParameter="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
-                            <DataGridTextColumn Header="RM Id" Binding="{Binding RightMoveId}" Width="Auto"/>
-                            <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:C0}.00}" Width="Auto"/>
-                            <DataGridTextColumn Header="House Type" Binding="{Binding HouseInfo}" Width="Auto"/>
-                            <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="Auto"/>
-                            <DataGridTextColumn Header="Desc" Binding="{Binding Desc}" Width="100"/>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="Auto"/>
-                            <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="Auto"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
+            <Grid Grid.Column="0" Grid.Row="2">
+                <DataGrid x:Name="listView" 
+                            ItemsSource="{Binding Path=RightMoveList}" 
+                            SelectedItem="{Binding Path=RightMoveSelectedItem}"
+                            AutoGenerateColumns="False"
+                            HorizontalGridLinesBrush="#6297C8"
+                            VerticalGridLinesBrush="#6297C8"
+                            IsReadOnly="True"
+                            AlternationCount="2"
+                            >
+                <DataGrid.InputBindings>
+                    <KeyBinding Key="Right"
+                            Command="{Binding NextImageCommand}"/>
+                    <KeyBinding Key="Left"
+                            Command="{Binding PrevImageCommand}"/>
+                </DataGrid.InputBindings>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding OpenLink}" 
+                                            CommandParameter="{Binding Path=RightMoveSelectedItem}" 
+                                            PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding UpdateImages, Delay=3000}"
+                                            CommandParameter="{Binding Path=RightMoveSelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Open Link" 
+                                Command="{Binding OpenLink}" 
+                                CommandParameter="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                        <MenuItem Header="View Images" 
+                                Command="{Binding LoadImageWindow}"
+                                CommandParameter="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="20"/>
+                    <DataGridTextColumn Header="RM Id" Binding="{Binding RightMoveId}" Width="50"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:C0}.00}" Width="100"/>
+                    <DataGridTextColumn Header="House Type" Binding="{Binding HouseInfo}" Width="100"/>
+                    <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="100"/>
+                    <DataGridTextColumn Header="Desc" Binding="{Binding Desc}" Width="100"/>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
+                    <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            </Grid>
             <Label Grid.Column="0" Grid.Row="3" 
                    Content="{Binding Path=Info}"/>
-            <Grid Grid.Column="0" Grid.Row="4" Margin="20">
+            <Grid Grid.Column="0" Grid.Row="4">
                 <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" IsIndeterminate="True"/>
             </Grid>
             <!--<Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
