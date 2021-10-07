@@ -46,12 +46,12 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
             </Grid.RowDefinitions>
             <GroupBox Grid.Column="0" Grid.Row="0" Header="Search Params" Panel.ZIndex="10">
                 <controls:SearchParamsControl x:Name="searchControl"
                                             SearchParams="{Binding Path=SearchParams, Mode=TwoWay}"
-                                            IsEnabled="{Binding Path=IsNotSearching}">
+                                            IsEnabled="{Binding Path=IsSearching, Converter={StaticResource BooleanToReverseConverter}}">
 
                 </controls:SearchParamsControl>
             </GroupBox>
@@ -109,54 +109,10 @@
             <Label Grid.Column="0" Grid.Row="3" 
                 Content="{Binding Path=Info}"/>
             <Grid Grid.Column="0" Grid.Row="4">
-                <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" IsIndeterminate="True"/>
+                <ProgressBar Minimum="0" Maximum="100" 
+                             Name="pbStatus" 
+                             IsIndeterminate="{Binding SearchAsyncCommand.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToReverseConverter}}"/>
             </Grid>
-            <!--<Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderBrush="Black" 
-                    BorderThickness="1,1,1,1" Background="{x:Null}" />
-            <Grid Grid.Column="0" Grid.Row="0">
-                <Grid.Style>
-                    <Style TargetType="{x:Type Grid}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ExpandButton, Path=IsChecked}" Value="True">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Style>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Image x:Name="img" Grid.Column="0" Grid.Row="0" Width="400" Source="{Binding DisplayedImage}"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="btnLeft" 
-                            Content="&lt;" 
-                            Padding="10"
-                            Command="{Binding PrevImageCommand}"
-                            CommandParameter="{Binding RightMovePropertyFullSelectedItem}"/>
-                    <Button x:Name="btnRight"
-                            Content=">" 
-                            Command="{Binding NextImageCommand}"
-                            CommandParameter="{Binding RightMovePropertyFullSelectedItem}"
-                            Padding="10"/>
-                </StackPanel>
-            </Grid>
-            <ToggleButton x:Name="ExpandButton" 
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Content=">" 
-                            Padding="10"
-                            IsChecked="{Binding IsImagesVisible}"/>
-        </Grid>-->
         </Grid>
     </Grid>
 </Window>

@@ -35,7 +35,6 @@ namespace RightMoveApp.ViewModel
 
 		private RightMoveParserServiceFactory _parserFactory;
 
-		// public MainViewModel(IServiceProvider serviceProvider, NavigationService navigationService, IDatabaseService dbService)
 		public MainViewModel(RightMoveParserServiceFactory parserFactory, NavigationService navigationService, IDatabaseService dbService)
 		{
 			_parserFactory = parserFactory;
@@ -47,7 +46,7 @@ namespace RightMoveApp.ViewModel
 
 			_model = new RightMoveModel();
 			
-			IsNotSearching = true;
+			IsSearching = false;
 		}
 
 		public bool IsImagesVisible
@@ -116,7 +115,7 @@ namespace RightMoveApp.ViewModel
 		/// <summary>
 		/// Gets or sets a value indicating whether searching is occurring
 		/// </summary>
-		public bool IsNotSearching { get; set; }
+		public bool IsSearching { get; set; }
 
 		#region Commands
 
@@ -371,7 +370,7 @@ namespace RightMoveApp.ViewModel
 		/// <param name="parameter"></param>
 		private void ExecuteSearch(object parameter)
 		{
-			IsNotSearching = false;
+			IsSearching = false;
 
 			// RightMoveParserService parser = _parserFactory.GetRequiredService<RightMoveParserService>();
 			RightMoveParserService parser = _parserFactory.CreateInstance(null);
@@ -379,7 +378,7 @@ namespace RightMoveApp.ViewModel
 			task.ContinueWith(t =>
 				{ 
 					RightMoveList = parser.Results;
-					IsNotSearching = true;
+					IsSearching = true;
 				});
 			
 			/*
@@ -389,7 +388,7 @@ namespace RightMoveApp.ViewModel
 			Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
 			*/
 
-			IsNotSearching = true;
+			IsSearching = true;
 		}
 
 		/// <summary>
@@ -399,22 +398,22 @@ namespace RightMoveApp.ViewModel
 		// private async Task ExecuteSearchAsync(object parameter)
 		private async Task<RightMoveSearchItemCollection> ExecuteSearchAsync()
 		{
-			IsNotSearching = false;
+			IsSearching = true;
 
 			var parser = _parserFactory.CreateInstance(SearchParams);
-			// parser.SearchParams = SearchParams;
+			await parser.SearchAsync();
+			RightMoveList = parser.Results;
+			Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
 
-			// run the search on a separate context so as not to block the UI thread
-			// await parser.SearchAsync().ConfigureAwait(false);
-			Task t = Task.Run(() => parser.SearchAsync());
+			IsSearching = false;
 
-			t.ContinueWith((x) =>
-			{
-				Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
+			//t.ContinueWith((x) =>
+			//{
+			//	Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
 
-				IsNotSearching = true;
-				RightMoveList = parser.Results;
-			});
+			//	IsNotSearching = true;
+			//	RightMoveList = parser.Results;
+			//});
 			
 			// _dbService.SaveProperties(RightMoveList.ToList());
 			/*
