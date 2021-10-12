@@ -2,12 +2,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using RightMove.DataTypes;
 using RightMove.Factory;
+using RightMove.Models.Db;
+using RightMove.Repositories.Db;
 using RightMove.Services;
+using RightMove.Services.Db;
 using RightMoveApp.Helpers;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
 using RightMoveApp.ViewModel.Commands;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -21,7 +25,7 @@ namespace RightMoveApp.ViewModel
 	{
 		// Services
 		private readonly NavigationService _navigationService;
-		private readonly IDatabaseService _dbService;
+		private readonly IRightMovePropertyRepository _dbService;
 		
 		private RightMoveSearchItemCollection _rightMoveList;
 		private string _info;
@@ -35,7 +39,7 @@ namespace RightMoveApp.ViewModel
 
 		private RightMoveParserServiceFactory _parserFactory;
 
-		public MainViewModel(RightMoveParserServiceFactory parserFactory, NavigationService navigationService, IDatabaseService dbService)
+		public MainViewModel(RightMoveParserServiceFactory parserFactory, NavigationService navigationService, IRightMovePropertyRepository dbService)
 		{
 			_parserFactory = parserFactory;
 			_navigationService = navigationService;
@@ -368,33 +372,6 @@ namespace RightMoveApp.ViewModel
 		/// The execute search command
 		/// </summary>
 		/// <param name="parameter"></param>
-		private void ExecuteSearch(object parameter)
-		{
-			IsSearching = false;
-
-			// RightMoveParserService parser = _parserFactory.GetRequiredService<RightMoveParserService>();
-			RightMoveParserService parser = _parserFactory.CreateInstance(null);
-			Task task = parser.SearchAsync();
-			task.ContinueWith(t =>
-				{ 
-					RightMoveList = parser.Results;
-					IsSearching = true;
-				});
-			
-			/*
-			RightMoveList = parser.Results;
-			_dbService.SaveProperties(RightMoveList.ToList());
-			
-			Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
-			*/
-
-			IsSearching = true;
-		}
-
-		/// <summary>
-		/// The execute search command
-		/// </summary>
-		/// <param name="parameter"></param>
 		// private async Task ExecuteSearchAsync(object parameter)
 		private async Task<RightMoveSearchItemCollection> ExecuteSearchAsync()
 		{
@@ -403,28 +380,16 @@ namespace RightMoveApp.ViewModel
 			var parser = _parserFactory.CreateInstance(SearchParams);
 			await parser.SearchAsync();
 			RightMoveList = parser.Results;
-			Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
 
+			UpdateAveragePrice();
+
+			UpdateDatabase();
+
+			// add properties to DB
 			IsSearching = false;
-
-			//t.ContinueWith((x) =>
-			//{
-			//	Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
-
-			//	IsNotSearching = true;
-			//	RightMoveList = parser.Results;
-			//});
-			
-			// _dbService.SaveProperties(RightMoveList.ToList());
-			/*
-			Info = $"Average price: {parser.Results.AveragePrice.ToString("C2")}";
-
-			IsNotSearching = true;
-			RightMoveList = parser.Results;
-			*/
 			return parser.Results;
 		}
-
+		
 		/// <summary>
 		/// The can execute search command
 		/// </summary>
@@ -434,8 +399,40 @@ namespace RightMoveApp.ViewModel
 		{
 			return true;
 		}
-		
+
 		#endregion
+
+		private void UpdateAveragePrice()
+		{
+			if (RightMoveList != null)
+			{
+				Info = $"Average price: {RightMoveList.AveragePrice.ToString("C2")}";
+			}
+		}
+
+		private void UpdateDatabase()
+		{
+			var dbProperties = _dbService.LoadProperties();
+			for (int i = 0; i < RightMoveList.Count; i++)
+			{
+				var property = RightMoveList[i];
+				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
+
+				if (matchingProperty != null)
+				{
+					// if the price has changed, add the new price
+					if (matchingProperty.Prices.Last() != property.Price)
+					{
+						_dbService.AddPriceToProperty(matchingProperty.Id, property.Price);
+					}
+				}
+				else
+				{
+					// save a new record of the new property
+					_dbService.SaveProperty(new RightMovePropertyModel(property));
+				}
+			}
+		}
 
 		private void SelectedItemChanged_Elapsed(object sender, ElapsedEventArgs e)
 		{

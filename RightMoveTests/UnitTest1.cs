@@ -82,7 +82,6 @@ namespace RightMoveTests
 				.Returns<IServiceProvider, Type, object[]>((sp, t, o) => new RightMoveParserService(httpService,
 				searchPageParserServiceFactory,
 				null,
-				null,
 				(SearchParams)o[0]));
 
 			RightMoveParserServiceFactory rightMoveParserServiceFactory = new RightMoveParserServiceFactory(activatorRightMoveParserServiceFactory.Object, serviceProvider.Object);
@@ -108,23 +107,6 @@ namespace RightMoveTests
 			};
 
 			return searchParams;
-		}
-
-		[Test]
-		public async Task ParsePropertyPage()
-		{
-			SearchParams searchParams = new SearchParams()
-			{
-				MinBedrooms = 2,
-				MaxBedrooms = 3,
-				MinPrice = 100000,
-				MaxPrice = 300000,
-				Sort = SortType.HighestPrice,
-				Radius = 0
-			};
-
-			// PropertyPageParser parser = new PropertyPageParser(90580477);
-			// await parser.ParseRightMovePropertyPageAsync();
 		}
 
 		[Test]

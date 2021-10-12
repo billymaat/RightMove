@@ -143,7 +143,6 @@ namespace RightMove.Services
 			{
 				int index = (i - 1) * multiple;
 				var searchUrlWithPageNumber = _searchUrl + "&index=" + index;
-				// var task = GetSearchResults(searchUrlWithPageNumber);
 				var task = GetSearchPages(searchUrlWithPageNumber);
 				listOfTasks.Add(task);
 			}
