@@ -1,11 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
-using Microsoft.Extensions.DependencyInjection;
 using RightMove.DataTypes;
 using RightMove.Factory;
 using RightMove.Models.Db;
 using RightMove.Repositories.Db;
-using RightMove.Services;
-using RightMove.Services.Db;
 using RightMoveApp.Helpers;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
@@ -59,12 +56,18 @@ namespace RightMoveApp.ViewModel
 			set;
 		}
 		
+		/// <summary>
+		/// Gets or sets the Info
+		/// </summary>
 		public string Info
 		{
 			get =>_info;
 			set => Set(ref _info, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the right move items
+		/// </summary>
 		public RightMoveSearchItemCollection RightMoveList
 		{
 			get => _model.RightMovePropertyItems;
@@ -77,7 +80,7 @@ namespace RightMoveApp.ViewModel
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the selected <see cref="RightMoveViewItem"/>
 		/// </summary>
@@ -95,6 +98,34 @@ namespace RightMoveApp.ViewModel
 				Set(ref _rightMovePropertyFullSelectedItem, value);
 				PrevImageCommand.RaiseCanExecuteChanged();
 				NextImageCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		/// <summary>
+		/// Gets the price history for right move property
+		/// </summary>
+		public string PriceHistory
+		{
+			get
+			{
+				string na = "N/A";
+
+				if (RightMoveSelectedItem is null)
+				{
+					return na;
+				}
+
+				var dbProperties = _dbService.LoadProperties();
+				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
+				
+				if (matchingProperty is null)
+				{
+					return na;
+				}
+
+				var prices = matchingProperty.Prices;
+				var priceString = string.Join("\n", prices);
+				return priceString;
 			}
 		}
 

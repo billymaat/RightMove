@@ -67,6 +67,13 @@
                     IsReadOnly="True"
                     AlternationCount="2"
                     >
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <TextBlock Background="Orange" Text="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.PriceHistory}"
+                                       TextWrapping="Wrap" HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
                     <DataGrid.InputBindings>
                         <KeyBinding Key="Right"
                     Command="{Binding NextImageCommand}"/>
