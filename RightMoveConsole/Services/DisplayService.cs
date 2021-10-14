@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RightMove.Services;
 
-namespace RightMoveConsole
+namespace RightMoveConsole.Services
 {
 	public class DisplayService : IDisplayService
 	{

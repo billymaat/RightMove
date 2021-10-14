@@ -9,6 +9,7 @@ using RightMoveApp.Services;
 using RightMoveApp.ViewModel.Commands;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -24,7 +25,6 @@ namespace RightMoveApp.ViewModel
 		private readonly NavigationService _navigationService;
 		private readonly IRightMovePropertyRepository _dbService;
 		
-		private RightMoveSearchItemCollection _rightMoveList;
 		private string _info;
 
 		private int _selectedImageIndex;
@@ -123,8 +123,11 @@ namespace RightMoveApp.ViewModel
 					return na;
 				}
 
+				var dates = matchingProperty.DatesUpdated;
 				var prices = matchingProperty.Prices;
-				var priceString = string.Join("\n", prices);
+
+				var combined = dates.Zip(prices, (d, p) => $"{DateTime.Parse(d).Date.ToString("dd/MM/yyyy")} : £{p}");
+				var priceString = string.Join("\n", combined);
 				return priceString;
 			}
 		}
@@ -435,10 +438,21 @@ namespace RightMoveApp.ViewModel
 
 		private void UpdateAveragePrice()
 		{
+			string info;
 			if (RightMoveList != null)
 			{
-				Info = $"Average price: {RightMoveList.AveragePrice.ToString("C2")}";
+				StringBuilder sb = new StringBuilder();
+
+				sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
+				sb.Append($"Count: {RightMoveList.Count}");
+				info = sb.ToString();
 			}
+			else
+			{
+				info = "...";
+			}
+
+			Info = info;
 		}
 
 		private void UpdateDatabase()
@@ -447,6 +461,11 @@ namespace RightMoveApp.ViewModel
 			for (int i = 0; i < RightMoveList.Count; i++)
 			{
 				var property = RightMoveList[i];
+
+				if (property.RightMoveId == 114594365)
+				{
+
+				}
 				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
 
 				if (matchingProperty != null)

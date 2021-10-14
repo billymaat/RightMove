@@ -21,21 +21,23 @@ namespace RightMoveConsole.Services
 		private readonly IRightMovePropertyRepository _db;
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
+		private readonly IDisplayService _display;
 
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			RightMoveParserServiceFactory rightMoveParseServiceFactory,
-			IRightMovePropertyRepository db)
+			IRightMovePropertyRepository db,
+			IDisplayService display)
 		{
 			_appLifetime = appLifetime;
 			_logger = logger;
 			_rightMoveParserServiceFactory = rightMoveParseServiceFactory;
 			_db = db;
+			_display = display;
 		}
 
-		private async Task DoWorkTwo()
+		private async Task DoLoopSearch()
 		{
-			
 			// for (int minPrice = 0; minPrice <= 3000000; minPrice += 10000) {
 			for (int j = 0; j < SearchParams.AllowedPrices.Count - 1; j++)
 			{	
@@ -90,32 +92,78 @@ namespace RightMoveConsole.Services
 			}
 		}
 
-		private async Task DoWork()
+		private SearchParams GetPrestwichSearchParams()
 		{
-			//SearchParams searchParams = new SearchParams()
-			//{
-			//	// RegionLocation = "Ashton-Under-Lyne, Greater Manchester",
-			//	RegionLocation = "Manchester, Greater Manchester",
-			//	Sort = SortType.HighestPrice,
-			//	// OutcodeLocation = "OL6",
-			//	MinBedrooms = 2,
-			//	MaxBedrooms = 2,
-			//	MinPrice = 140000,
-			//	// MaxPrice = 10000000,
-			//	MaxPrice = 250000
-			//};
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Prestwich, Manchester, Greater Manchester";
 
+			return searchParams;
+		}
+
+		private SearchParams GetAshtonSearchParams()
+		{
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Ashton-Under-Lyne, Greater Manchester";
+			return searchParams;
+		}
+
+		private SearchParams GetManchesterSearchParams()
+		{
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Manchester, Greater Manchester";
+
+			return searchParams;
+		}
+
+		private SearchParams GetDroylsdenSearchParams()
+		{
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Droylsden, Greater Manchester";
+
+			return searchParams;
+		}
+
+		private SearchParams GetAudenshawSearchParams()
+		{
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Audenshaw, Manchester, Greater Manchester";
+
+			return searchParams;
+		}
+
+		private SearchParams GetDukinfieldSearchParams()
+		{
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Dukinfield, Cheshire";
+
+			return searchParams;
+		}
+
+		private SearchParams GetStalybridgeSearchParams()
+		{
+			SearchParams searchParams = GetSearchParams();
+			searchParams.RegionLocation = "Stalybridge, Greater Manchester";
+
+			return searchParams;
+		}
+
+		private SearchParams GetSearchParams()
+		{
 			SearchParams searchParams = new SearchParams()
 			{
-				// RegionLocation = "Ashton-Under-Lyne, Greater Manchester",
-				RegionLocation = "Prestwich, Manchester, Greater Manchester",
+				RegionLocation = "Ashton-Under-Lyne, Greater Manchester",
 				Sort = SortType.HighestPrice,
-				MinBedrooms = 1,
-				MaxBedrooms = 10,
-				MinPrice = 140000,
-				MaxPrice = 10000000,
+				MinBedrooms = 2,
+				MaxBedrooms = 3,
+				MinPrice = 100000,
+				MaxPrice = 500000,
 			};
 
+			return searchParams;
+		}
+
+		private async Task DoSearch(SearchParams searchParams)
+		{
 			_display.WriteLine("Starting search");
 			_display.WriteLine(searchParams.ToString());
 
@@ -168,8 +216,15 @@ namespace RightMoveConsole.Services
 					{
 						_logger.LogInformation("Hello World!");
 
-						// Simulate real work is being done
-						await DoWorkTwo();
+						// perform searches
+						await DoSearch(GetAshtonSearchParams());
+						await DoSearch(GetManchesterSearchParams());
+						await DoSearch(GetPrestwichSearchParams());
+						await DoSearch(GetStalybridgeSearchParams());
+						await DoSearch(GetDukinfieldSearchParams());
+						await DoSearch(GetAudenshawSearchParams());
+						await DoSearch(GetDroylsdenSearchParams());
+
 						_exitCode = 0;
 					}
 					catch (Exception ex)

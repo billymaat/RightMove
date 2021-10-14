@@ -4,8 +4,8 @@ using System.Text;
 
 namespace RightMoveConsole.Services
 {
-	public interface IDbService
+	public interface IDisplayService
 	{
-		void CreateConnection();
+		void WriteLine(string s);
 	}
 }
