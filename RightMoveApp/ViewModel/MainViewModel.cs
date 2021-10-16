@@ -1,8 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
 using RightMove.DataTypes;
+using RightMove.Db.Models;
+using RightMove.Db.Repositories;
 using RightMove.Factory;
-using RightMove.Models.Db;
-using RightMove.Repositories.Db;
 using RightMoveApp.Helpers;
 using RightMoveApp.Model;
 using RightMoveApp.Services;

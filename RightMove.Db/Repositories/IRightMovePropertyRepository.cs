@@ -1,9 +1,9 @@
-﻿using RightMove.Models.Db;
+﻿using RightMove.Db.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RightMove.Repositories.Db
+namespace RightMove.Db.Repositories
 {
 	public interface IRightMovePropertyRepository
 	{

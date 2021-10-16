@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using RightMove.DataTypes;
 
-namespace RightMoveConsole.Models
+namespace RightMove.Db.Models
 {
 	public class RightMovePropertyModel
 	{

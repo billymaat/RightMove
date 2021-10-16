@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RightMove.Db\RightMove.Db.csproj" />
     <ProjectReference Include="..\RightMove\RightMove.csproj" />
   </ItemGroup>
 

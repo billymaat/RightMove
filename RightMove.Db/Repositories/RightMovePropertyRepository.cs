@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using Dapper;
 using RightMove.DataTypes;
-using RightMoveConsole.Models;
+using RightMove.Db.Models;
 
-namespace RightMoveConsole.Repositories
+namespace RightMove.Db.Repositories
 {
 	public class RightMovePropertyRepository : SqLiteBaseRepository, IRightMovePropertyRepository
 	{

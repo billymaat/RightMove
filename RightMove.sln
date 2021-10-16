@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Tests", "RightMov
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMoveConsole", "RightMoveConsole\RightMoveConsole.csproj", "{6EA2322C-699E-4EC5-A26D-E05E133B7883}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Db", "RightMove.Db\RightMove.Db.csproj", "{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6EA2322C-699E-4EC5-A26D-E05E133B7883}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EA2322C-699E-4EC5-A26D-E05E133B7883}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EA2322C-699E-4EC5-A26D-E05E133B7883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using RightMove.DataTypes;
 using RightMove.Factory;
-using RightMove.Repositories.Db;
 using RightMove.Services;
 
 namespace RightMove.Extensions
@@ -30,8 +29,7 @@ namespace RightMove.Extensions
 				.AddTransient<PropertyPageParser>()
 				.AddTransient<RightMoveParserService>()
 				.AddTransient<SearchPageParserServiceFactory>()
-				.AddTransient<IActivator, ActivatorInjector>()
-				.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>();
+				.AddTransient<IActivator, ActivatorInjector>();
 		}
 	}
 }

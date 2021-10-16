@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-namespace RightMoveConsole.Repositories
+namespace RightMove.Db.Repositories
 {
 	public class SqLiteBaseRepository
 	{
