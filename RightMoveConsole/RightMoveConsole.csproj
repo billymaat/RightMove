@@ -23,4 +23,10 @@
     <ProjectReference Include="..\RightMove\RightMove.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="searchlocations.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

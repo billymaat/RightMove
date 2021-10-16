@@ -28,6 +28,7 @@ namespace RightMoveConsole
 						services.AddScoped<IDisplayService, DisplayService>()
 							.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
 							.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
+							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 							.AddHostedService<MainService>();
 					}
 				);

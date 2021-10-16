@@ -22,18 +22,21 @@ namespace RightMoveConsole.Services
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
 		private readonly IDisplayService _display;
+		private readonly ISearchLocationsReader _searchLocationsReader;
 
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			RightMoveParserServiceFactory rightMoveParseServiceFactory,
 			IRightMovePropertyRepository db,
-			IDisplayService display)
+			IDisplayService display,
+			ISearchLocationsReader searchLocationsReader)
 		{
 			_appLifetime = appLifetime;
 			_logger = logger;
 			_rightMoveParserServiceFactory = rightMoveParseServiceFactory;
 			_db = db;
 			_display = display;
+			_searchLocationsReader = searchLocationsReader;
 		}
 
 		private async Task DoLoopSearch()
@@ -90,61 +93,6 @@ namespace RightMoveConsole.Services
 					}
 				}
 			}
-		}
-
-		private SearchParams GetPrestwichSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Prestwich, Manchester, Greater Manchester";
-
-			return searchParams;
-		}
-
-		private SearchParams GetAshtonSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Ashton-Under-Lyne, Greater Manchester";
-			return searchParams;
-		}
-
-		private SearchParams GetManchesterSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Manchester, Greater Manchester";
-
-			return searchParams;
-		}
-
-		private SearchParams GetDroylsdenSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Droylsden, Greater Manchester";
-
-			return searchParams;
-		}
-
-		private SearchParams GetAudenshawSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Audenshaw, Manchester, Greater Manchester";
-
-			return searchParams;
-		}
-
-		private SearchParams GetDukinfieldSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Dukinfield, Cheshire";
-
-			return searchParams;
-		}
-
-		private SearchParams GetStalybridgeSearchParams()
-		{
-			SearchParams searchParams = GetSearchParams();
-			searchParams.RegionLocation = "Stalybridge, Greater Manchester";
-
-			return searchParams;
 		}
 
 		private SearchParams GetSearchParams()
@@ -217,13 +165,16 @@ namespace RightMoveConsole.Services
 						_logger.LogInformation("Hello World!");
 
 						// perform searches
-						await DoSearch(GetAshtonSearchParams());
-						await DoSearch(GetManchesterSearchParams());
-						await DoSearch(GetPrestwichSearchParams());
-						await DoSearch(GetStalybridgeSearchParams());
-						await DoSearch(GetDukinfieldSearchParams());
-						await DoSearch(GetAudenshawSearchParams());
-						await DoSearch(GetDroylsdenSearchParams());
+						var searchLocations = _searchLocationsReader.GetFilenames();
+						if (searchLocations != null)
+						{
+							foreach (var searchLocation in searchLocations)
+							{
+								var searchParams = GetSearchParams();
+								searchParams.RegionLocation = searchLocation;
+								await DoSearch(searchParams);
+							}
+						}
 
 						_exitCode = 0;
 					}
