@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
+using RightMove.Db.Models;
+using RightMove.Db.Repositories;
 using RightMove.Factory;
-using RightMoveConsole.Models;
-using RightMoveConsole.Repositories;
 
 namespace RightMoveConsole.Services
 {
