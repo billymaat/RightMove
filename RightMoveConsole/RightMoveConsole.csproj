@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="RightMoveDB.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="searchlocations.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

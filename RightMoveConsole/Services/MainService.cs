@@ -112,7 +112,7 @@ namespace RightMoveConsole.Services
 
 		private async Task DoSearch(SearchParams searchParams)
 		{
-			_display.WriteLine("Starting search");
+			_display.WriteLine("Search Parameters:");
 			_display.WriteLine(searchParams.ToString());
 
 			var rightMoveService = _rightMoveParserServiceFactory.CreateInstance(searchParams);
@@ -149,7 +149,12 @@ namespace RightMoveConsole.Services
 						newProperties.Add(property);
 					}
 				}
+
+				_display.WriteLine($"New properties: {newProperties.Count}");
+				_display.WriteLine($"Updated properties: {updatedProperties.Count}");
 			}
+
+			_display.WriteLine();
 		}
 
 		public Task StartAsync(CancellationToken cancellationToken)

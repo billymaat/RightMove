@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using RightMove.Helpers;
@@ -247,17 +248,9 @@ namespace RightMove.DataTypes
 
 		public override string ToString()
 		{
-			StringBuilder sb = new StringBuilder();
 			Type t = this.GetType();
 			PropertyInfo[] props = t.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-			foreach (var prop in props)
-			{
-				sb.AppendLine($"{prop.Name}: {prop.GetValue(this, null)}");
-			}
-			// sb.Append($"{nameof(OutcodeLocation)}: {OutcodeLocation}");
-			// sb.Append(RegionLocation)
-
-			return sb.ToString();
+			return string.Join(System.Environment.NewLine, props.Select(prop => $"{prop.Name}: {prop.GetValue(this, null)}"));		
 		}
 
 		/// <summary>

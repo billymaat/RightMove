@@ -7,5 +7,7 @@ namespace RightMoveConsole.Services
 	public interface IDisplayService
 	{
 		void WriteLine(string s);
+
+		void WriteLine();
 	}
 }
