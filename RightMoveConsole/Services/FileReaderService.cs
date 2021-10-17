@@ -37,9 +37,14 @@ namespace RightMoveConsole.Services
 			get;
 		}
 
+		public abstract string FilePath
+		{
+			get;
+		}
+
 		protected bool FileExists()
 		{
-			return File.Exists(FileName);
+			return File.Exists(FilePath);
 		}
 	}
 }

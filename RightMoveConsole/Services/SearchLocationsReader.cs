@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace RightMoveConsole.Services
@@ -8,6 +10,7 @@ namespace RightMoveConsole.Services
 	{
 		List<String> GetFilenames();
 	}
+
 	public class SearchLocationsReader : FileReaderService, ISearchLocationsReader
 	{
 		private Func<string> _filepath;
@@ -19,6 +22,14 @@ namespace RightMoveConsole.Services
 
 		public override string FileName => _filepath?.Invoke();
 
+		public override string FilePath
+		{
+			get
+			{
+				var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+				return Path.Combine(path, FileName);
+			}
+		}
 		public List<string> GetFilenames()
 		{
 			if (!FileExists())
@@ -29,7 +40,7 @@ namespace RightMoveConsole.Services
 
 			List<string> filenames = new List<string>();
 
-			using (System.IO.StreamReader reader = new System.IO.StreamReader(FileName))
+			using (System.IO.StreamReader reader = new System.IO.StreamReader(FilePath))
 			{
 				string line;
 				while ((line = reader.ReadLine()) != null)
