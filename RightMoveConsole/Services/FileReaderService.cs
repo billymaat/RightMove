@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace RightMoveConsole.Services
@@ -32,18 +33,38 @@ namespace RightMoveConsole.Services
 			protected set;
 		}
 
+		/// <summary>
+		/// Gets the filename, excluding the path
+		/// </summary>
 		public abstract string FileName
 		{
 			get;
 		}
 
-		public abstract string FilePath
+		/// <summary>
+		/// Gets the file path of the file to read
+		/// </summary>
+		public virtual string FilePath
 		{
-			get;
+			get
+			{
+				if (string.IsNullOrEmpty(FileName))
+				{
+					return null;
+				}
+
+				var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+				return Path.Combine(path, FileName);
+			}
 		}
 
 		protected bool FileExists()
 		{
+			if (string.IsNullOrEmpty(FilePath))
+			{
+				return false;
+			}
+
 			return File.Exists(FilePath);
 		}
 	}

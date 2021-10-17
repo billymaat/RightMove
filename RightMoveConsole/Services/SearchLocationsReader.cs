@@ -8,12 +8,12 @@ namespace RightMoveConsole.Services
 {
 	public interface ISearchLocationsReader : IFileReader
 	{
-		List<String> GetFilenames();
+		List<String> GetLocations();
 	}
 
 	public class SearchLocationsReader : FileReaderService, ISearchLocationsReader
 	{
-		private Func<string> _filepath;
+		private readonly Func<string> _filepath;
 
 		public SearchLocationsReader(Func<string> filepath) : base()
 		{
@@ -22,15 +22,11 @@ namespace RightMoveConsole.Services
 
 		public override string FileName => _filepath?.Invoke();
 
-		public override string FilePath
-		{
-			get
-			{
-				var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-				return Path.Combine(path, FileName);
-			}
-		}
-		public List<string> GetFilenames()
+		/// <summary>
+		/// Get a list of locations
+		/// </summary>
+		/// <returns>A list of locations</returns>
+		public List<string> GetLocations()
 		{
 			if (!FileExists())
 			{
@@ -38,9 +34,9 @@ namespace RightMoveConsole.Services
 				return null;
 			}
 
-			List<string> filenames = new List<string>();
+			List<string> locations = new List<string>();
 
-			using (System.IO.StreamReader reader = new System.IO.StreamReader(FilePath))
+			using (StreamReader reader = new StreamReader(FilePath))
 			{
 				string line;
 				while ((line = reader.ReadLine()) != null)
@@ -51,11 +47,11 @@ namespace RightMoveConsole.Services
 						continue;					
 					}
 
-					filenames.Add(line);
+					locations.Add(line);
 				}
 			}
 
-			return filenames;
+			return locations;
 		}
 	}
 }

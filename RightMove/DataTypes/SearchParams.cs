@@ -138,6 +138,28 @@ namespace RightMove.DataTypes
 			40
 		};
 
+		private static readonly Dictionary<PropertyTypeEnum, string> PropertyTypeDictionary = new Dictionary<PropertyTypeEnum, string>()
+		{
+			{PropertyTypeEnum.Bungalow, "bungalow"},
+			{PropertyTypeEnum.Flat, "flat" },
+			{PropertyTypeEnum.Land, "land" },
+			{PropertyTypeEnum.SemiDetached, "semi-detached" },
+			{PropertyTypeEnum.Detached, "detached"},
+			{PropertyTypeEnum.Terraced, "terraced" },
+			{PropertyTypeEnum.ParkHome, "park-home" }
+		};
+
+		public enum PropertyTypeEnum
+		{
+			Bungalow,
+			Flat,
+			Land,
+			SemiDetached,
+			Detached,
+			Terraced,
+			ParkHome
+		}
+
 		private double _radius;
 
 		/// <summary>
@@ -210,7 +232,7 @@ namespace RightMove.DataTypes
 		/// <summary>
 		/// Gets or sets the property type
 		/// </summary>
-		public List<string> PropertyType
+		public List<PropertyTypeEnum> PropertyType
 		{
 			get;
 			set;
@@ -301,9 +323,9 @@ namespace RightMove.DataTypes
 				options.Add(Option.MaxPrice, MaxPrice.ToString());
 			}
 			
-			if (PropertyType != null && PropertyType.Count > 1)
+			if (PropertyType != null && PropertyType.Count > 0)
 			{
-				options.Add(Option.PropertyType, string.Join(",", PropertyType));
+				options.Add(Option.PropertyType, string.Join(",", PropertyType.Select(o => PropertyTypeDictionary[o])));
 			}
 
 			options.Add(Option.SortType, ((int)Sort).ToString());

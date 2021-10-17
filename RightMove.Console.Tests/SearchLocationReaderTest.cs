@@ -15,9 +15,17 @@ namespace RightMove.Console.Tests
 		public void SearchLocationsReader ()
 		{
 			SearchLocationsReader reader = new SearchLocationsReader(() => @"C:\Users\Billy\source\repos\RightMove\RightMoveConsole\searchlocations.txt");
-			var filenames = reader.GetFilenames();
+			var filenames = reader.GetLocations();
 			Assert.IsNotNull(filenames);
 			Assert.IsTrue(filenames.Count > 0);
+		}
+
+		[Test]
+		public void SearchLocationReader_NullFilePath()
+		{
+			SearchLocationsReader reader = new SearchLocationsReader(null);
+			var filenames = reader.GetLocations();
+			Assert.IsNull(filenames);
 		}
 	}
 }

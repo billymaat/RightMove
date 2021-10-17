@@ -93,21 +93,9 @@ namespace RightMove.Services
 			await Task.WhenAll(listOfTasks).ConfigureAwait(false);
 			foreach (var task in listOfTasks)
 			{
-				if (task.Result != null)
-				{
-					if (task.Result.RightMoveSearchItems.Count > 0)
-					{
-						rightMoveItems.AddRangeUnique(task.Result.RightMoveSearchItems);
-					}
-					else
-					{
-						
-					}
-
-				}
-				else
-				{
-
+				if (task.Result != null && task.Result.RightMoveSearchItems.Count > 0)
+				{		
+					rightMoveItems.AddRangeUnique(task.Result.RightMoveSearchItems);				
 				}
 			}
 			
