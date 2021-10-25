@@ -32,7 +32,7 @@ namespace RightMove.DataTypes
 		}
 
 		/// <summary>
-	    /// Gets or sets the selected radius
+		/// Gets or sets the selected radius
 		/// </summary>
 		private const double DefaultRadius = 0;
 
@@ -149,17 +149,6 @@ namespace RightMove.DataTypes
 			{PropertyTypeEnum.ParkHome, "park-home" }
 		};
 
-		public enum PropertyTypeEnum
-		{
-			Bungalow,
-			Flat,
-			Land,
-			SemiDetached,
-			Detached,
-			Terraced,
-			ParkHome
-		}
-
 		private double _radius;
 
 		/// <summary>
@@ -173,6 +162,11 @@ namespace RightMove.DataTypes
 			MaxPrice = DefaultMaxPrice;
 			Sort = DefaultSort;
 			Radius = DefaultRadius;
+		}
+
+		public SearchParams(SearchParams searchParams)
+		{
+			Copy(searchParams);
 		}
 
 		/// <summary>
@@ -232,7 +226,7 @@ namespace RightMove.DataTypes
 		/// <summary>
 		/// Gets or sets the property type
 		/// </summary>
-		public List<PropertyTypeEnum> PropertyType
+		public PropertyTypeEnum PropertyType
 		{
 			get;
 			set;
@@ -266,6 +260,25 @@ namespace RightMove.DataTypes
 
 				_radius = value;
 			}
+		}
+
+		/// <summary>
+		/// Copy a search params
+		/// </summary>
+		/// <param name="searchParams">the <see cref="SearchParams"/> to copy</param>
+		public void Copy(SearchParams searchParams)
+		{
+			OutcodeLocation = searchParams.OutcodeLocation;
+			RegionLocation = searchParams.RegionLocation;
+			PropertyType = searchParams.PropertyType;
+
+
+			MinBedrooms = searchParams.MinBedrooms;
+			MaxBedrooms = searchParams.MaxBedrooms;
+			MinPrice = searchParams.MinPrice;
+			MaxPrice = searchParams.MaxPrice;
+			Sort = searchParams.Sort;
+			Radius = searchParams.Radius;
 		}
 
 		public override string ToString()
@@ -322,10 +335,24 @@ namespace RightMove.DataTypes
 			{
 				options.Add(Option.MaxPrice, MaxPrice.ToString());
 			}
-			
-			if (PropertyType != null && PropertyType.Count > 0)
+
+			List<PropertyTypeEnum> selectedTypes = new List<PropertyTypeEnum>();
+			foreach (PropertyTypeEnum enu in Enum.GetValues(typeof(PropertyTypeEnum)))
 			{
-				options.Add(Option.PropertyType, string.Join(",", PropertyType.Select(o => PropertyTypeDictionary[o])));
+				if (enu == PropertyTypeEnum.None)
+				{
+					continue;
+				}
+
+				if (PropertyType.HasFlag(enu))
+				{
+					selectedTypes.Add(enu);
+				}
+			}
+
+			if (selectedTypes.Count > 0)
+			{
+				options.Add(Option.PropertyType, string.Join(",", selectedTypes.Select(o => PropertyTypeDictionary[o])));
 			}
 
 			options.Add(Option.SortType, ((int)Sort).ToString());
@@ -367,6 +394,5 @@ namespace RightMove.DataTypes
 
 			return $"REGION^{region}";
 		}
-
 	}
 }

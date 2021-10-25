@@ -411,7 +411,9 @@ namespace RightMoveApp.ViewModel
 		{
 			IsSearching = true;
 
-			var parser = _parserFactory.CreateInstance(SearchParams);
+			// create a copy if search params in case its changed during search
+			SearchParams searchParams = new SearchParams(SearchParams);
+			var parser = _parserFactory.CreateInstance(searchParams);
 			await parser.SearchAsync();
 			RightMoveList = parser.Results;
 

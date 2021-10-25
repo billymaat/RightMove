@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using RightMove;
 using RightMove.DataTypes;
 using Utilities;
+using static RightMove.DataTypes.SearchParams;
 
 namespace RightMoveApp.UserControls
 {
@@ -120,6 +121,12 @@ namespace RightMoveApp.UserControls
 			5
 		};
 
+		public PropertyTypeEnum PropType
+		{
+			get;
+			set;
+		}
+
 		public StringTrieSet SearchString
 		{
 			get
@@ -128,7 +135,6 @@ namespace RightMoveApp.UserControls
 			}
 		}
 		
-
 		public SearchParams SearchParams
 		{
 			get
@@ -136,7 +142,10 @@ namespace RightMoveApp.UserControls
 				SearchParams searchParams = (SearchParams)GetValue(SearchParamsProperty);
 				return searchParams;
 			}
-			set { SetValue(SearchParamsProperty, value); }
+			set 
+			{ 
+				SetValue(SearchParamsProperty, value);
+			}
 		}
 
 		// Using a DependencyProperty as the backing store for MySelectedItem.  This enables animation, styling, binding, etc...

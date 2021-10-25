@@ -105,7 +105,7 @@ namespace RightMoveConsole.Services
 				MaxBedrooms = 3,
 				MinPrice = 100000,
 				MaxPrice = 500000,
-				PropertyType = new List<SearchParams.PropertyTypeEnum>() { SearchParams.PropertyTypeEnum.Detached }
+				PropertyType = PropertyTypeEnum.Detached
 			};
 
 			return searchParams;
