@@ -152,21 +152,6 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <!--<StackPanel Grid.Column="1" Grid.Row="5" 
-                    Orientation="Horizontal">
-            <CheckBox Content="SemiDetached"
-                IsChecked="{Binding
-                ElementName=uc, Path=SearchParams.PropertyType, Mode=TwoWay, 
-                UpdateSourceTrigger=PropertyChanged,
-                Converter={StaticResource PropertyTypeConverter},
-                ConverterParameter={x:Static dataTypes:PropertyTypeEnum.SemiDetached}}"/>
-            <CheckBox Content="Detached"
-                IsChecked="{Binding 
-                ElementName=uc, Path=SearchParams.PropertyType, Mode=TwoWay, 
-                UpdateSourceTrigger=PropertyChanged,
-                Converter={StaticResource PropertyTypeConverter},
-                ConverterParameter={x:Static dataTypes:PropertyTypeEnum.Detached}}"/>
-        </StackPanel>-->
     </Grid>
 
 </UserControl>
