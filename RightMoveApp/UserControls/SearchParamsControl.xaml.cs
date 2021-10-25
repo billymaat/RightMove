@@ -52,6 +52,8 @@ namespace RightMoveApp.UserControls
 			{ 40, "Within 40 miles" }
 		};
 
+		public Dictionary<PropertyTypeEnum, string> PropertyTypes => PropertyTypeDictionary;
+
 		/// <summary>
 		/// Prices bound to combo box
 		/// </summary>

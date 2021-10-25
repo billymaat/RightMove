@@ -7,22 +7,24 @@ using System.Windows.Data;
 
 namespace RightMoveApp.UserControls.ValueConverters
 {
-	public class PropertyTypeConverter : IValueConverter
+	public class PropertyTypeConverter : IMultiValueConverter
 	{
 		private PropertyTypeEnum _target;
+		private PropertyTypeEnum _mask;
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			PropertyTypeEnum mask = (PropertyTypeEnum)parameter;
-			_target = (PropertyTypeEnum)value;
+			_mask = (PropertyTypeEnum)values[1];
+			_target = (PropertyTypeEnum)values[0];
 
-			return (mask & _target) != 0;
+			return (_mask & _target) != 0;
 		}
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
-			_target ^= (PropertyTypeEnum)parameter;
-			return _target;
+			_target = _target ^ _mask;
+			return new object[2] 
+				{ _target, _mask } ;
 		}
 	}
 }

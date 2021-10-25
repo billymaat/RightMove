@@ -138,7 +138,7 @@ namespace RightMove.DataTypes
 			40
 		};
 
-		private static readonly Dictionary<PropertyTypeEnum, string> PropertyTypeDictionary = new Dictionary<PropertyTypeEnum, string>()
+		public static readonly Dictionary<PropertyTypeEnum, string> PropertyTypeDictionary = new Dictionary<PropertyTypeEnum, string>()
 		{
 			{PropertyTypeEnum.Bungalow, "bungalow"},
 			{PropertyTypeEnum.Flat, "flat" },
