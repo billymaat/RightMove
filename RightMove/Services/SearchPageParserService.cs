@@ -143,7 +143,7 @@ namespace RightMove.Services
 				rightMoveItem.Address = address;
 				rightMoveItem.Desc = desc;
 				rightMoveItem.Agent = agent;
-				rightMoveItem.Date = date;
+				rightMoveItem.DateAdded = date;
 				rightMoveItem.Link = link;
 				rightMoveItem.Price = price;
 				rightMoveItem.Featured = featured;

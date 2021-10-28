@@ -87,7 +87,7 @@ namespace RightMove.Services
 			
 
 			property.Price = RightMoveParserHelper.ParsePrice(Json.propertyData.prices.primaryPrice);
-			property.Date = RightMoveParserHelper.ParseDate(Json.propertyData.listingHistory.listingUpdateReason);
+			property.DateAdded = RightMoveParserHelper.ParseDate(Json.propertyData.listingHistory.listingUpdateReason);
 			property.ImageUrl = Json.propertyData.images.Select(o => o.url).ToArray();
 
 			RightMoveProperty = property;

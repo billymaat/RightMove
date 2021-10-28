@@ -17,17 +17,16 @@ namespace RightMove.Db.Repositories
 		{
 
 		}
-		
+
 		/// <summary>
 		/// Save property to db
 		/// </summary>
 		/// <param name="property">the<see cref="RightMovePropertyModel"/></param>
 		public void SaveProperty(RightMovePropertyModel property)
 		{
-			property.DateUpdated = DateTime.Now.ToString();
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
-				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, Date, Link, Price, DateUpdated) values (@RightMoveId, @HouseInfo, @Address, @Date, @Link, @Price, @DateUpdated)", property);
+				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, Date, Link, Price) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @Link, @Price)", property);
 			}
 		}
 		
@@ -64,7 +63,7 @@ namespace RightMove.Db.Repositories
 				}
 
 				string newPriceString = $"{property.Price}|{price}";
-				string newDateString = $"{property.DateUpdated}|{DateTime.Now.Date}";
+				string newDateString = $"{property.DateAdded}|{DateTime.Now}";
 				
 				cnn.Execute(@"update Property set Price = @price, Date = @date where Id = @id", new
 				{

@@ -71,7 +71,7 @@ namespace RightMoveApp.Model
 		{
 			get
 			{
-				return _item.Date;
+				return _item.DateAdded;
 			}
 		}
 

@@ -25,9 +25,6 @@ namespace RightMove.Factory
 
 		public RightMoveParserService CreateInstance(SearchParams searchParams)
 		{
-			//return ActivatorUtilities.CreateInstance<RightMoveParserService>(_services,
-			//	new object[] {searchParams});
-
 			return (RightMoveParserService)_activator.CreateInstance(_services,
 				typeof(RightMoveParserService),
 				new object[] { searchParams });

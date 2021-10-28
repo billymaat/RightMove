@@ -7,8 +7,8 @@
 
         x:Class="RightMoveApp.MainWindow"
         xmlns:controls="clr-namespace:RightMoveApp.UserControls"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        mc:Ignorable="d"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:valueconverter="clr-namespace:RightMoveApp.ValueConverters"
+    mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="1500" Language="en-GB"
         SizeToContent="Width"
         HorizontalAlignment="Stretch"
@@ -26,12 +26,7 @@
                     <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
                         <Setter Property="Background" Value="#E5F0FA" />
                     </Trigger>
-                    <!--<DataTrigger Binding="{Binding Path=Selectable}" Value="False">
-                            <DataTrigger.Setters>
-                                <Setter Property="Background" Value="LightGray" />
-                            </DataTrigger.Setters>
-                        </DataTrigger>-->
-            </Style.Triggers>
+                </Style.Triggers>
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
@@ -65,8 +60,7 @@
                     VerticalGridLinesBrush="#6297C8"
                     HorizontalAlignment="Stretch"
                     IsReadOnly="True"
-                    AlternationCount="2"
-                    >
+                    AlternationCount="2">
                     <DataGrid.RowDetailsTemplate>
                         <DataTemplate>
                             <TextBlock Background="Orange" Text="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.PriceHistory}"

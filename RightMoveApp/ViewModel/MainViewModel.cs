@@ -8,6 +8,7 @@ using RightMoveApp.Model;
 using RightMoveApp.Services;
 using RightMoveApp.ViewModel.Commands;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -98,6 +99,29 @@ namespace RightMoveApp.ViewModel
 				Set(ref _rightMovePropertyFullSelectedItem, value);
 				PrevImageCommand.RaiseCanExecuteChanged();
 				NextImageCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		public List<int> Prices
+		{
+			get
+			{
+				if (RightMoveSelectedItem is null)
+				{
+					return null;
+				}
+
+				var dbProperties = _dbService.LoadProperties();
+				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
+
+				if (matchingProperty is null)
+				{
+					return null;
+				}
+
+				var prices = matchingProperty.Prices;
+
+				return prices;
 			}
 		}
 

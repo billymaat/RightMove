@@ -65,7 +65,7 @@ namespace RightMove.DataTypes
 			set;
 		}
 
-		public DateTime Date
+		public DateTime DateAdded
 		{
 			get;
 			set;
@@ -127,7 +127,7 @@ namespace RightMove.DataTypes
 				   string.Equals(Address, other.Address, StringComparison.InvariantCultureIgnoreCase) &&
 				   string.Equals(Desc, other.Desc, StringComparison.InvariantCultureIgnoreCase) &&
 				   string.Equals(Agent, other.Agent, StringComparison.InvariantCultureIgnoreCase) &&
-				   Date.Equals(other.Date) &&
+				   DateAdded.Equals(other.DateAdded) &&
 				   Price == other.Price;
 
 			// Featured == other.Featured; // we choose not to make featured an equality check
@@ -159,7 +159,7 @@ namespace RightMove.DataTypes
 			hashCode.Add(Address, StringComparer.InvariantCultureIgnoreCase);
 			hashCode.Add(Desc, StringComparer.InvariantCultureIgnoreCase);
 			hashCode.Add(Agent, StringComparer.InvariantCultureIgnoreCase);
-			hashCode.Add(Date);
+			hashCode.Add(DateAdded);
 			hashCode.Add(Price);
 
 			// hashCode.Add(Featured);
@@ -174,7 +174,7 @@ namespace RightMove.DataTypes
 			sb.Append(string.Format("{0} : {1}\n", nameof(HouseInfo), HouseInfo));
 			sb.Append(string.Format("{0} : {1}\n", nameof(Address), Address));
 			sb.Append($"{nameof(Price)} : {Price}");
-			sb.Append(string.Format("{0} : {1}\n", nameof(Date), Date));
+			sb.Append(string.Format("{0} : {1}\n", nameof(DateAdded), DateAdded));
 			sb.Append(string.Format("{0} : {1}\n", nameof(Link), Link));
 			return sb.ToString();
 		}

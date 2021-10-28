@@ -148,7 +148,6 @@
                             </MultiBinding>
                         </CheckBox.IsChecked>
                     </CheckBox>
-
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

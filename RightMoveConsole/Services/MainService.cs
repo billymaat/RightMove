@@ -10,6 +10,7 @@ using RightMove.DataTypes;
 using RightMove.Db.Models;
 using RightMove.Db.Repositories;
 using RightMove.Factory;
+using static RightMoveConsole.Services.DatabaseService;
 
 namespace RightMoveConsole.Services
 {
@@ -18,7 +19,7 @@ namespace RightMoveConsole.Services
 		private int? _exitCode;
 
 		private readonly RightMoveParserServiceFactory _rightMoveParserServiceFactory;
-		private readonly IRightMovePropertyRepository _db;
+		private readonly IDatabaseService _db;
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
 		private readonly IDisplayService _display;
@@ -27,7 +28,7 @@ namespace RightMoveConsole.Services
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			RightMoveParserServiceFactory rightMoveParseServiceFactory,
-			IRightMovePropertyRepository db,
+			IDatabaseService db,
 			IDisplayService display,
 			ISearchLocationsReader searchLocationsReader)
 		{
@@ -65,32 +66,8 @@ namespace RightMoveConsole.Services
 
 				if (res.Result)
 				{
-					var dbProperties = _db.LoadProperties();
-					List<RightMoveProperty> updatedProperties = new List<RightMoveProperty>();
-					List<RightMoveProperty> newProperties = new List<RightMoveProperty>();
-
 					_logger.LogDebug($"Results count: {rightMoveService.Results.Count}");
-					for (int i = 0; i < rightMoveService.Results.Count; i++)
-					{
-						var property = rightMoveService.Results[i];
-						var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
-
-						if (matchingProperty != null)
-						{
-							// if the price has changed, add the new price
-							if (matchingProperty.Prices.Last() != property.Price)
-							{
-								_db.AddPriceToProperty(matchingProperty.Id, property.Price);
-								updatedProperties.Add(property);
-							}
-						}
-						else
-						{
-							// save a new record of the new property
-							_db.SaveProperty(new RightMovePropertyModel(property));
-							newProperties.Add(property);
-						}
-					}
+					(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results);
 				}
 			}
 		}
@@ -105,13 +82,13 @@ namespace RightMoveConsole.Services
 				MaxBedrooms = 3,
 				MinPrice = 100000,
 				MaxPrice = 500000,
-				PropertyType = PropertyTypeEnum.Detached
+				PropertyType = PropertyTypeEnum.None
 			};
 
 			return searchParams;
 		}
 
-		private async Task DoSearch(SearchParams searchParams)
+		private async Task DoSearch(SearchParams searchParams, bool updateDb = true)
 		{
 			_display.WriteLine("Search Parameters:");
 			_display.WriteLine(searchParams.ToString());
@@ -123,41 +100,35 @@ namespace RightMoveConsole.Services
 
 			if (res.Result)
 			{
-				var dbProperties = _db.LoadProperties();
-				List<RightMoveProperty> updatedProperties = new List<RightMoveProperty>();
-				List<RightMoveProperty> newProperties = new List<RightMoveProperty>();
-				
 				_display.WriteLine($"Results count: {rightMoveService.Results.Count}");
-				for (int i = 0; i < rightMoveService.Results.Count; i++)
+
+				if (updateDb)
 				{
-					var property = rightMoveService.Results[i];
-					// _display.WriteLine($"{i}: {property}");
-					var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
+					(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results);
 
-					if (matchingProperty != null)
-					{
-						// if the price has changed, add the new price
-						if (matchingProperty.Prices.Last() != property.Price)
-						{
-							_db.AddPriceToProperty(matchingProperty.Id, property.Price);
-							updatedProperties.Add(property);
-						}
-					}
-					else
-					{
-						// save a new record of the new property
-						_db.SaveProperty(new RightMovePropertyModel(property));
-						newProperties.Add(property);
-					}
+					_display.WriteLine($"New properties: {databaseUpdate.newPropertiesCount}");
+					_display.WriteLine($"Updated properties: {databaseUpdate.updatedPropertiesCount}");
 				}
-
-				_display.WriteLine($"New properties: {newProperties.Count}");
-				_display.WriteLine($"Updated properties: {updatedProperties.Count}");
 			}
 
 			_display.WriteLine();
 		}
 
+		private async Task DoSearch()
+		{
+			// perform searches
+			var searchLocations = _searchLocationsReader.GetLocations();
+			if (searchLocations != null)
+			{
+				foreach (var searchLocation in searchLocations)
+				{
+					var searchParams = GetSearchParams();
+					searchParams.RegionLocation = searchLocation;
+					await DoSearch(searchParams);
+				}
+			}
+		}
+		
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			_logger.LogDebug($"Starting with arguments: {string.Join(" ", Environment.GetCommandLineArgs())}");
@@ -168,20 +139,9 @@ namespace RightMoveConsole.Services
 				{
 					try
 					{
-						_logger.LogInformation("Hello World!");
+						_logger.LogInformation("Starting application");
 
-						// perform searches
-						var searchLocations = _searchLocationsReader.GetLocations();
-						if (searchLocations != null)
-						{
-							foreach (var searchLocation in searchLocations)
-							{
-								var searchParams = GetSearchParams();
-								searchParams.RegionLocation = searchLocation;
-								await DoSearch(searchParams);
-							}
-						}
-
+						await DoSearch();
 						_exitCode = 0;
 					}
 					catch (Exception ex)
