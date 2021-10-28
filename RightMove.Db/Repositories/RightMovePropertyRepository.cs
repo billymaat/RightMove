@@ -26,7 +26,7 @@ namespace RightMove.Db.Repositories
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
-				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, Date, Link, Price) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @Link, @Price)", property);
+				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, Date, Link, Price) values (@RightMoveId, @HouseInfo, @Address, @Date, @Link, @Price)", property);
 			}
 		}
 		
@@ -63,7 +63,7 @@ namespace RightMove.Db.Repositories
 				}
 
 				string newPriceString = $"{property.Price}|{price}";
-				string newDateString = $"{property.DateAdded}|{DateTime.Now}";
+				string newDateString = $"{property.Date}|{DateTime.Now}";
 				
 				cnn.Execute(@"update Property set Price = @price, Date = @date where Id = @id", new
 				{
