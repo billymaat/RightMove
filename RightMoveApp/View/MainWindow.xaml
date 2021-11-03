@@ -8,10 +8,11 @@
         x:Class="RightMoveApp.MainWindow"
         xmlns:controls="clr-namespace:RightMoveApp.UserControls"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:valueconverter="clr-namespace:RightMoveApp.ValueConverters"
-    mc:Ignorable="d"
+        mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="800" Language="en-GB"
         HorizontalAlignment="Stretch"
-        DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}">
+        DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
+        Name="mainWindow">
     <Window.Resources>
     </Window.Resources>
     <Grid>
@@ -119,10 +120,27 @@
                 <Image Grid.Row="0" 
                     Source="{Binding DisplayedImage}"/>
                 <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Style.Resources>
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <Button>
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="20"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
                     <Button x:Name="btnLeft"
                             Grid.Column="0"
                         Content="&lt;" 
