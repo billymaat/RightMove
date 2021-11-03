@@ -75,7 +75,7 @@ namespace RightMoveApp.ViewModel
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the Info
 		/// </summary>
@@ -163,7 +163,7 @@ namespace RightMoveApp.ViewModel
 
 				var dbProperties = _dbService.LoadProperties();
 				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
-				
+
 				if (matchingProperty is null)
 				{
 					return na;
