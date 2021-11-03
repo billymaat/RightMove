@@ -9,8 +9,7 @@
         xmlns:controls="clr-namespace:RightMoveApp.UserControls"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:valueconverter="clr-namespace:RightMoveApp.ValueConverters"
     mc:Ignorable="d"
-        Title="RightMove Scraper" Height="450" Width="1500" Language="en-GB"
-        SizeToContent="Width"
+        Title="RightMove Scraper" Height="450" Width="500" Language="en-GB"
         HorizontalAlignment="Stretch"
         DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}">
     <Window.Resources>
@@ -30,7 +29,7 @@
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
