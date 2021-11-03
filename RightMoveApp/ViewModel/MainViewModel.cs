@@ -36,6 +36,7 @@ namespace RightMoveApp.ViewModel
 		private int _selectedImageIndex;
 		private BitmapImage _displayedImage;
 		private RightMoveProperty _rightMovePropertyFullSelectedItem;
+		private RightMoveProperty _rightMoveSelectedItem;
 
 		// cancellation token
 		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
@@ -105,8 +106,11 @@ namespace RightMoveApp.ViewModel
 		/// </summary>
 		public RightMoveProperty RightMoveSelectedItem
 		{
-			get;
-			set;
+			get => _rightMoveSelectedItem;
+			set
+			{
+				Set(ref _rightMoveSelectedItem, value);
+			}
 		}
 
 		public RightMoveProperty RightMovePropertyFullSelectedItem

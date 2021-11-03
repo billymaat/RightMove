@@ -7,6 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <converters:BooleanToReverseConverter x:Key="BooleanToReverseConverter"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <vm:ViewModelLocator
                 xmlns:vm="clr-namespace:RightMoveApp.ViewModel"
                 x:Key="Locator"/>

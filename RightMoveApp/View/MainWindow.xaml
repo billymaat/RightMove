@@ -52,7 +52,12 @@
             </GroupBox>
             <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" Content="Search" Command="{Binding SearchAsyncCommand}"/>
             <Grid Grid.Column="0" Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <DataGrid x:Name="listView" 
+                    Grid.Column="0"
                     ItemsSource="{Binding Path=RightMoveList}" 
                     SelectedItem="{Binding Path=RightMoveSelectedItem}"
                     AutoGenerateColumns="False"
@@ -106,11 +111,15 @@
                         <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <Image Grid.Column="1" 
+                       Source="{Binding DisplayedImage}" 
+                       Width="100"
+                       Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
             </Grid>
             <Label Grid.Column="0" Grid.Row="3" 
                 Content="{Binding Path=Info}"/>
             <Grid Grid.Column="0" Grid.Row="4">
-                <ProgressBar Minimum="0" Maximum="100" 
+                <ProgressBar Minimum="0" Maximum="100"
                              Name="pbStatus" 
                              IsIndeterminate="{Binding SearchAsyncCommand.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToReverseConverter}}"/>
             </Grid>
