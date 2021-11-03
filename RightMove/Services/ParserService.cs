@@ -30,10 +30,10 @@ namespace RightMove.Services
 
 				}
 			}
-			
+
 			return date;
 		}
-		
+
 		public static string ParseAgent(string agentText)
 		{
 			string agent = null;
@@ -46,7 +46,7 @@ namespace RightMove.Services
 
 			return agent;
 		}
-		
+
 		public static int ParsePrice(string priceText)
 		{
 			Regex reg = new Regex(@"[0-9,]+");

@@ -54,7 +54,7 @@ namespace RightMoveApp
 			services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
 			services.AddScoped<ISampleService, SampleService>();
 			services.AddScoped<IDatabaseService, DatabaseService>();
-			
+
 			services.AddScoped<NavigationService>(serviceProvider =>
 			{
 				var navigationService = new NavigationService(serviceProvider);
@@ -70,7 +70,7 @@ namespace RightMoveApp
 			// Register all ViewModels
 			services.AddSingleton<MainViewModel>();
 			services.AddTransient<ImageViewModel>();
-			
+
 			// Register all the windows of the application
 			services.AddSingleton<MainWindow>();
 			services.AddTransient<ImageWindow>();
@@ -81,7 +81,7 @@ namespace RightMoveApp
 			await host.StartAsync();
 			var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
 			await navigationService.ShowAsync(WindowKeys.MainWindow);
-			
+
 			base.OnStartup(e);
 		}
 

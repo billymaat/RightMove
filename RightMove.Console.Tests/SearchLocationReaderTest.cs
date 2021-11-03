@@ -12,7 +12,7 @@ namespace RightMove.Console.Tests
 		}
 
 		[Test]
-		public void SearchLocationsReader ()
+		public void SearchLocationsReader()
 		{
 			SearchLocationsReader reader = new SearchLocationsReader(() => @"C:\Users\Billy\source\repos\RightMove\RightMoveConsole\searchlocations.txt");
 			var filenames = reader.GetLocations();

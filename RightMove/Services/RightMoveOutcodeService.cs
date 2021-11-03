@@ -68,7 +68,7 @@ namespace RightMove.Services
 
 			return outcodeDictionary;
 		}
-		
+
 		public static void WriteLine(string value)
 		{
 			m_Queue.Add(value);

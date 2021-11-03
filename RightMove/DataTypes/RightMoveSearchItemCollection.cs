@@ -12,9 +12,9 @@ namespace RightMove.DataTypes
 	public class RightMoveSearchItemCollection : IList<RightMoveProperty>
 	{
 		private int _id = 0;
-		
+
 		private readonly List<RightMoveProperty> _lst;
-		
+
 		public RightMoveSearchItemCollection()
 		{
 			_lst = new List<RightMoveProperty>();
@@ -31,14 +31,14 @@ namespace RightMove.DataTypes
 		}
 
 		public double AveragePrice => CalculateAveragePrice();
-		
+
 		public double CalculateAveragePrice()
 		{
 			return this.Where(o => o.Price != RightMoveParserService.PriceNotSet)
 				.Select(o => o.Price)
 				.Average();
 		}
-		
+
 		public void AddUnique(RightMoveProperty item)
 		{
 			if (!ContainsPropertyId(item.RightMoveId))
@@ -77,7 +77,7 @@ namespace RightMove.DataTypes
 		public int Count => _lst.Count;
 
 		public bool IsReadOnly => false;
-		
+
 		public void AddRangeUnique(RightMoveSearchItemCollection items)
 		{
 			foreach (var rightMoveSearchItem in items)
@@ -90,7 +90,7 @@ namespace RightMove.DataTypes
 		{
 			throw new NotImplementedException("we do not add non unique ranges");
 		}
-		
+
 		public IEnumerator<RightMoveProperty> GetEnumerator()
 		{
 			return _lst.GetEnumerator();

@@ -29,12 +29,12 @@ namespace RightMove.Db.Repositories
 				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, Date, Link, Price) values (@RightMoveId, @HouseInfo, @Address, @Date, @Link, @Price)", property);
 			}
 		}
-		
+
 		/// <summary>
 		/// Load propertues
 		/// </summary>
 		/// <returns>a list of <see cref="RightMovePropertyModel"/></returns>
-		public List<RightMovePropertyModel> LoadProperties() 
+		public List<RightMovePropertyModel> LoadProperties()
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
@@ -64,7 +64,7 @@ namespace RightMove.Db.Repositories
 
 				string newPriceString = $"{property.Price}|{price}";
 				string newDateString = $"{property.Date}|{DateTime.Now}";
-				
+
 				cnn.Execute(@"update Property set Price = @price, Date = @date where Id = @id", new
 				{
 					price = newPriceString,

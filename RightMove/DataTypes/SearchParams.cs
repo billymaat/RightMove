@@ -177,7 +177,7 @@ namespace RightMove.DataTypes
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the region location
 		/// </summary>
@@ -222,7 +222,7 @@ namespace RightMove.DataTypes
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the property type
 		/// </summary>
@@ -285,7 +285,7 @@ namespace RightMove.DataTypes
 		{
 			Type t = this.GetType();
 			PropertyInfo[] props = t.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-			return string.Join(System.Environment.NewLine, props.Select(prop => $"{prop.Name}: {prop.GetValue(this, null)}"));		
+			return string.Join(System.Environment.NewLine, props.Select(prop => $"{prop.Name}: {prop.GetValue(this, null)}"));
 		}
 
 		/// <summary>
@@ -303,7 +303,7 @@ namespace RightMove.DataTypes
 				{
 					throw new ArgumentException("invalid area code");
 				}
-				
+
 				options.Add(Option.LocationIdentifier, outcodeString);
 			}
 			else if (!string.IsNullOrEmpty(RegionLocation))
@@ -364,7 +364,7 @@ namespace RightMove.DataTypes
 
 			return UrlHelper.EncodeParameters(options);
 		}
-		
+
 		/// <summary>
 		/// Generate outcode option
 		/// </summary>

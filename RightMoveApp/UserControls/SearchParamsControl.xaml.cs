@@ -136,7 +136,7 @@ namespace RightMoveApp.UserControls
 				return RightMoveCodes.RegionTree;
 			}
 		}
-		
+
 		public SearchParams SearchParams
 		{
 			get
@@ -144,8 +144,8 @@ namespace RightMoveApp.UserControls
 				SearchParams searchParams = (SearchParams)GetValue(SearchParamsProperty);
 				return searchParams;
 			}
-			set 
-			{ 
+			set
+			{
 				SetValue(SearchParamsProperty, value);
 			}
 		}

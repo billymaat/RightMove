@@ -11,7 +11,7 @@ namespace RightMove.DataTypes
 		public RightMoveProperty()
 		{
 		}
-		
+
 		public RightMoveProperty(IHttpService httpService)
 		{
 			_httpService = httpService;
@@ -25,11 +25,11 @@ namespace RightMove.DataTypes
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the right move id
 		/// </summary>
-		public int RightMoveId 
+		public int RightMoveId
 		{
 			get;
 			set;
@@ -47,7 +47,7 @@ namespace RightMove.DataTypes
 			set;
 		}
 
-		public string Address 
+		public string Address
 		{
 			get;
 			set;
@@ -95,21 +95,21 @@ namespace RightMove.DataTypes
 				return $"{RightMoveUrls.RightMoveUrl}{Link}";
 			}
 		}
-		
-		
+
+
 		public string[] ImageUrl
 		{
 			get;
 			set;
 		}
-		
+
 		public byte[] GetImage(int index)
 		{
-			if (index >= ImageUrl.Length || index < 0) 
+			if (index >= ImageUrl.Length || index < 0)
 			{
 				return null;
 			}
-			
+
 			return _httpService.DownloadImage(ImageUrl[index]);
 		}
 

@@ -15,7 +15,7 @@ namespace RightMove.Db.Repositories
 		static SqLiteBaseRepository()
 		{
 			var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-			
+
 			DbFile = Path.Combine(path, "RightMoveDB.db");
 		}
 

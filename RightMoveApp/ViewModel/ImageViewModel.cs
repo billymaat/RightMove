@@ -18,7 +18,7 @@ namespace RightMoveApp.ViewModel
 	{
 		private RightMoveProperty _rightMoveProperty;
 		private int _selectedImageIndex = 0;
-		
+
 		public ImageViewModel()
 		{
 			// NextImageAsyncCommand = new AsyncCommand<object>(ExecuteNextImage, CanExecuteNextImage);
@@ -31,7 +31,7 @@ namespace RightMoveApp.ViewModel
 			{
 				return false;
 			}
-			
+
 			return _selectedImageIndex > 0;
 		}
 
@@ -47,7 +47,7 @@ namespace RightMoveApp.ViewModel
 			{
 				return false;
 			}
-			
+
 			return _selectedImageIndex != _rightMoveProperty.ImageUrl.Length - 1;
 		}
 
@@ -62,7 +62,7 @@ namespace RightMoveApp.ViewModel
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets or sets the selected <see cref="RightMoveViewItem"/>
 		/// </summary>
@@ -77,13 +77,13 @@ namespace RightMoveApp.ViewModel
 			get;
 			set;
 		}
-		
+
 		public ICommand PrevImageAsyncCommand
 		{
 			get;
 			set;
 		}
-		
+
 		public async Task ActivateAsync(object parameter)
 		{
 			if (parameter is int propertyId)
@@ -97,7 +97,7 @@ namespace RightMoveApp.ViewModel
 			await UpdateImage();
 			*/
 		}
-		
+
 		private async Task UpdateImage()
 		{
 			byte[] imageArr = _rightMoveProperty.GetImage(_selectedImageIndex);
@@ -105,11 +105,11 @@ namespace RightMoveApp.ViewModel
 			{
 				return;
 			}
-			
+
 			var bitmapImage = ToImage(imageArr);
 			DisplayedImage = bitmapImage;
 		}
-		
+
 		private BitmapImage ToImage(byte[] array)
 		{
 			using (var ms = new System.IO.MemoryStream(array))
@@ -124,7 +124,7 @@ namespace RightMoveApp.ViewModel
 		}
 
 		private BitmapImage _displayedImage;
-		
+
 		public BitmapImage DisplayedImage
 		{
 			get

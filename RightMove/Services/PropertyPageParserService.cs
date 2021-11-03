@@ -13,8 +13,8 @@ namespace RightMove.Services
 	{
 		private IHttpService _httpService;
 		private RightMovePropertyFactory _propertyFactory;
-		
-		public PropertyPageParser(IHttpService httpService, 
+
+		public PropertyPageParser(IHttpService httpService,
 			RightMovePropertyFactory propertyFactory)
 		{
 			_propertyFactory = propertyFactory;
@@ -26,19 +26,19 @@ namespace RightMove.Services
 			get;
 			set;
 		}
-		
+
 		public RightMoveProperty RightMoveProperty
 		{
 			get;
 			private set;
 		}
-		
+
 		public RightMovePropertyPage Page
 		{
 			get;
 			private set;
 		}
-		
+
 		public Rootobject Json
 		{
 			get;
@@ -64,7 +64,7 @@ namespace RightMove.Services
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 			}
-			
+
 			ParseRightMovePropertyPage(document);
 			return true;
 		}
@@ -72,7 +72,7 @@ namespace RightMove.Services
 		private void ParseRightMovePropertyPage(IDocument document)
 		{
 			Json = GetJson(document);
-			
+
 
 			if (Json is null)
 			{
@@ -84,7 +84,7 @@ namespace RightMove.Services
 			property.Address = $"{Json.propertyData.address.displayAddress}, {Json.propertyData.address.ukCountry}";
 			property.Desc = Json.propertyData.text.description;
 			property.Agent = Json.propertyData.customer.branchDisplayName;
-			
+
 
 			property.Price = RightMoveParserHelper.ParsePrice(Json.propertyData.prices.primaryPrice);
 			property.DateAdded = RightMoveParserHelper.ParseDate(Json.propertyData.listingHistory.listingUpdateReason);
@@ -92,11 +92,11 @@ namespace RightMove.Services
 
 			RightMoveProperty = property;
 		}
-		
+
 		private static Rootobject GetJson(IDocument document)
 		{
 			var script = document.All.FirstOrDefault(o => o.LocalName.Equals("script") &&
-			                                              o.Text().Trim().StartsWith("window.PAGE_MODEL"));
+														  o.Text().Trim().StartsWith("window.PAGE_MODEL"));
 
 			if (string.IsNullOrEmpty(script?.Text()))
 			{
@@ -117,7 +117,7 @@ namespace RightMove.Services
 				NullValueHandling = NullValueHandling.Ignore,
 				MissingMemberHandling = MissingMemberHandling.Ignore
 			};
-			
+
 			var json = JsonConvert.DeserializeObject<Rootobject>(jsonText, settings);
 			return json;
 		}

@@ -5,42 +5,42 @@ using System.Linq;
 
 namespace Utilities
 {
-    public class StringTrieSet : ICollection<string>
-    {
-        private readonly TrieSet<char> _trie;
+	public class StringTrieSet : ICollection<string>
+	{
+		private readonly TrieSet<char> _trie;
 
-        public StringTrieSet() : this(EqualityComparer<char>.Default)
-        {
-            
-        }
+		public StringTrieSet() : this(EqualityComparer<char>.Default)
+		{
 
-        public StringTrieSet(IEqualityComparer<char> comparer)
-        {
-            _trie = new TrieSet<char>(comparer);
-        }
+		}
 
-        public int Count => _trie.Count;
+		public StringTrieSet(IEqualityComparer<char> comparer)
+		{
+			_trie = new TrieSet<char>(comparer);
+		}
 
-        bool ICollection<string>.IsReadOnly => false;
+		public int Count => _trie.Count;
 
-        public IEnumerable<string> GetByPrefix(string prefix) =>
-            _trie.GetByPrefix(prefix).Select(c => new string(c.ToArray()));
+		bool ICollection<string>.IsReadOnly => false;
 
-        public IEnumerator<string> GetEnumerator() => _trie.Select(c => new string(c.ToArray())).GetEnumerator();
+		public IEnumerable<string> GetByPrefix(string prefix) =>
+			_trie.GetByPrefix(prefix).Select(c => new string(c.ToArray()));
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		public IEnumerator<string> GetEnumerator() => _trie.Select(c => new string(c.ToArray())).GetEnumerator();
 
-        public void Add(string item) => _trie.Add(item);
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public void AddRange(IEnumerable<string> item) => _trie.AddRange(item);
+		public void Add(string item) => _trie.Add(item);
 
-        public void Clear() => _trie.Clear();
+		public void AddRange(IEnumerable<string> item) => _trie.AddRange(item);
 
-        public bool Contains(string item) => _trie.Contains(item);
+		public void Clear() => _trie.Clear();
 
-        public void CopyTo(string[] array, int arrayIndex) =>
-            Array.Copy(_trie.Select(c => new string(c.ToArray())).ToArray(), 0, array, arrayIndex, Count);
+		public bool Contains(string item) => _trie.Contains(item);
 
-        public bool Remove(string item) => _trie.Remove(item);
-    }
+		public void CopyTo(string[] array, int arrayIndex) =>
+			Array.Copy(_trie.Select(c => new string(c.ToArray())).ToArray(), 0, array, arrayIndex, Count);
+
+		public bool Remove(string item) => _trie.Remove(item);
+	}
 }

@@ -44,7 +44,7 @@ namespace RightMoveConsole.Services
 					line = line.Trim();
 					if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
 					{
-						continue;					
+						continue;
 					}
 
 					locations.Add(line);

@@ -9,7 +9,7 @@ namespace RightMoveApp.Utilities
 	{
 		void HandleError(Exception ex);
 	}
-	
+
 	public static class TaskUtilities
 	{
 #pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void

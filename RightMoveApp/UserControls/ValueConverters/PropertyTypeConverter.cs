@@ -23,8 +23,8 @@ namespace RightMoveApp.UserControls.ValueConverters
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
 		{
 			_target = _target ^ _mask;
-			return new object[2] 
-				{ _target, _mask } ;
+			return new object[2]
+				{ _target, _mask };
 		}
 	}
 }

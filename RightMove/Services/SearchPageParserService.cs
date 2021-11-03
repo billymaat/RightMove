@@ -33,7 +33,7 @@ namespace RightMove.Services
 		private readonly RightMovePropertyFactory _propertyFactory;
 		private readonly IHttpService _httpService;
 		private readonly ILoggerService _logger;
-		
+
 		public SearchPageParserService(
 			IHttpService httpService,
 			ILoggerService logger,
@@ -147,7 +147,7 @@ namespace RightMove.Services
 				rightMoveItem.Link = link;
 				rightMoveItem.Price = price;
 				rightMoveItem.Featured = featured;
-				
+
 
 				rightMoveItems.Add(rightMoveItem);
 			}

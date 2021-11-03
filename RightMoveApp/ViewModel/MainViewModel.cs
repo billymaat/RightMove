@@ -30,7 +30,7 @@ namespace RightMoveApp.ViewModel
 
 		// The database service
 		private readonly IDatabaseService _dbService;
-		
+
 		private string _info;
 
 		private int _selectedImageIndex;
@@ -50,9 +50,9 @@ namespace RightMoveApp.ViewModel
 		private RightMoveParserServiceFactory _parserFactory;
 		private readonly Func<IPropertyPageParser> _propertyParserFactory;
 
-		public MainViewModel(IOptions<AppSettings> settings, 
-			RightMoveParserServiceFactory parserFactory, 
-			NavigationService navigationService, 
+		public MainViewModel(IOptions<AppSettings> settings,
+			RightMoveParserServiceFactory parserFactory,
+			NavigationService navigationService,
 			IDatabaseService dbService,
 			Func<IPropertyPageParser> propertyParserFactory)
 		{
@@ -81,7 +81,7 @@ namespace RightMoveApp.ViewModel
 		/// </summary>
 		public string Info
 		{
-			get =>_info;
+			get => _info;
 			set => Set(ref _info, value);
 		}
 
@@ -226,7 +226,7 @@ namespace RightMoveApp.ViewModel
 			get;
 			set;
 		}
-		
+
 		// Tried to get this AsyncCommand to work but it wouldn't
 		public ICommand UpdateImages
 		{
@@ -251,7 +251,7 @@ namespace RightMoveApp.ViewModel
 			get;
 			set;
 		}
-		
+
 		/// <summary>
 		/// Gets a value indicating whether to write to database
 		/// </summary>
@@ -298,12 +298,12 @@ namespace RightMoveApp.ViewModel
 				Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
 			}
 		}
-		
+
 		private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
 		{
 			_selectedImageIndex = 0;
 			IPropertyPageParser parser = _propertyParserFactory();
-			
+
 			await parser.ParseRightMovePropertyPageAsync(RightMoveSelectedItem.RightMoveId, cancellationToken);
 			if (cancellationToken.IsCancellationRequested)
 			{
@@ -335,12 +335,12 @@ namespace RightMoveApp.ViewModel
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 			}
-			
+
 			var bitmapImage = ImageHelper.ToImage(imageArr);
-			
+
 			// freeze as accessed from non UI thread
 			bitmapImage.Freeze();
-			
+
 			DisplayedImage = bitmapImage;
 		}
 
@@ -478,7 +478,7 @@ namespace RightMoveApp.ViewModel
 			IsSearching = false;
 			return parser.Results;
 		}
-		
+
 		/// <summary>
 		/// The can execute search command
 		/// </summary>
@@ -523,7 +523,7 @@ namespace RightMoveApp.ViewModel
 			try
 			{
 				CancellationToken cancellationToken = _tokenSource.Token;
-				Task.Run(async() => await UpdateFullSelectedItemAndImage(cancellationToken), cancellationToken);
+				Task.Run(async () => await UpdateFullSelectedItemAndImage(cancellationToken), cancellationToken);
 			}
 			catch (Exception ex)
 			{

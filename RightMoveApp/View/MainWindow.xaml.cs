@@ -50,7 +50,7 @@ namespace RightMoveApp
 			}
 
 			Sort(gridViewColumnHeader, dir);
-			_lastHeaderClicked = gridViewColumnHeader; 
+			_lastHeaderClicked = gridViewColumnHeader;
 			_lastDirection = dir;
 		}
 
@@ -68,7 +68,7 @@ namespace RightMoveApp
 			{
 				return;
 			}
-			
+
 			collectionView.SortDescriptions.Clear();
 			var sd = new SortDescription(bindingPath, dir);
 			collectionView.SortDescriptions.Add(sd);

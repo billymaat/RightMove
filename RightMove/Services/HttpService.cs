@@ -40,19 +40,19 @@ namespace RightMove.Services
 			var config = Configuration.Default.WithRequester(requester).WithDefaultLoader().WithDefaultCookies();
 			var context = BrowsingContext.New(config);
 
-			IDocument document= null;
-			
+			IDocument document = null;
+
 			try
 			{
 				document = await context.OpenAsync(url, cancellationToken).ConfigureAwait(false);
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
 
 			}
 			return document;
 		}
-				
+
 		public byte[] DownloadImage(string uri, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			using (WebClient client = new WebClient())
@@ -68,7 +68,7 @@ namespace RightMove.Services
 			using (WebClient client = new WebClient())
 			{
 				byte[] data = null;
-				client.DownloadDataCompleted += delegate(object sender, DownloadDataCompletedEventArgs e)
+				client.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
 				{
 					data = e.Result;
 				};

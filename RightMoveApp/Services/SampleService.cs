@@ -8,7 +8,7 @@ namespace RightMoveApp.Services
 	{
 		string GetCurrentDate();
 	}
-	
+
 	public class SampleService : ISampleService
 	{
 		public string GetCurrentDate() => DateTime.Now.ToLongDateString();

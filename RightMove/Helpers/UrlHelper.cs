@@ -13,7 +13,7 @@ namespace RightMove.Helpers
 		/// <returns>The encoded options as string</returns>
 		public static string EncodeParameters(Dictionary<string, string> options)
 		{
-			var optionsString = string.Join("&", options.Select(o => HttpUtility.UrlEncode((string) o.Key) + "=" + HttpUtility.UrlEncode((string) o.Value)));
+			var optionsString = string.Join("&", options.Select(o => HttpUtility.UrlEncode((string)o.Key) + "=" + HttpUtility.UrlEncode((string)o.Value)));
 
 			return optionsString;
 		}

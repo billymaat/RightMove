@@ -29,14 +29,14 @@ namespace RightMoveTests
 		{
 			Assert.Pass();
 		}
-		
+
 		[Test]
 		public void ParseSearchPage_Null()
 		{
 			RightMoveParserServiceFactory factory = CreateRightMoveParserServiceFactory();
 			Assert.That(() => factory.CreateInstance(null), Throws.ArgumentNullException);
 		}
-		
+
 		[Test]
 		public async Task ParseSearchPage()
 		{
@@ -112,7 +112,7 @@ namespace RightMoveTests
 		[Test]
 		public void ParsePage()
 		{
-			
+
 		}
 	}
 }

@@ -51,14 +51,14 @@ namespace RightMove.Services
 				}
 
 				var location = $"REGION^{i}";
-				
+
 				SearchParams searchParams = new SearchParams()
 				{
 					OutcodeLocation = location
 				};
 
 				Dictionary<string, string> options = new Dictionary<string, string>();
-				
+
 				options.Add("locationIdentifier", $"REGION^{i}");
 				var encodedOptions = UrlHelper.EncodeParameters(options);
 				string searchUrl = $"{RightMoveUrls.SearchUrl}?{encodedOptions}";

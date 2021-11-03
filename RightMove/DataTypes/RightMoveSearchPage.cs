@@ -40,7 +40,7 @@ namespace RightMove.DataTypes
 			get;
 			set;
 		}
-		
+
 		public string SearchUrl
 		{
 			get;

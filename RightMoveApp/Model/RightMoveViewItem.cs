@@ -87,7 +87,7 @@ namespace RightMoveApp.Model
 		{
 			get { return _item.Url; }
 		}
-		
+
 		public bool Featured
 		{
 			get

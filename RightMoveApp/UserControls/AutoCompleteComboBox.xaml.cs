@@ -95,7 +95,7 @@ namespace RightMoveApp.UserControls
 
 			// IEnumerable<string> results = ItemsSource.Where(o => o.ToLower().StartsWith(txtAuto.Text.ToLower()));
 
-			
+
 			IEnumerable<string> results = ItemsSource.GetByPrefix(txtAuto.Text);
 
 			if (!results.Any())
@@ -133,7 +133,7 @@ namespace RightMoveApp.UserControls
 				case Key.Enter:
 				case Key.Tab:
 					// Commit the selection
-				lstSuggestion.Visibility = Visibility.Collapsed;
+					lstSuggestion.Visibility = Visibility.Collapsed;
 					e.Handled = (e.Key == Key.Enter);
 					break;
 				case Key.Escape:

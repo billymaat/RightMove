@@ -8,9 +8,9 @@ using System.Text;
 
 namespace RightMove.Db.Services
 {
-    public class DatabaseService : IDatabaseService
-    {
-        private readonly IRightMovePropertyRepository _db;
+	public class DatabaseService : IDatabaseService
+	{
+		private readonly IRightMovePropertyRepository _db;
 
 		public DatabaseService(IRightMovePropertyRepository db)
 		{

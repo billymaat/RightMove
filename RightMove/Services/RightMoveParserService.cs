@@ -23,7 +23,7 @@ namespace RightMove.Services
 		/// <param name="httpService">the http service</param>
 		/// <param name="searchPageParseFactory">the <see cref="SearchPageParserServiceFactory"> service</param>
 		/// <param name="searchParams">the <see cref="SearchParams"/></param>
-		public RightMoveParserService(IHttpService httpService, 
+		public RightMoveParserService(IHttpService httpService,
 			SearchPageParserServiceFactory searchPageParseFactory,
 			ILoggerService logger,
 			SearchParams searchParams)
@@ -38,7 +38,7 @@ namespace RightMove.Services
 			}
 
 			SearchParams = searchParams;
-			
+
 			// construct the search url from the SearchParams
 			_searchUrl = $"{RightMoveUrls.SearchUrl}?{SearchParams.EncodeOptions()}";
 		}
@@ -83,22 +83,22 @@ namespace RightMove.Services
 			pageCount = GetPageCount(rightMoveFirstPageSearch, pageCount);
 
 			_logger?.WriteLine($"Page count: {pageCount}");
-			
+
 			// extract the items
 			var listOfTasks = ExtractRightMoveItems(pageCount);
 
 			RightMoveSearchItemCollection rightMoveItems = new RightMoveSearchItemCollection();
-			
+
 			// wait until we've got all the results, and then add them all to a list
 			await Task.WhenAll(listOfTasks).ConfigureAwait(false);
 			foreach (var task in listOfTasks)
 			{
 				if (task.Result != null && task.Result.RightMoveSearchItems.Count > 0)
-				{		
-					rightMoveItems.AddRangeUnique(task.Result.RightMoveSearchItems);				
+				{
+					rightMoveItems.AddRangeUnique(task.Result.RightMoveSearchItems);
 				}
 			}
-			
+
 			Results = rightMoveItems;
 
 			return true;
@@ -108,7 +108,7 @@ namespace RightMove.Services
 		{
 			if (rightMoveFirstPageSearch.ResultsCount >= 0)
 			{
-				pageCount = (int) Math.Ceiling(rightMoveFirstPageSearch.ResultsCount / 24.0);
+				pageCount = (int)Math.Ceiling(rightMoveFirstPageSearch.ResultsCount / 24.0);
 			}
 
 			// check the page count

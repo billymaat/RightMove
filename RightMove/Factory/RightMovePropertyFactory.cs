@@ -9,12 +9,12 @@ namespace RightMove.Factory
 	public class RightMovePropertyFactory
 	{
 		private IHttpService _httpService;
-		
+
 		public RightMovePropertyFactory(IHttpService httpService)
 		{
-			_httpService = httpService;	
+			_httpService = httpService;
 		}
-		
+
 		public RightMoveProperty Create()
 		{
 			return new RightMoveProperty(_httpService);

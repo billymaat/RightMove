@@ -23,7 +23,7 @@ namespace RightMove
 			get;
 			private set;
 		}
-		
+
 		public static Dictionary<string, int> RegionDictionary
 		{
 			get;
@@ -35,17 +35,17 @@ namespace RightMove
 			get;
 			set;
 		}
-		
+
 		static RightMoveCodes()
 		{
-			Action action = () => 
-			{ 
-			// load outcode dictionary
+			Action action = () =>
+			{
+				// load outcode dictionary
 				var outcodeJson = JsonConvert.DeserializeObject<dynamic>(Properties.Resources.Outcodes);
 				OutcodeDictionary = new Dictionary<string, int>();
 				foreach (var g in outcodeJson)
 				{
-					OutcodeDictionary.Add((string) g.outcode, (int) g.code);
+					OutcodeDictionary.Add((string)g.outcode, (int)g.code);
 				}
 
 				// load region dictionary

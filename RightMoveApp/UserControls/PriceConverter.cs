@@ -10,7 +10,7 @@ namespace RightMoveApp.UserControls
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			double price = (double) value;
+			double price = (double)value;
 
 			return price.ToString("C2");
 		}

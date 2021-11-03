@@ -20,7 +20,7 @@ namespace RightMoveApp.ViewModel.Commands
 				CommandManager.RequerySuggested -= value;
 			}
 		}
-		private readonly Action<object>  _executeMethod;
+		private readonly Action<object> _executeMethod;
 		private readonly Func<object, bool> _canExecuteMethod;
 
 		public RelayCommand(Action<object> executeMethod, Func<object, bool> canExecuteMethod)
@@ -43,7 +43,7 @@ namespace RightMoveApp.ViewModel.Commands
 				_executeMethod(parameter);
 			}
 		}
-		
+
 		public void RaiseCanExecuteChanged()
 		{
 			CommandManager.InvalidateRequerySuggested();

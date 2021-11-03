@@ -54,5 +54,5 @@ namespace RightMoveApp.Services
 
 			return window;
 		}
-    }
+	}
 }

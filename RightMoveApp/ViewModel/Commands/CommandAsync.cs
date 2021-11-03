@@ -18,7 +18,7 @@ namespace RightMoveApp.ViewModel.Commands
 		private bool _locked;
 
 		public CommandAsync(Func<T, CancellationToken, Task> executeTask) : this(executeTask, o => true)
-		{ 
+		{
 		}
 
 		public CommandAsync(Func<T, CancellationToken, Task> executeTask, Predicate<T> canExecute)
@@ -46,7 +46,7 @@ namespace RightMoveApp.ViewModel.Commands
 				_locked = true;
 
 				CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-				await _executeTask.Invoke((T) parameter, _cancellationTokenSource.Token);
+				await _executeTask.Invoke((T)parameter, _cancellationTokenSource.Token);
 			}
 			finally
 			{

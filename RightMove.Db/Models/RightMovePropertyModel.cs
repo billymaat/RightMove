@@ -27,19 +27,19 @@ namespace RightMove.Db.Models
 			get;
 			set;
 		}
-		
+
 		public int RightMoveId
 		{
 			get;
 			set;
 		}
-		
+
 		public string HouseInfo
 		{
 			get;
 			set;
 		}
-		
+
 		public string Address
 		{
 			get;
@@ -63,11 +63,11 @@ namespace RightMove.Db.Models
 			get;
 			set;
 		}
-		
+
 		public List<int> Prices => SplitIntegers(Price);
 
 		public List<string> DatesUpdated => SplitString(Date);
-		
+
 		private static List<string> SplitString(string s)
 		{
 			if (s is null)

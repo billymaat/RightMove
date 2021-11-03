@@ -45,7 +45,7 @@ namespace RightMoveConsole.Services
 		{
 			// for (int minPrice = 0; minPrice <= 3000000; minPrice += 10000) {
 			for (int j = 0; j < SearchParams.AllowedPrices.Count - 1; j++)
-			{	
+			{
 				SearchParams searchParams = new SearchParams()
 				{
 					RegionLocation = "Manchester, Greater Manchester",
@@ -129,7 +129,7 @@ namespace RightMoveConsole.Services
 				}
 			}
 		}
-		
+
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			_logger.LogDebug($"Starting with arguments: {string.Join(" ", Environment.GetCommandLineArgs())}");
