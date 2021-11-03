@@ -54,6 +54,7 @@
             <Grid Grid.Column="0" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <DataGrid x:Name="listView" 
@@ -111,10 +112,34 @@
                         <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Image Grid.Column="1" 
-                       Source="{Binding DisplayedImage}" 
-                       Width="100"
-                       Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
+                <Grid Grid.Column="2" 
+                      HorizontalAlignment="Stretch"
+                      MinWidth="200"
+                      Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" 
+                       Source="{Binding DisplayedImage}"/>
+                    <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="btnLeft"
+                                Grid.Column="0"
+                            Content="&lt;" 
+                            Padding="10"
+                            Command="{Binding PrevImageCommand}"/>
+                        <Button x:Name="btnRight"
+                                Grid.Column="1"
+                            Content=">" 
+                            Command="{Binding NextImageCommand}"
+                            Padding="10"/>
+                    </Grid>
+                </Grid>
             </Grid>
             <Label Grid.Column="0" Grid.Row="3" 
                 Content="{Binding Path=Info}"/>
