@@ -8,6 +8,8 @@ namespace RightMoveApp
 	{
 		public string StringSetting { get; set; }
 
+		public bool WriteToDb { get; set; }
+
 		public int IntegerSetting { get; set; }
 
 		public bool BooleanSetting { get; set; }

@@ -9,8 +9,9 @@ using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
 using RightMove.Db.Models;
 using RightMove.Db.Repositories;
+using RightMove.Db.Services;
 using RightMove.Factory;
-using static RightMoveConsole.Services.DatabaseService;
+using static RightMove.Db.Services.DatabaseService;
 
 namespace RightMoveConsole.Services
 {

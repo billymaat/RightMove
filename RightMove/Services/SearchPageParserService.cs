@@ -9,7 +9,7 @@ using RightMove.Factory;
 
 namespace RightMove.Services
 {
-	public class SearchPageParserService : ParserBase
+	public class SearchPageParserService
 	{
 		/// <summary>
 		/// Class of selectors

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RightMoveConsole.Services
+namespace RightMove.Db.Services
 {
     public class DatabaseService : IDatabaseService
     {
@@ -23,6 +23,11 @@ namespace RightMoveConsole.Services
 			Updated,
 			NotModified,
 			Failed
+		}
+
+		public List<RightMovePropertyModel> LoadProperties()
+		{
+			return _db.LoadProperties();
 		}
 
 		public (int, int) AddToDatabase(IList<RightMoveProperty> properties)

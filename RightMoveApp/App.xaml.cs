@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RightMove.Db.Repositories;
+using RightMove.Db.Services;
 using RightMove.Extensions;
 using RightMove.Factory;
 using RightMoveApp.Services;
@@ -24,13 +25,13 @@ namespace RightMoveApp
 	{
 		private readonly IHost host;
 		public static IServiceProvider ServiceProvider { get; private set; }
-		
+
 		public static class WindowKeys
 		{
 			public const string MainWindow = nameof(MainWindow);
 			public const string ImageWindow = nameof(ImageWindow);
 		}
-		
+
 		public App()
 		{
 			host = Host.CreateDefaultBuilder()

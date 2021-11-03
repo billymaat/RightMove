@@ -9,7 +9,7 @@ using RightMove.JsonObjects;
 
 namespace RightMove.Services
 {
-	public class PropertyPageParser : ParserBase
+	public class PropertyPageParser : IPropertyPageParser
 	{
 		private IHttpService _httpService;
 		private RightMovePropertyFactory _propertyFactory;
@@ -50,7 +50,7 @@ namespace RightMove.Services
 			return await ParseRightMovePropertyPageAsync(PropertyId, cancellationToken);
 		}
 
-		private async Task<bool> ParseRightMovePropertyPageAsync(int propertyId, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<bool> ParseRightMovePropertyPageAsync(int propertyId, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			string url = RightMoveUrls.GetPropertyUrl(propertyId);
 			IDocument document = await _httpService.GetDocument(url, cancellationToken);

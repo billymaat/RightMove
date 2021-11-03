@@ -29,7 +29,17 @@ namespace RightMove.Extensions
 				.AddTransient<PropertyPageParser>()
 				.AddTransient<RightMoveParserService>()
 				.AddTransient<SearchPageParserServiceFactory>()
-				.AddTransient<IActivator, ActivatorInjector>();
+				.AddTransient<IActivator, ActivatorInjector>()
+				.AddFactory<IPropertyPageParser, PropertyPageParser>();
+		}
+
+		public static void AddFactory<TService, TImplementation>(this IServiceCollection services)
+			where TService : class
+			where TImplementation : class, TService
+		{
+			services.AddTransient<TService, TImplementation>();
+			services.AddSingleton<Func<TService>>(x => () => x.GetService<TService>());
+			services.AddSingleton<IFactory<TService>, Factory<TService>>();
 		}
 	}
 }

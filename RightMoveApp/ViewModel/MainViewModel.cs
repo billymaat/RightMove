@@ -1,8 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
+using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
 using RightMove.Db.Models;
 using RightMove.Db.Repositories;
+using RightMove.Db.Services;
 using RightMove.Factory;
+using RightMove.Services;
 using RightMoveApp.Helpers;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
@@ -24,30 +27,45 @@ namespace RightMoveApp.ViewModel
 	{
 		// Services
 		private readonly NavigationService _navigationService;
-		private readonly IRightMovePropertyRepository _dbService;
+
+		// The database service
+		private readonly IDatabaseService _dbService;
 		
 		private string _info;
 
 		private int _selectedImageIndex;
 		private BitmapImage _displayedImage;
 		private RightMoveProperty _rightMovePropertyFullSelectedItem;
-		CancellationTokenSource _tokenSource = new CancellationTokenSource();
+
+		// cancellation token
+		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
+
+		// Time for selected item changed in data grid
 		private System.Timers.Timer _selectedItemChangedTimer;
+
+		// The right move model
 		private RightMoveModel _model;
-
+		private AppSettings _settings;
 		private RightMoveParserServiceFactory _parserFactory;
+		private readonly Func<IPropertyPageParser> _propertyParserFactory;
 
-		public MainViewModel(RightMoveParserServiceFactory parserFactory, NavigationService navigationService, IRightMovePropertyRepository dbService)
+		public MainViewModel(IOptions<AppSettings> settings, 
+			RightMoveParserServiceFactory parserFactory, 
+			NavigationService navigationService, 
+			IDatabaseService dbService,
+			Func<IPropertyPageParser> propertyParserFactory)
 		{
+			_settings = settings.Value;
 			_parserFactory = parserFactory;
 			_navigationService = navigationService;
 			_dbService = dbService;
-			
+			_propertyParserFactory = propertyParserFactory;
+
 			InitializeCommands();
 			InitializeTimers();
 
 			_model = new RightMoveModel();
-			
+
 			IsSearching = false;
 		}
 
@@ -229,6 +247,11 @@ namespace RightMoveApp.ViewModel
 			get;
 			set;
 		}
+		
+		/// <summary>
+		/// Gets a value indicating whether to write to database
+		/// </summary>
+		public bool WriteToDb => _settings.WriteToDb;
 
 		#endregion
 
@@ -274,27 +297,26 @@ namespace RightMoveApp.ViewModel
 		
 		private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
 		{
-			//_selectedImageIndex = 0;
-			//PropertyPageParser parser = _parserFactory.GetRequiredService<PropertyPageParser>();
-			//parser.PropertyId = RightMoveSelectedItem.RightMoveId;
+			_selectedImageIndex = 0;
+			IPropertyPageParser parser = _propertyParserFactory();
 			
-			//await parser.ParseRightMovePropertyPageAsync(cancellationToken);
-			//if (cancellationToken.IsCancellationRequested)
-			//{
-			//	cancellationToken.ThrowIfCancellationRequested();
-			//}
+			await parser.ParseRightMovePropertyPageAsync(RightMoveSelectedItem.RightMoveId, cancellationToken);
+			if (cancellationToken.IsCancellationRequested)
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+			}
 
-			//var dispatcher = Application.Current.Dispatcher;
+			var dispatcher = Application.Current.Dispatcher;
 
-			//Action setRightMoveProp = () => RightMovePropertyFullSelectedItem = parser.RightMoveProperty;
-			//if (dispatcher.CheckAccess())
-			//{
-			//	setRightMoveProp();
-			//}
-			//else
-			//{
-			//	dispatcher.Invoke(setRightMoveProp);
-			//}
+			Action setRightMoveProp = () => RightMovePropertyFullSelectedItem = parser.RightMoveProperty;
+			if (dispatcher.CheckAccess())
+			{
+				setRightMoveProp();
+			}
+			else
+			{
+				dispatcher.Invoke(setRightMoveProp);
+			}
 		}
 
 		private void UpdateImage(RightMoveProperty rightMoveProperty, int selectedIndex, CancellationToken cancellationToken)
@@ -399,7 +421,7 @@ namespace RightMoveApp.ViewModel
 		/// <returns>true if can execute, false otherwise</returns>
 		private bool CanExecuteUpdateImages(object arg)
 		{
-			return IsImagesVisible && RightMoveSelectedItem != null;
+			return RightMoveSelectedItem != null;
 		}
 
 		/// <summary>
@@ -443,7 +465,10 @@ namespace RightMoveApp.ViewModel
 
 			UpdateAveragePrice();
 
-			UpdateDatabase();
+			if (WriteToDb)
+			{
+				UpdateDatabase();
+			}
 
 			// add properties to DB
 			IsSearching = false;
@@ -483,31 +508,7 @@ namespace RightMoveApp.ViewModel
 
 		private void UpdateDatabase()
 		{
-			var dbProperties = _dbService.LoadProperties();
-			for (int i = 0; i < RightMoveList.Count; i++)
-			{
-				var property = RightMoveList[i];
-
-				if (property.RightMoveId == 114594365)
-				{
-
-				}
-				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
-
-				if (matchingProperty != null)
-				{
-					// if the price has changed, add the new price
-					if (matchingProperty.Prices.Last() != property.Price)
-					{
-						_dbService.AddPriceToProperty(matchingProperty.Id, property.Price);
-					}
-				}
-				else
-				{
-					// save a new record of the new property
-					_dbService.SaveProperty(new RightMovePropertyModel(property));
-				}
-			}
+			(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _dbService.AddToDatabase(RightMoveList);
 		}
 
 		private void SelectedItemChanged_Elapsed(object sender, ElapsedEventArgs e)
