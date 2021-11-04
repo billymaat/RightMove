@@ -18,7 +18,7 @@ namespace RightMove.Services
 		/// <returns>Returns the <see cref="IDocument"/></returns>
 		Task<IDocument> GetDocument(string url, CancellationToken cancellationToken = default(CancellationToken));
 
-		byte[] DownloadImage(string uri, CancellationToken cancellationToken = default(CancellationToken));
+		byte[] DownloadImage(string uri);
 		Task<byte[]> DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken));
 	}
 
@@ -46,49 +46,43 @@ namespace RightMove.Services
 			{
 				document = await context.OpenAsync(url, cancellationToken).ConfigureAwait(false);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-
+				document = null;
 			}
+
 			return document;
 		}
 
-		public byte[] DownloadImage(string uri, CancellationToken cancellationToken = default(CancellationToken))
+		/// <summary>
+		/// Download image
+		/// </summary>
+		/// <param name="uri">the uri as string</param>
+		/// <returns>the byte[]</returns>
+		public byte[] DownloadImage(string uri)
 		{
 			using (WebClient client = new WebClient())
 			{
-				// client.DownloadDataAsync(uri, cancellationToken);
 				byte[] pic = client.DownloadData(uri);
 				return pic;
 			}
 		}
 
-		//public Task<byte[]> DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken))
-		//{
-		//	using (WebClient client = new WebClient())
-		//	{
-		//		byte[] data = null;
-		//		client.DownloadDataCompleted += async delegate (object sender, DownloadDataCompletedEventArgs e)
-		//		{
-		//			data = e.Result;
-		//		};
-
-		//		client.DownloadDataAsync(new Uri(uri), cancellationToken);
-		//		while (client.IsBusy)
-		//		{
-		//			Task.Delay(100, cancellationToken);
-		//		}
-
-		//		return data;
-		//	}
-		//}
-
+		/// <summary>
+		/// Download image async
+		/// </summary>
+		/// <param name="uri">the uri as string</param>
+		/// <param name="cancellationToken">the cancellation token</param>
+		/// <returns>the byte[]</returns>
 		public async Task<byte[]> DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			using (WebClient client = new WebClient())
 			{
-				byte[] data = await client.DownloadDataTaskAsync(new Uri(uri));
-				return data;
+				using (cancellationToken.Register(client.CancelAsync))
+				{
+					byte[] data = await client.DownloadDataTaskAsync(new Uri(uri));
+					return data;
+				}
 			}
 		}
 	}
