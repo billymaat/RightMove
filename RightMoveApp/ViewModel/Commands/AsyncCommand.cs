@@ -14,15 +14,17 @@ namespace RightMoveApp.ViewModel.Commands
 	{
 		private readonly Func<Task<TResult>> _command;
 		private NotifyTaskCompletion<TResult> _execution;
+		private readonly Func<bool> _canExecute;
 
-		public AsyncCommand(Func<Task<TResult>> command)
+		public AsyncCommand(Func<Task<TResult>> command, Func<bool> canExecute = null)
 		{
 			_command = command;
+			_canExecute = canExecute;
 		}
 
 		public override bool CanExecute(object parameter)
 		{
-			return true;
+			return _canExecute != null ? _canExecute() : true;
 		}
 
 		public override Task ExecuteAsync(object parameter)
@@ -57,9 +59,9 @@ namespace RightMoveApp.ViewModel.Commands
 			return new AsyncCommand<object>(async () => { await command(); return null; });
 		}
 
-		public static AsyncCommand<TResult> Create<TResult>(Func<Task<TResult>> command)
+		public static AsyncCommand<TResult> Create<TResult>(Func<Task<TResult>> command, Func<bool> canExecute = null)
 		{
-			return new AsyncCommand<TResult>(command);
+			return new AsyncCommand<TResult>(command, canExecute);
 		}
 	}
 }

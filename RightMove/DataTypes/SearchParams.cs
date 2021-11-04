@@ -288,6 +288,17 @@ namespace RightMove.DataTypes
 			return string.Join(System.Environment.NewLine, props.Select(prop => $"{prop.Name}: {prop.GetValue(this, null)}"));
 		}
 
+		public bool IsValid()
+		{
+			if (string.IsNullOrEmpty(OutcodeLocation) &&
+				string.IsNullOrEmpty(RegionLocation))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		/// <summary>
 		/// Generates the options string
 		/// </summary>

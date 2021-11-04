@@ -358,7 +358,7 @@ namespace RightMoveApp.ViewModel
 		private void InitializeCommands()
 		{
 			// SearchAsyncCommand = new AsyncCommand<object>(() => ExecuteSearchAsync());// , CanExecuteSearch);
-			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync());
+			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync(), () => CanExecuteSearch(null));
 			// SearchAsyncCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
 			// LoadImageWindow = new AsyncCommand<object>(ExecuteLoadImageWindowAsync);//, CanExecuteLoadImageWindow);
@@ -486,7 +486,7 @@ namespace RightMoveApp.ViewModel
 		/// <returns>true if can execute, false otherwise</returns>
 		private bool CanExecuteSearch(object parameter)
 		{
-			return true;
+			return SearchParams.IsValid();
 		}
 
 		#endregion
