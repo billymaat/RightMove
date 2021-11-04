@@ -100,7 +100,7 @@ namespace RightMoveApp.ViewModel
 
 		private async Task UpdateImage()
 		{
-			byte[] imageArr = _rightMoveProperty.GetImage(_selectedImageIndex);
+			byte[] imageArr = await _rightMoveProperty.GetImage(_selectedImageIndex);
 			if (imageArr is null)
 			{
 				return;

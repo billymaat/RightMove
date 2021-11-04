@@ -19,7 +19,7 @@ namespace RightMove.Services
 		Task<IDocument> GetDocument(string url, CancellationToken cancellationToken = default(CancellationToken));
 
 		byte[] DownloadImage(string uri, CancellationToken cancellationToken = default(CancellationToken));
-		byte[] DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken));
+		Task<byte[]> DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken));
 	}
 
 	public class HttpService : IHttpService
@@ -63,22 +63,31 @@ namespace RightMove.Services
 			}
 		}
 
-		public byte[] DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken))
+		//public Task<byte[]> DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken))
+		//{
+		//	using (WebClient client = new WebClient())
+		//	{
+		//		byte[] data = null;
+		//		client.DownloadDataCompleted += async delegate (object sender, DownloadDataCompletedEventArgs e)
+		//		{
+		//			data = e.Result;
+		//		};
+
+		//		client.DownloadDataAsync(new Uri(uri), cancellationToken);
+		//		while (client.IsBusy)
+		//		{
+		//			Task.Delay(100, cancellationToken);
+		//		}
+
+		//		return data;
+		//	}
+		//}
+
+		public async Task<byte[]> DownloadImageAsync(string uri, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			using (WebClient client = new WebClient())
 			{
-				byte[] data = null;
-				client.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
-				{
-					data = e.Result;
-				};
-
-				client.DownloadDataAsync(new Uri(uri), cancellationToken);
-				while (client.IsBusy)
-				{
-					Task.Delay(100, cancellationToken);
-				}
-
+				byte[] data = await client.DownloadDataTaskAsync(new Uri(uri));
 				return data;
 			}
 		}

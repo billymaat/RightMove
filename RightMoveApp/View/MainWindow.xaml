@@ -118,7 +118,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Image Grid.Row="0" 
-                    Source="{Binding DisplayedImage}"/>
+                    Source="{Binding DisplayedImage}" 
+                    Visibility="{Binding LoadingImage, Converter={StaticResource InverseBooleanToVisiblityConverter}}"/>
+                <controls:BusySpinner Grid.Row="0"
+                                      Visibility="{Binding LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
                 <Grid Grid.Row="1" HorizontalAlignment="Stretch">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Button}">

@@ -8,6 +8,11 @@
         <ResourceDictionary>
             <converters:BooleanToReverseConverter x:Key="BooleanToReverseConverter"/>
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:ValueConverterGroup x:Key="InverseBooleanToVisiblityConverter">
+                <converters:BooleanToReverseConverter/>
+                <converters:BooleanToVisibilityConverter/>
+            </converters:ValueConverterGroup>
             <vm:ViewModelLocator
                 xmlns:vm="clr-namespace:RightMoveApp.ViewModel"
                 x:Key="Locator"/>

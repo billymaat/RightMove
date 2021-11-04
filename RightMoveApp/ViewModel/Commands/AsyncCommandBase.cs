@@ -23,7 +23,7 @@ namespace RightMoveApp.ViewModel.Commands
 			remove { CommandManager.RequerySuggested -= value; }
 		}
 
-		protected void RaiseCanExecuteChanged()
+		public void RaiseCanExecuteChanged()
 		{
 			CommandManager.InvalidateRequerySuggested();
 		}

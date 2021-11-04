@@ -237,7 +237,7 @@ namespace RightMoveApp.ViewModel
 		/// <summary>
 		/// Gets or sets the NextImageCommand
 		/// </summary>
-		public RelayCommand NextImageCommand
+		public IAsyncCommand NextImageCommand
 		{
 			get;
 			set;
@@ -246,7 +246,7 @@ namespace RightMoveApp.ViewModel
 		/// <summary>
 		/// Gets or sets the PrevImageCommand
 		/// </summary>
-		public RelayCommand PrevImageCommand
+		public IAsyncCommand PrevImageCommand
 		{
 			get;
 			set;
@@ -284,14 +284,15 @@ namespace RightMoveApp.ViewModel
 		private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
 		{
 			await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
-			UpdateImage(_selectedImageIndex, cancellationToken);
+			await UpdateImage(_selectedImageIndex, cancellationToken);
+			LoadingImage = false;
 		}
 
-		private void UpdateImage(int selectedIndex, CancellationToken cancellationToken)
+		private async Task UpdateImage(int selectedIndex, CancellationToken cancellationToken)
 		{
 			try
 			{
-				UpdateImage(RightMovePropertyFullSelectedItem, selectedIndex, cancellationToken);
+				await UpdateImage(RightMovePropertyFullSelectedItem, selectedIndex, cancellationToken);
 			}
 			catch (OperationCanceledException e)
 			{
@@ -323,12 +324,12 @@ namespace RightMoveApp.ViewModel
 			}
 		}
 
-		private void UpdateImage(RightMoveProperty rightMoveProperty, int selectedIndex, CancellationToken cancellationToken)
+		private async Task<BitmapImage> UpdateImage(RightMoveProperty rightMoveProperty, int selectedIndex, CancellationToken cancellationToken)
 		{
-			byte[] imageArr = rightMoveProperty.GetImage(selectedIndex);
+			byte[] imageArr = await rightMoveProperty.GetImage(selectedIndex);
 			if (imageArr is null)
 			{
-				return;
+				return null;
 			}
 
 			if (cancellationToken.IsCancellationRequested)
@@ -342,6 +343,8 @@ namespace RightMoveApp.ViewModel
 			bitmapImage.Freeze();
 
 			DisplayedImage = bitmapImage;
+
+			return bitmapImage;
 		}
 
 		#endregion
@@ -364,8 +367,10 @@ namespace RightMoveApp.ViewModel
 			// LoadImageWindow = new AsyncCommand<object>(ExecuteLoadImageWindowAsync);//, CanExecuteLoadImageWindow);
 			SearchParams = new SearchParams();
 			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
-			PrevImageCommand = new RelayCommand(ExecuteUpdatePrevImageAsync, CanExecuteUpdatePrevImage);
-			NextImageCommand = new RelayCommand(ExecuteUpdateNextImageAsync, CanExecuteUpdateNextImage);
+			//PrevImageCommand = new RelayCommand(ExecuteUpdatePrevImageAsync, CanExecuteUpdatePrevImage);
+			//NextImageCommand = new RelayCommand(ExecuteUpdateNextImageAsync, CanExecuteUpdateNextImage);
+			PrevImageCommand = AsyncCommand.Create(() => ExecuteUpdatePrevImageAsync(null), () => CanExecuteUpdatePrevImage(null));
+			NextImageCommand = AsyncCommand.Create(() => ExecuteUpdateNextImageAsync(null), () => CanExecuteUpdateNextImage(null));
 		}
 
 		#region Command functions
@@ -380,12 +385,13 @@ namespace RightMoveApp.ViewModel
 			return RightMovePropertyFullSelectedItem != null && _selectedImageIndex != RightMovePropertyFullSelectedItem.ImageUrl.Length - 1;
 		}
 
-		private void ExecuteUpdateNextImageAsync(object arg1)
+		private async Task<BitmapImage> ExecuteUpdateNextImageAsync(object arg1)
 		{
 			_selectedImageIndex++;
 			CancellationTokenSource tokenSource = new CancellationTokenSource();
 			var token = tokenSource.Token;
-			UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
+			var bitmap = await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
+			return bitmap;
 		}
 
 		private bool CanExecuteUpdatePrevImage(object obj)
@@ -398,12 +404,13 @@ namespace RightMoveApp.ViewModel
 			return _selectedImageIndex > 0;
 		}
 
-		private void ExecuteUpdatePrevImageAsync(object arg1)
+		private async Task<BitmapImage> ExecuteUpdatePrevImageAsync(object arg1)
 		{
 			_selectedImageIndex--;
 			CancellationTokenSource tokenSource = new CancellationTokenSource();
 			var token = tokenSource.Token;
-			UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
+			var bitmap = await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
+			return bitmap;
 		}
 
 		private void ExecuteUpdateImages(object arg)
@@ -416,6 +423,7 @@ namespace RightMoveApp.ViewModel
 			}
 
 			_selectedItemChangedTimer.Start();
+			LoadingImage = true;
 		}
 
 		/// <summary>
@@ -528,6 +536,17 @@ namespace RightMoveApp.ViewModel
 			catch (Exception ex)
 			{
 				System.Diagnostics.Debug.WriteLine("Operation exception");
+			}
+		}
+
+		private bool _loadingImage;
+
+		public bool LoadingImage
+		{
+			get => _loadingImage;
+			set
+			{
+				Set(ref _loadingImage, value);
 			}
 		}
 	}
