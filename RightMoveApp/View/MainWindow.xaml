@@ -46,7 +46,10 @@
 
             </controls:SearchParamsControl>
         </GroupBox>
-        <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" Content="Search" Command="{Binding SearchAsyncCommand}"/>
+        <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" 
+                Content="Search" 
+                IsDefault="True"
+                Command="{Binding SearchAsyncCommand}"/>
         <Grid Grid.Column="0" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

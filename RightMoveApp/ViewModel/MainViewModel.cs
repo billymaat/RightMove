@@ -31,12 +31,14 @@ namespace RightMoveApp.ViewModel
 		// The database service
 		private readonly IDatabaseService _dbService;
 
-		private string _info;
-
 		private int _selectedImageIndex;
+
+		// Backing fields
+		private string _info;
 		private BitmapImage _displayedImage;
 		private RightMoveProperty _rightMovePropertyFullSelectedItem;
 		private RightMoveProperty _rightMoveSelectedItem;
+		private bool _loadingImage;
 
 		// cancellation token
 		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
@@ -175,6 +177,15 @@ namespace RightMoveApp.ViewModel
 				var combined = dates.Zip(prices, (d, p) => $"{DateTime.Parse(d).Date.ToString("dd/MM/yyyy")} : £{p}");
 				var priceString = string.Join("\n", combined);
 				return priceString;
+			}
+		}
+
+		public bool LoadingImage
+		{
+			get => _loadingImage;
+			set
+			{
+				Set(ref _loadingImage, value);
 			}
 		}
 
@@ -525,7 +536,6 @@ namespace RightMoveApp.ViewModel
 
 		private void SelectedItemChanged_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine("Started running");
 			_selectedItemChangedTimer.Stop();
 
 			try
@@ -536,17 +546,6 @@ namespace RightMoveApp.ViewModel
 			catch (Exception ex)
 			{
 				System.Diagnostics.Debug.WriteLine("Operation exception");
-			}
-		}
-
-		private bool _loadingImage;
-
-		public bool LoadingImage
-		{
-			get => _loadingImage;
-			set
-			{
-				Set(ref _loadingImage, value);
 			}
 		}
 	}
