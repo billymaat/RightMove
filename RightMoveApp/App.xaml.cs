@@ -13,6 +13,7 @@ using RightMove.Db.Repositories;
 using RightMove.Db.Services;
 using RightMove.Extensions;
 using RightMove.Factory;
+using RightMoveApp.Model;
 using RightMoveApp.Services;
 using RightMoveApp.ViewModel;
 
@@ -65,6 +66,8 @@ namespace RightMoveApp
 
 			// register RightMoveLibrary
 			services.RegisterNew();
+
+			services.AddSingleton<RightMoveModel>();
 
 			// ...
 			// Register all ViewModels

@@ -12,6 +12,7 @@ using RightMoveApp.Services;
 using RightMoveApp.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -36,8 +37,6 @@ namespace RightMoveApp.ViewModel
 		// Backing fields
 		private string _info;
 		private BitmapImage _displayedImage;
-		private RightMoveProperty _rightMovePropertyFullSelectedItem;
-		private RightMoveProperty _rightMoveSelectedItem;
 		private bool _loadingImage;
 		private string _imageIndexView;
 
@@ -48,12 +47,13 @@ namespace RightMoveApp.ViewModel
 		private System.Timers.Timer _selectedItemChangedTimer;
 
 		// The right move model
-		private RightMoveModel _model;
-		private AppSettings _settings;
-		private RightMoveParserServiceFactory _parserFactory;
+		private readonly RightMoveModel _rightMoveModel;
+		private readonly AppSettings _settings;
+		private readonly RightMoveParserServiceFactory _parserFactory;
 		private readonly Func<IPropertyPageParser> _propertyParserFactory;
 
 		public MainViewModel(IOptions<AppSettings> settings,
+			RightMoveModel rightMoveModel,
 			RightMoveParserServiceFactory parserFactory,
 			NavigationService navigationService,
 			IDatabaseService dbService,
@@ -68,9 +68,21 @@ namespace RightMoveApp.ViewModel
 			InitializeCommands();
 			InitializeTimers();
 
-			_model = new RightMoveModel();
-
+			_rightMoveModel = rightMoveModel;
+			_rightMoveModel.PropertyChanged += RightMoveModel_PropertyChanged;
 			IsSearching = false;
+		}
+
+		private void RightMoveModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyItems))
+			{
+				RaisePropertyChanged(nameof(RightMoveList));
+			}
+			else if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyFullSelectedItem))
+			{
+				RaisePropertyChanged(nameof(RightMovePropertyFullSelectedItem));
+			}
 		}
 
 		public bool IsImagesVisible
@@ -93,39 +105,22 @@ namespace RightMoveApp.ViewModel
 		/// </summary>
 		public RightMoveSearchItemCollection RightMoveList
 		{
-			get => _model.RightMovePropertyItems;
-			set
-			{
-				if (_model.RightMovePropertyItems != value)
-				{
-					_model.RightMovePropertyItems = value;
-					RaisePropertyChanged();
-				}
-			}
+			get => _rightMoveModel.RightMovePropertyItems;
 		}
 
+		private RightMoveProperty _rightMoveSelectedItem;
 		/// <summary>
 		/// Gets or sets the selected <see cref="RightMoveViewItem"/>
 		/// </summary>
 		public RightMoveProperty RightMoveSelectedItem
 		{
 			get => _rightMoveSelectedItem;
-			set
-			{
-				Set(ref _rightMoveSelectedItem, value);
-			}
+			set => Set(ref _rightMoveSelectedItem, value);
 		}
 
 		public RightMoveProperty RightMovePropertyFullSelectedItem
 		{
-			get => _rightMovePropertyFullSelectedItem;
-			set
-			{
-				Set(ref _rightMovePropertyFullSelectedItem, value);
-				PrevImageCommand.RaiseCanExecuteChanged();
-				NextImageCommand.RaiseCanExecuteChanged();
-				UpdateImageIndexView();
-			}
+			get => _rightMoveModel.RightMovePropertyFullSelectedItem;
 		}
 
 		public List<int> Prices
@@ -273,11 +268,6 @@ namespace RightMoveApp.ViewModel
 			set;
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether to write to database
-		/// </summary>
-		public bool WriteToDb => _settings.WriteToDb;
-
 		#endregion
 
 		#region Command methods
@@ -302,73 +292,59 @@ namespace RightMoveApp.ViewModel
 			return RightMoveSelectedItem != null;
 		}
 
+		#endregion
+
 		private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
 		{
 			await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
-			await UpdateImage(_selectedImageIndex, cancellationToken);
+			await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, cancellationToken);
 			LoadingImage = false;
-		}
-
-		private async Task UpdateImage(int selectedIndex, CancellationToken cancellationToken)
-		{
-			try
-			{
-				await UpdateImage(RightMovePropertyFullSelectedItem, selectedIndex, cancellationToken);
-			}
-			catch (OperationCanceledException e)
-			{
-				Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
-			}
 		}
 
 		private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
 		{
 			_selectedImageIndex = 0;
-			IPropertyPageParser parser = _propertyParserFactory();
 
-			await parser.ParseRightMovePropertyPageAsync(RightMoveSelectedItem.RightMoveId, cancellationToken);
-			if (cancellationToken.IsCancellationRequested)
-			{
-				cancellationToken.ThrowIfCancellationRequested();
-			}
+			// update the right move full selected item
+			await _rightMoveModel.GetFullRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
 
-			var dispatcher = Application.Current.Dispatcher;
-
-			Action setRightMoveProp = () => RightMovePropertyFullSelectedItem = parser.RightMoveProperty;
-			if (dispatcher.CheckAccess())
-			{
-				setRightMoveProp();
-			}
-			else
-			{
-				dispatcher.Invoke(setRightMoveProp);
-			}
+			// refresh the can execute of image commands
+			PrevImageCommand.RaiseCanExecuteChanged();
+			NextImageCommand.RaiseCanExecuteChanged();
 		}
 
 		private async Task<BitmapImage> UpdateImage(RightMoveProperty rightMoveProperty, int selectedIndex, CancellationToken cancellationToken)
 		{
-			byte[] imageArr = await rightMoveProperty.GetImage(selectedIndex);
-			if (imageArr is null)
+			try
 			{
+				byte[] imageArr = await rightMoveProperty.GetImage(selectedIndex);
+				if (imageArr is null)
+				{
+					return null;
+				}
+
+				if (cancellationToken.IsCancellationRequested)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+				}
+
+				var bitmapImage = ImageHelper.ToImage(imageArr);
+
+				// freeze as accessed from non UI thread
+				bitmapImage.Freeze();
+
+				DisplayedImage = bitmapImage;
+
+				// update the image view
+				UpdateImageIndexView();
+				return bitmapImage;
+			}
+			catch (OperationCanceledException e)
+			{
+				Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
 				return null;
 			}
-
-			if (cancellationToken.IsCancellationRequested)
-			{
-				cancellationToken.ThrowIfCancellationRequested();
-			}
-
-			var bitmapImage = ImageHelper.ToImage(imageArr);
-
-			// freeze as accessed from non UI thread
-			bitmapImage.Freeze();
-
-			DisplayedImage = bitmapImage;
-
-			return bitmapImage;
 		}
-
-		#endregion
 
 		private void InitializeTimers()
 		{
@@ -381,15 +357,10 @@ namespace RightMoveApp.ViewModel
 		/// </summary>
 		private void InitializeCommands()
 		{
-			// SearchAsyncCommand = new AsyncCommand<object>(() => ExecuteSearchAsync());// , CanExecuteSearch);
 			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync(), () => CanExecuteSearch(null));
-			// SearchAsyncCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
-			// LoadImageWindow = new AsyncCommand<object>(ExecuteLoadImageWindowAsync);//, CanExecuteLoadImageWindow);
 			SearchParams = new SearchParams();
 			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
-			//PrevImageCommand = new RelayCommand(ExecuteUpdatePrevImageAsync, CanExecuteUpdatePrevImage);
-			//NextImageCommand = new RelayCommand(ExecuteUpdateNextImageAsync, CanExecuteUpdateNextImage);
 			PrevImageCommand = AsyncCommand.Create(() => ExecuteUpdatePrevImageAsync(null), () => CanExecuteUpdatePrevImage(null));
 			NextImageCommand = AsyncCommand.Create(() => ExecuteUpdateNextImageAsync(null), () => CanExecuteUpdateNextImage(null));
 		}
@@ -492,20 +463,13 @@ namespace RightMoveApp.ViewModel
 
 			// create a copy if search params in case its changed during search
 			SearchParams searchParams = new SearchParams(SearchParams);
-			var parser = _parserFactory.CreateInstance(searchParams);
-			await parser.SearchAsync();
-			RightMoveList = parser.Results;
+			await _rightMoveModel.GetRightMoveItems(searchParams);
 
 			UpdateAveragePrice();
 
-			if (WriteToDb)
-			{
-				UpdateDatabase();
-			}
-
 			// add properties to DB
 			IsSearching = false;
-			return parser.Results;
+			return _rightMoveModel.RightMovePropertyItems;
 		}
 
 		/// <summary>
@@ -539,11 +503,6 @@ namespace RightMoveApp.ViewModel
 			Info = info;
 		}
 
-		private void UpdateDatabase()
-		{
-			(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _dbService.AddToDatabase(RightMoveList);
-		}
-
 		private void UpdateImageIndexView()
 		{
 			if (_selectedImageIndex < 0 || !HasImages)
@@ -565,7 +524,7 @@ namespace RightMoveApp.ViewModel
 				CancellationToken cancellationToken = _tokenSource.Token;
 				Task.Run(async () => await UpdateFullSelectedItemAndImage(cancellationToken), cancellationToken);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				System.Diagnostics.Debug.WriteLine("Operation exception");
 			}
