@@ -39,6 +39,7 @@ namespace RightMoveApp.ViewModel
 		private RightMoveProperty _rightMovePropertyFullSelectedItem;
 		private RightMoveProperty _rightMoveSelectedItem;
 		private bool _loadingImage;
+		private string _imageIndexView;
 
 		// cancellation token
 		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
@@ -123,6 +124,7 @@ namespace RightMoveApp.ViewModel
 				Set(ref _rightMovePropertyFullSelectedItem, value);
 				PrevImageCommand.RaiseCanExecuteChanged();
 				NextImageCommand.RaiseCanExecuteChanged();
+				UpdateImageIndexView();
 			}
 		}
 
@@ -183,10 +185,7 @@ namespace RightMoveApp.ViewModel
 		public bool LoadingImage
 		{
 			get => _loadingImage;
-			set
-			{
-				Set(ref _loadingImage, value);
-			}
+			set => Set(ref _loadingImage, value);
 		}
 
 		/// <summary>
@@ -211,6 +210,17 @@ namespace RightMoveApp.ViewModel
 		/// Gets or sets a value indicating whether searching is occurring
 		/// </summary>
 		public bool IsSearching { get; set; }
+
+		/// <summary>
+		/// Gets a value indicating whether selected item has images available
+		/// </summary>
+		public bool HasImages => RightMovePropertyFullSelectedItem != null && RightMovePropertyFullSelectedItem.ImageUrl.Length > 0;
+
+		public string ImageIndexView
+		{
+			get => _imageIndexView;
+			set => Set(ref _imageIndexView, value);
+		}
 
 		#region Commands
 
@@ -532,6 +542,18 @@ namespace RightMoveApp.ViewModel
 		private void UpdateDatabase()
 		{
 			(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _dbService.AddToDatabase(RightMoveList);
+		}
+
+		private void UpdateImageIndexView()
+		{
+			if (_selectedImageIndex < 0 || !HasImages)
+			{
+				ImageIndexView = null;
+			}
+			else
+			{
+				ImageIndexView = $"Images: {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
+			}
 		}
 
 		private void SelectedItemChanged_Elapsed(object sender, ElapsedEventArgs e)

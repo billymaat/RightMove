@@ -119,13 +119,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Image Grid.Row="0" 
                     Source="{Binding DisplayedImage}" 
                     Visibility="{Binding LoadingImage, Converter={StaticResource InverseBooleanToVisiblityConverter}}"/>
                 <controls:BusySpinner Grid.Row="0"
                                       Visibility="{Binding LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-
                 <Grid Grid.Row="1" HorizontalAlignment="Stretch">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Button}">
@@ -159,6 +159,11 @@
                         Command="{Binding NextImageCommand}"
                         Padding="10"/>
                 </Grid>
+                <TextBlock Grid.Row="2" Visibility="{Binding ImageIndexView, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock.Text>
+                        <Binding Path="ImageIndexView"/>
+                    </TextBlock.Text>
+                </TextBlock>            
             </Grid>
         </Grid>
         <Label Grid.Column="0" Grid.Row="3" 
