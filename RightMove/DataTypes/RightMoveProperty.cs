@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using RightMove.Services;
 
@@ -104,14 +105,14 @@ namespace RightMove.DataTypes
 			set;
 		}
 
-		public async Task<byte[]> GetImage(int index)
+		public async Task<byte[]> GetImage(int index, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (index >= ImageUrl.Length || index < 0)
 			{
 				return null;
 			}
 
-			return await _httpService.DownloadImageAsync(ImageUrl[index]);
+			return await _httpService.DownloadImageAsync(ImageUrl[index], cancellationToken);
 		}
 
 		/// <summary>

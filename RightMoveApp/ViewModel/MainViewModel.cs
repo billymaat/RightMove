@@ -380,8 +380,10 @@ namespace RightMoveApp.ViewModel
 		private async Task<BitmapImage> ExecuteUpdateNextImageAsync(object arg1)
 		{
 			_selectedImageIndex++;
-			CancellationTokenSource tokenSource = new CancellationTokenSource();
-			var token = tokenSource.Token;
+			_tokenSource.Cancel();
+
+			_tokenSource = new CancellationTokenSource();
+			var token = _tokenSource.Token;
 			var bitmap = await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
 			return bitmap;
 		}
@@ -399,8 +401,10 @@ namespace RightMoveApp.ViewModel
 		private async Task<BitmapImage> ExecuteUpdatePrevImageAsync(object arg1)
 		{
 			_selectedImageIndex--;
-			CancellationTokenSource tokenSource = new CancellationTokenSource();
-			var token = tokenSource.Token;
+			_tokenSource.Cancel();
+			_tokenSource = new CancellationTokenSource();
+
+			var token = _tokenSource.Token;
 			var bitmap = await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
 			return bitmap;
 		}
