@@ -315,6 +315,8 @@ namespace RightMoveApp.ViewModel
 
 		private async Task<BitmapImage> UpdateImage(RightMoveProperty rightMoveProperty, int selectedIndex, CancellationToken cancellationToken)
 		{
+			LoadingImage = true;
+
 			try
 			{
 				byte[] imageArr = await rightMoveProperty.GetImage(selectedIndex);
@@ -343,6 +345,10 @@ namespace RightMoveApp.ViewModel
 			{
 				Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
 				return null;
+			}
+			finally
+			{
+				LoadingImage = false;
 			}
 		}
 
@@ -515,7 +521,7 @@ namespace RightMoveApp.ViewModel
 			}
 			else
 			{
-				ImageIndexView = $"Images: {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
+				ImageIndexView = $"Image {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
 			}
 		}
 
