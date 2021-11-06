@@ -297,7 +297,7 @@ namespace RightMoveApp.ViewModel
 		private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
 		{
 			await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
-			await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, cancellationToken);
+			await UpdateImage(cancellationToken);
 			LoadingImage = false;
 		}
 
@@ -313,33 +313,22 @@ namespace RightMoveApp.ViewModel
 			NextImageCommand.RaiseCanExecuteChanged();
 		}
 
-		private async Task<BitmapImage> UpdateImage(RightMoveProperty rightMoveProperty, int selectedIndex, CancellationToken cancellationToken)
+		/// <summary>
+		/// Update the displayed image
+		/// </summary>
+		/// <param name="cancellationToken">the cancellation token</param>
+		/// <returns></returns>
+		private async Task<BitmapImage> UpdateImage(CancellationToken cancellationToken)
 		{
 			LoadingImage = true;
 
 			try
 			{
-				byte[] imageArr = await rightMoveProperty.GetImage(selectedIndex);
-				if (imageArr is null)
-				{
-					return null;
-				}
-
-				if (cancellationToken.IsCancellationRequested)
-				{
-					cancellationToken.ThrowIfCancellationRequested();
-				}
-
-				var bitmapImage = ImageHelper.ToImage(imageArr);
-
-				// freeze as accessed from non UI thread
-				bitmapImage.Freeze();
-
-				DisplayedImage = bitmapImage;
+				DisplayedImage = await _rightMoveModel.GetImage(_selectedImageIndex);
 
 				// update the image view
 				UpdateImageIndexView();
-				return bitmapImage;
+				return DisplayedImage;
 			}
 			catch (OperationCanceledException e)
 			{
@@ -390,7 +379,7 @@ namespace RightMoveApp.ViewModel
 
 			_tokenSource = new CancellationTokenSource();
 			var token = _tokenSource.Token;
-			var bitmap = await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
+			var bitmap = await UpdateImage(token);
 			return bitmap;
 		}
 
@@ -411,14 +400,12 @@ namespace RightMoveApp.ViewModel
 			_tokenSource = new CancellationTokenSource();
 
 			var token = _tokenSource.Token;
-			var bitmap = await UpdateImage(RightMovePropertyFullSelectedItem, _selectedImageIndex, token);
+			var bitmap = await UpdateImage(token);
 			return bitmap;
 		}
 
 		private void ExecuteUpdateImages(object arg)
 		{
-			System.Diagnostics.Debug.WriteLine(RightMoveSelectedItem.RightMoveId);
-
 			if (_selectedItemChangedTimer.Enabled)
 			{
 				_selectedItemChangedTimer.Stop();
@@ -531,7 +518,11 @@ namespace RightMoveApp.ViewModel
 
 			try
 			{
+				_tokenSource.Cancel();
+
+				_tokenSource = new CancellationTokenSource();
 				CancellationToken cancellationToken = _tokenSource.Token;
+
 				Task.Run(async () => await UpdateFullSelectedItemAndImage(cancellationToken), cancellationToken);
 			}
 			catch (Exception)

@@ -5,12 +5,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Microsoft.Extensions.Options;
 using RightMove;
 using RightMove.DataTypes;
 using RightMove.Db.Services;
 using RightMove.Factory;
 using RightMove.Services;
+using RightMoveApp.Helpers;
 
 namespace RightMoveApp.Model
 {
@@ -87,6 +89,26 @@ namespace RightMoveApp.Model
 			}
 
 			RightMovePropertyFullSelectedItem = parser.RightMoveProperty;
+		}
+
+		public async Task<BitmapImage> GetImage(int index, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			byte[] imageArr = await RightMovePropertyFullSelectedItem.GetImage(index);
+			if (imageArr is null)
+			{
+				return null;
+			}
+
+			if (cancellationToken.IsCancellationRequested)
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+			}
+
+			var bitmapImage = ImageHelper.ToImage(imageArr);
+
+			// freeze as accessed from non UI thread
+			bitmapImage.Freeze();
+			return bitmapImage;
 		}
 
 		private void UpdateDatabase()
