@@ -1,8 +1,9 @@
-﻿<Window
+﻿<mah:MetroWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:RightMoveApp"
 
         x:Class="RightMoveApp.MainWindow"
@@ -73,6 +74,11 @@
                                     VerticalAlignment="Stretch"/>
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="ToolTip" Value="{Binding}"/>
+                    </Style>
+                </DataGrid.CellStyle>
                 <DataGrid.InputBindings>
                     <KeyBinding Key="Right"
                 Command="{Binding NextImageCommand}"/>
@@ -174,4 +180,4 @@
                             IsIndeterminate="{Binding SearchAsyncCommand.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToReverseConverter}}"/>
         </Grid>
     </Grid>
-</Window>
+</mah:MetroWindow>

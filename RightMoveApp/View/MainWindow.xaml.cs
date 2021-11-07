@@ -19,13 +19,14 @@ using Microsoft.Extensions.Options;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
 using RightMoveApp.UserControls;
+using MahApps.Metro.Controls;
 
 namespace RightMoveApp
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : MetroWindow
 	{
 		private GridViewColumnHeader _lastHeaderClicked;
 		private ListSortDirection _lastDirection = ListSortDirection.Ascending;

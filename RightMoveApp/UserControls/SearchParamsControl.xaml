@@ -19,10 +19,9 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <valueconverters:PropertyTypeConverter x:Key="PropertyTypeConverter" x:Shared="False"/>
-        <Style x:Key="comboStyle" TargetType="{x:Type ComboBox}">
-            <Setter Property="Margin" Value="1"/>
-        </Style>
-        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource comboStyle}"/>
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboStyle}">
+            <Setter Property="Margin" Value="0,0,0,1"/>
+        </Style> 
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot">
         <Grid.ColumnDefinitions>
@@ -44,7 +43,7 @@
                                        SelectedValue="{Binding ElementName=uc, Path=SearchParams.RegionLocation, Mode=TwoWay}"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Search radius"/>
-        <ComboBox Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
+        <ComboBox Template="{DynamicResource ComboBoxTemplate1}" Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
                   ItemsSource="{Binding ElementName=uc, Path=RadiusEntries}" 
                   SelectedValuePath="Key" 
                   SelectedValue="{Binding ElementName=uc, Path=SearchParams.Radius, Mode=TwoWay}">
