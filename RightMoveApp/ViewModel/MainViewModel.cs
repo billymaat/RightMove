@@ -183,13 +183,15 @@ namespace RightMoveApp.ViewModel
 			set => Set(ref _loadingImage, value);
 		}
 
+		private SearchParams _searchParams;
+
 		/// <summary>
 		/// Gets or sets the <see cref="SearchParams"/>
 		/// </summary>
 		public SearchParams SearchParams
 		{
-			get;
-			set;
+			get => _searchParams;
+			set => Set(ref _searchParams, value);
 		}
 
 		/// <summary>
@@ -308,7 +310,10 @@ namespace RightMoveApp.ViewModel
 			// update the right move full selected item
 			await _rightMoveModel.GetFullRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
 
+			System.Diagnostics.Debug.WriteLine($"P {RightMovePropertyFullSelectedItem != null}");
 			// refresh the can execute of image commands
+			PrevImageCommand.CanExecute(null);
+			NextImageCommand.CanExecute(null);
 			PrevImageCommand.RaiseCanExecuteChanged();
 			NextImageCommand.RaiseCanExecuteChanged();
 		}
@@ -369,6 +374,8 @@ namespace RightMoveApp.ViewModel
 		/// <returns></returns>
 		private bool CanExecuteUpdateNextImage(object obj)
 		{
+			System.Diagnostics.Debug.WriteLine(RightMovePropertyFullSelectedItem != null);
+			System.Diagnostics.Debug.WriteLine(RightMovePropertyFullSelectedItem != null && _selectedImageIndex != RightMovePropertyFullSelectedItem.ImageUrl.Length - 1);
 			return RightMovePropertyFullSelectedItem != null && _selectedImageIndex != RightMovePropertyFullSelectedItem.ImageUrl.Length - 1;
 		}
 

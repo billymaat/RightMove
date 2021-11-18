@@ -17,15 +17,27 @@ namespace RightMoveApp.ViewModel.Commands
 			await ExecuteAsync(parameter);
 		}
 
-		public event EventHandler CanExecuteChanged
-		{
-			add { CommandManager.RequerySuggested += value; }
-			remove { CommandManager.RequerySuggested -= value; }
-		}
+		//public event EventHandler CanExecuteChanged
+		//{
+		//	add
+		//	{
+		//		CommandManager.RequerySuggested += value;
+		//	}
+		//	remove
+		//	{
+		//		CommandManager.RequerySuggested -= value;
+		//	}
+		//}
+
+		public event EventHandler CanExecuteChanged;
 
 		public void RaiseCanExecuteChanged()
 		{
-			CommandManager.InvalidateRequerySuggested();
+			//CommandManager.InvalidateRequerySuggested();
+			if (CanExecuteChanged != null)
+			{
+				CanExecuteChanged(this, new EventArgs());
+			}
 		}
 	}
 }

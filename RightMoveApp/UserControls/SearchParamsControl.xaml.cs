@@ -27,7 +27,7 @@ namespace RightMoveApp.UserControls
 		{
 			InitializeComponent();
 
-			LayoutRoot.DataContext = this;
+			// LayoutRoot.DataContext = this;
 		}
 
 		/// <summary>
@@ -123,12 +123,6 @@ namespace RightMoveApp.UserControls
 			5
 		};
 
-		public PropertyTypeEnum PropType
-		{
-			get;
-			set;
-		}
-
 		public StringTrieSet SearchString
 		{
 			get
@@ -152,6 +146,11 @@ namespace RightMoveApp.UserControls
 
 		// Using a DependencyProperty as the backing store for MySelectedItem.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty SearchParamsProperty =
-			DependencyProperty.Register("SearchParams", typeof(SearchParams), typeof(SearchParamsControl), new UIPropertyMetadata(new SearchParams()));
+			DependencyProperty.Register("SearchParams", typeof(SearchParams), typeof(SearchParamsControl), new UIPropertyMetadata(new SearchParams(), OnSearchParamsChanged));
+
+		private static void OnSearchParamsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			
+		}
 	}
 }

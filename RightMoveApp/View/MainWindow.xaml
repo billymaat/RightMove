@@ -42,7 +42,7 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.Row="0" Header="Search Params" Panel.ZIndex="10">
             <controls:SearchParamsControl x:Name="searchControl"
-                                        SearchParams="{Binding Path=SearchParams, Mode=TwoWay}"
+                                        SearchParams="{Binding Path=SearchParams, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         IsEnabled="{Binding Path=IsSearching, Converter={StaticResource BooleanToReverseConverter}}">
 
             </controls:SearchParamsControl>
