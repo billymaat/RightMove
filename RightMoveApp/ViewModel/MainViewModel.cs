@@ -208,10 +208,15 @@ namespace RightMoveApp.ViewModel
 			set => Set(ref _displayedImage, value);
 		}
 
+		private bool _isSearching;
 		/// <summary>
 		/// Gets or sets a value indicating whether searching is occurring
 		/// </summary>
-		public bool IsSearching { get; set; }
+		public bool IsSearching 
+		{ 
+			get => _isSearching;
+			set => Set(ref _isSearching, value);
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether selected item has images available
@@ -222,6 +227,14 @@ namespace RightMoveApp.ViewModel
 		{
 			get => _imageIndexView;
 			set => Set(ref _imageIndexView, value);
+		}
+
+		private bool _hasSearchExecuted;
+
+		public bool HasSearchedExecuted
+		{
+			get => _hasSearchExecuted;
+			set => Set(ref _hasSearchExecuted, value);
 		}
 
 		#region Commands
@@ -494,7 +507,7 @@ namespace RightMoveApp.ViewModel
 				StringBuilder sb = new StringBuilder();
 
 				sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
-				sb.Append($"Propery count: {RightMoveList.Count}");
+				sb.Append($"Property count: {RightMoveList.Count}");
 				Info = sb.ToString();
 			}
 			else

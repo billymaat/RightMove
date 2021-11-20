@@ -18,6 +18,7 @@
             <converters:BooleanToReverseConverter x:Key="BooleanToReverseConverter"/>
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:BooleanToCollapsedVisibilityConverter x:Key="BooleanToCollapsedVisiblilityConverter"/>
             <converters:ValueConverterGroup x:Key="InverseBooleanToVisiblityConverter">
                 <converters:BooleanToReverseConverter/>
                 <converters:BooleanToVisibilityConverter/>
