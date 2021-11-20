@@ -489,33 +489,25 @@ namespace RightMoveApp.ViewModel
 
 		private void UpdateAveragePrice()
 		{
-			string info;
 			if (RightMoveList != null)
 			{
 				StringBuilder sb = new StringBuilder();
 
 				sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
-				sb.Append($"Count: {RightMoveList.Count}");
-				info = sb.ToString();
+				sb.Append($"Propery count: {RightMoveList.Count}");
+				Info = sb.ToString();
 			}
 			else
 			{
-				info = "...";
+				Info = "...";
 			}
-
-			Info = info;
 		}
 
 		private void UpdateImageIndexView()
 		{
-			if (_selectedImageIndex < 0 || !HasImages)
-			{
-				ImageIndexView = null;
-			}
-			else
-			{
-				ImageIndexView = $"Image {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
-			}
+			ImageIndexView = _selectedImageIndex < 0 || !HasImages
+				? null
+				: $"Image {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
 		}
 
 		private async void SelectedItemChanged_Elapsed(object sender, EventArgs e)

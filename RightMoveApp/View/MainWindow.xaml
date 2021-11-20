@@ -66,13 +66,13 @@
                 HorizontalAlignment="Stretch"
                 IsReadOnly="True"
                 AlternationCount="2">
-                <DataGrid.RowDetailsTemplate>
+                <!--<DataGrid.RowDetailsTemplate>
                     <DataTemplate>
                         <TextBlock Background="Orange" Text="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.PriceHistory}"
                                     TextWrapping="Wrap" HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"/>
                     </DataTemplate>
-                </DataGrid.RowDetailsTemplate>
+                </DataGrid.RowDetailsTemplate>-->
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="ToolTip" Value="{Binding}"/>
@@ -138,26 +138,26 @@
                 </TextBlock>
                 <Grid Grid.Row="2" HorizontalAlignment="Stretch">
                     <Grid.Resources>
-                        <Style TargetType="{x:Type Button}">
+                        <!--<Style TargetType="{x:Type Button}">
                             <Style.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"/>
                                 </Style>
                             </Style.Resources>
                             <Setter Property="Margin" Value="5"/>
-                        </Style>
+                        </Style>-->
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button>
+                    <!--<Button>
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="20"/>
                             </Style>
                         </Button.Resources>
-                    </Button>
+                    </Button>-->
                     <Button x:Name="btnLeft"
                             Grid.Column="0"
                         Content="&lt;" 
