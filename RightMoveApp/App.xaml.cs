@@ -39,7 +39,6 @@ namespace RightMoveApp
 				.ConfigureServices((context, services) =>
 				{
 					ConfigureServices(context.Configuration, services);
-					services.Register();
 
 					// register db writer
 					services.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>();
@@ -65,7 +64,7 @@ namespace RightMoveApp
 			});
 
 			// register RightMoveLibrary
-			services.RegisterNew();
+			services.Register();
 
 			services.AddSingleton<RightMoveModel>();
 

@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
 using RightMove.Db.Models;
@@ -44,7 +45,7 @@ namespace RightMoveApp.ViewModel
 		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
 		// Time for selected item changed in data grid
-		private System.Timers.Timer _selectedItemChangedTimer;
+		private System.Windows.Threading.DispatcherTimer _selectedItemChangedTimer;
 
 		// The right move model
 		private readonly RightMoveModel _rightMoveModel;
@@ -191,7 +192,11 @@ namespace RightMoveApp.ViewModel
 		public SearchParams SearchParams
 		{
 			get => _searchParams;
-			set => Set(ref _searchParams, value);
+			set
+			{
+				Set(ref _searchParams, value);
+				SearchAsyncCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 		/// <summary>
@@ -309,13 +314,6 @@ namespace RightMoveApp.ViewModel
 
 			// update the right move full selected item
 			await _rightMoveModel.GetFullRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
-
-			System.Diagnostics.Debug.WriteLine($"P {RightMovePropertyFullSelectedItem != null}");
-			// refresh the can execute of image commands
-			PrevImageCommand.CanExecute(null);
-			NextImageCommand.CanExecute(null);
-			PrevImageCommand.RaiseCanExecuteChanged();
-			NextImageCommand.RaiseCanExecuteChanged();
 		}
 
 		/// <summary>
@@ -330,9 +328,11 @@ namespace RightMoveApp.ViewModel
 			try
 			{
 				DisplayedImage = await _rightMoveModel.GetImage(_selectedImageIndex);
-
 				// update the image view
 				UpdateImageIndexView();
+
+				PrevImageCommand.RaiseCanExecuteChanged();
+				NextImageCommand.RaiseCanExecuteChanged();
 				return DisplayedImage;
 			}
 			catch (OperationCanceledException e)
@@ -348,8 +348,9 @@ namespace RightMoveApp.ViewModel
 
 		private void InitializeTimers()
 		{
-			_selectedItemChangedTimer = new System.Timers.Timer(500);
-			_selectedItemChangedTimer.Elapsed += SelectedItemChanged_Elapsed;
+			_selectedItemChangedTimer = new System.Windows.Threading.DispatcherTimer();
+			_selectedItemChangedTimer.Interval = TimeSpan.FromMilliseconds(500);
+			_selectedItemChangedTimer.Tick += SelectedItemChanged_Elapsed;
 		}
 
 		/// <summary>
@@ -374,8 +375,6 @@ namespace RightMoveApp.ViewModel
 		/// <returns></returns>
 		private bool CanExecuteUpdateNextImage(object obj)
 		{
-			System.Diagnostics.Debug.WriteLine(RightMovePropertyFullSelectedItem != null);
-			System.Diagnostics.Debug.WriteLine(RightMovePropertyFullSelectedItem != null && _selectedImageIndex != RightMovePropertyFullSelectedItem.ImageUrl.Length - 1);
 			return RightMovePropertyFullSelectedItem != null && _selectedImageIndex != RightMovePropertyFullSelectedItem.ImageUrl.Length - 1;
 		}
 
@@ -413,7 +412,7 @@ namespace RightMoveApp.ViewModel
 
 		private void ExecuteUpdateImages(object arg)
 		{
-			if (_selectedItemChangedTimer.Enabled)
+			if (_selectedItemChangedTimer.IsEnabled)
 			{
 				_selectedItemChangedTimer.Stop();
 			}
@@ -519,7 +518,7 @@ namespace RightMoveApp.ViewModel
 			}
 		}
 
-		private void SelectedItemChanged_Elapsed(object sender, ElapsedEventArgs e)
+		private async void SelectedItemChanged_Elapsed(object sender, EventArgs e)
 		{
 			_selectedItemChangedTimer.Stop();
 
@@ -530,7 +529,7 @@ namespace RightMoveApp.ViewModel
 				_tokenSource = new CancellationTokenSource();
 				CancellationToken cancellationToken = _tokenSource.Token;
 
-				Task.Run(async () => await UpdateFullSelectedItemAndImage(cancellationToken), cancellationToken);
+				await UpdateFullSelectedItemAndImage(cancellationToken);
 			}
 			catch (Exception)
 			{

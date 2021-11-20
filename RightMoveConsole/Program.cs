@@ -25,7 +25,7 @@ namespace RightMoveConsole
 			Host.CreateDefaultBuilder(args)
 				.ConfigureServices((_, services) =>
 					{
-						services.RegisterNew();
+						services.Register();
 						services.AddScoped<IDisplayService, DisplayService>()
 							.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
 							.AddTransient<IDatabaseService, DatabaseService>()

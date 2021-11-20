@@ -10,16 +10,6 @@ namespace RightMove.Extensions
 	{
 		public static void Register(this IServiceCollection services)
 		{
-			// services.AddTransient<RightMoveParserService>(x => Activator.CreateInstance<RightMoveParserService>(x, new SearchParams()));
-			services.AddTransient<RightMovePropertyFactory>();
-			services.AddTransient<IHttpService, HttpService>();
-			services.AddTransient<RightMoveParserService>();
-			services.AddTransient<PropertyPageParser>();
-			services.AddTransient<SearchPageParserService>();
-		}
-
-		public static void RegisterNew(this IServiceCollection services)
-		{
 			services.AddTransient<IHttpService, HttpService>()
 				.AddScoped<ILoggerService, LoggerService>()
 				.AddScoped<RightMoveOutcodeService>()
