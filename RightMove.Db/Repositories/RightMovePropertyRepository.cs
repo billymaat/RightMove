@@ -18,6 +18,29 @@ namespace RightMove.Db.Repositories
 
 		}
 
+		public void CreateTableIfNotExist()
+		{
+			using (SQLiteConnection ccn = new SQLiteConnection(GetConnectionString()))
+			{
+				ccn.Open();
+
+				using (var cmd = new SQLiteCommand(ccn))
+				{
+					// cmd.CommandText = @"CREATE TABLE cars(id INTEGER PRIMARY KEY, name TEXT, price INT)";
+					cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Property(Id INTEGER NOT NULL PRIMARY KEY,
+						RightMoveId TEXT NOT NULL,
+						HouseInfo TEXT,
+						Address TEXT,
+						DateAdded TEXT,
+						DateReduced TEXT,
+						Date TEXT,
+						Price TEXT,
+						Link TEXT)";
+					cmd.ExecuteNonQuery();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Save property to db
 		/// </summary>
@@ -26,7 +49,7 @@ namespace RightMove.Db.Repositories
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
-				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, Date, Link, Price) values (@RightMoveId, @HouseInfo, @Address, @Date, @Link, @Price)", property);
+				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, DateAdded, DateReduced, Date, Price, Link) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @DateReduced, @Date, @Price, @Link)", property);
 			}
 		}
 
@@ -52,6 +75,7 @@ namespace RightMove.Db.Repositories
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
+				// get the property from the id
 				var property = cnn.QuerySingle<RightMovePropertyModel>("select * from Property where Id = @id", new
 				{
 					id = primaryId
@@ -62,9 +86,13 @@ namespace RightMove.Db.Repositories
 					throw new Exception($"{nameof(property)} should never be null");
 				}
 
+				// we split the prices in teh database
+				// original price|new price
+				// original date|new date(now)
 				string newPriceString = $"{property.Price}|{price}";
 				string newDateString = $"{property.Date}|{DateTime.Now}";
 
+				// write it to the database
 				cnn.Execute(@"update Property set Price = @price, Date = @date where Id = @id", new
 				{
 					price = newPriceString,
@@ -74,6 +102,10 @@ namespace RightMove.Db.Repositories
 			}
 		}
 
+		/// <summary>
+		/// Get the connection string
+		/// </summary>
+		/// <returns>the connection string</returns>
 		private string GetConnectionString()
 		{
 			return $"Data Source={DbFile};Version=3;";

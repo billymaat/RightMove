@@ -67,10 +67,26 @@ namespace RightMove.DataTypes
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the date the property was added.
+		/// </summary>
+		/// <remarks>This is parsed from the page. It is equal to <see cref="DateTime.MinValue"/>
+		/// if we couldn't parse a date</remarks>
 		public DateTime DateAdded
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the date the property was reduced.
+		/// </summary>
+		/// <remarks>This is parsed from the page. It is equal to <see cref="DateTime.MinValue"/>
+		/// if we couldn't parse a date</remarks>
+		public DateTime DateReduced
+		{
+			get;
+			internal set;
 		}
 
 		public int Price
@@ -168,16 +184,21 @@ namespace RightMove.DataTypes
 			return hashCode.ToHashCode();
 		}
 
+		/// <summary>
+		/// Gets a string representation.
+		/// </summary>
+		/// <returns>the string representation</returns>
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.Append(string.Format("{0} : {1}\n", nameof(RightMoveId), RightMoveId));
-			sb.Append(string.Format("{0} : {1}\n", nameof(HouseInfo), HouseInfo));
-			sb.Append(string.Format("{0} : {1}\n", nameof(Address), Address));
+			sb.Append($"{nameof(RightMoveId)} : {RightMoveId}\n");
+			sb.Append($"{nameof(HouseInfo)} : {HouseInfo}\n");
+			sb.Append($"{Address} : {Address}\n");
 			sb.Append($"{nameof(Price)} : {Price}");
-			sb.Append(string.Format("{0} : {1}\n", nameof(DateAdded), DateAdded));
-			sb.Append(string.Format("{0} : {1}\n", nameof(Link), Link));
+			sb.Append($"{nameof(DateAdded)} : {DateAdded}\n");
+			sb.Append($"{nameof(DateReduced)} : {DateReduced}\n");
+			sb.Append($"{nameof(Link)} : {Link}\n");
 			return sb.ToString();
 		}
 	}

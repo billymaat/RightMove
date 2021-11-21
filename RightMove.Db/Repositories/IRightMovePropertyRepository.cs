@@ -7,6 +7,8 @@ namespace RightMove.Db.Repositories
 {
 	public interface IRightMovePropertyRepository
 	{
+		void CreateTableIfNotExist();
+
 		void SaveProperty(RightMovePropertyModel property);
 
 		List<RightMovePropertyModel> LoadProperties();

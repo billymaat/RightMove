@@ -9,6 +9,8 @@ namespace RightMove.Db.Services
 {
 	public interface IDatabaseService
 	{
+		bool CreateTableIfNotExists();
+
 		List<RightMovePropertyModel> LoadProperties();
 
 		Result AddToDatabase(RightMoveProperty property);

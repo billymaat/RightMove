@@ -141,7 +141,7 @@ namespace RightMoveConsole.Services
 					try
 					{
 						_logger.LogInformation("Starting application");
-
+						CreateTable();
 						await DoSearch();
 						_exitCode = 0;
 					}
@@ -158,6 +158,11 @@ namespace RightMoveConsole.Services
 			});
 
 			return Task.CompletedTask;
+		}
+
+		private static void CreateTable()
+		{
+			
 		}
 
 		public Task StopAsync(CancellationToken cancellationToken)

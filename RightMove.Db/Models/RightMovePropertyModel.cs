@@ -17,9 +17,13 @@ namespace RightMove.Db.Models
 			RightMoveId = rightMoveProperty.RightMoveId;
 			HouseInfo = rightMoveProperty.HouseInfo;
 			Address = rightMoveProperty.Address;
-			Date = rightMoveProperty.DateAdded.ToString(CultureInfo.CurrentCulture);
 			Link = rightMoveProperty.Link;
 			Price = rightMoveProperty.Price.ToString(CultureInfo.CurrentCulture);
+
+			// initialise the dates
+			DateAdded = rightMoveProperty.DateAdded.ToString("dd/MM/yyyy");
+			DateReduced = rightMoveProperty.DateReduced.ToString("dd/MM/yyyy");
+			Date = DateTime.Now.ToString("dd/MM/yyyy");
 		}
 
 		public int Id
@@ -46,10 +50,19 @@ namespace RightMove.Db.Models
 			set;
 		}
 
-		public string Date
+		public string DateAdded
 		{
 			get;
 			set;
+		}
+		public string DateReduced { get; }
+
+		/// <summary>
+		/// Gets the Date the model was created
+		/// </summary>
+		public string Date 
+		{ 
+			get; 
 		}
 
 		public string Link
@@ -66,7 +79,12 @@ namespace RightMove.Db.Models
 
 		public List<int> Prices => SplitIntegers(Price);
 
-		public List<string> DatesUpdated => SplitString(Date);
+		/// <summary>
+		/// Gets the latest price - the last price added
+		/// </summary>
+		public int LatestPrice => Prices.Last(); 
+
+		public List<string> Dates => SplitString(Date);
 
 		private static List<string> SplitString(string s)
 		{

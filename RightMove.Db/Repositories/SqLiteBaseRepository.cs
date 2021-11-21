@@ -16,7 +16,7 @@ namespace RightMove.Db.Repositories
 		{
 			var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-			DbFile = Path.Combine(path, "RightMoveDB.db");
+			DbFile = Path.Combine(path, "RightMoveDB_1.db");
 		}
 
 		public static SQLiteConnection SimpleDbConnection()

@@ -25,6 +25,14 @@ namespace RightMove.Db.Services
 			Failed
 		}
 
+		public bool TableCreated { get; set; }
+
+		public bool CreateTableIfNotExists()
+		{
+			_db.CreateTableIfNotExist();
+			return true;
+		}
+
 		public List<RightMovePropertyModel> LoadProperties()
 		{
 			return _db.LoadProperties();
@@ -32,6 +40,12 @@ namespace RightMove.Db.Services
 
 		public (int, int) AddToDatabase(IList<RightMoveProperty> properties)
 		{
+			if (!TableCreated)
+			{
+				CreateTableIfNotExists();
+				TableCreated = true;
+			}
+
 			var dbProperties = _db.LoadProperties();
 			int newPropertiesCount = 0;
 			int updatedPropertiesCount = 0;
