@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
 using RightMove.Db.Models;
@@ -44,7 +45,7 @@ namespace RightMoveApp.ViewModel
 		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
 		// Time for selected item changed in data grid
-		private System.Timers.Timer _selectedItemChangedTimer;
+		private System.Windows.Threading.DispatcherTimer _selectedItemChangedTimer;
 
 		// The right move model
 		private readonly RightMoveModel _rightMoveModel;
@@ -183,13 +184,19 @@ namespace RightMoveApp.ViewModel
 			set => Set(ref _loadingImage, value);
 		}
 
+		private SearchParams _searchParams;
+
 		/// <summary>
 		/// Gets or sets the <see cref="SearchParams"/>
 		/// </summary>
 		public SearchParams SearchParams
 		{
-			get;
-			set;
+			get => _searchParams;
+			set
+			{
+				Set(ref _searchParams, value);
+				SearchAsyncCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 		/// <summary>
@@ -201,10 +208,19 @@ namespace RightMoveApp.ViewModel
 			set => Set(ref _displayedImage, value);
 		}
 
+		private bool _isSearching;
 		/// <summary>
 		/// Gets or sets a value indicating whether searching is occurring
 		/// </summary>
-		public bool IsSearching { get; set; }
+		public bool IsSearching 
+		{ 
+			get => _isSearching;
+			set
+			{
+				Set(ref _isSearching, value);
+				SearchAsyncCommand.RaiseCanExecuteChanged();
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether selected item has images available
@@ -217,12 +233,26 @@ namespace RightMoveApp.ViewModel
 			set => Set(ref _imageIndexView, value);
 		}
 
+		private bool _hasSearchExecuted;
+
+		public bool HasSearchedExecuted
+		{
+			get => _hasSearchExecuted;
+			set => Set(ref _hasSearchExecuted, value);
+		}
+
 		#region Commands
 
 		/// <summary>
 		/// Gets or sets the search command
 		/// </summary>
 		public IAsyncCommand SearchAsyncCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand SearchParamsUpdatedCommand
 		{
 			get;
 			set;
@@ -307,10 +337,6 @@ namespace RightMoveApp.ViewModel
 
 			// update the right move full selected item
 			await _rightMoveModel.GetFullRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
-
-			// refresh the can execute of image commands
-			PrevImageCommand.RaiseCanExecuteChanged();
-			NextImageCommand.RaiseCanExecuteChanged();
 		}
 
 		/// <summary>
@@ -325,9 +351,11 @@ namespace RightMoveApp.ViewModel
 			try
 			{
 				DisplayedImage = await _rightMoveModel.GetImage(_selectedImageIndex);
-
 				// update the image view
 				UpdateImageIndexView();
+
+				PrevImageCommand.RaiseCanExecuteChanged();
+				NextImageCommand.RaiseCanExecuteChanged();
 				return DisplayedImage;
 			}
 			catch (OperationCanceledException e)
@@ -343,8 +371,9 @@ namespace RightMoveApp.ViewModel
 
 		private void InitializeTimers()
 		{
-			_selectedItemChangedTimer = new System.Timers.Timer(500);
-			_selectedItemChangedTimer.Elapsed += SelectedItemChanged_Elapsed;
+			_selectedItemChangedTimer = new System.Windows.Threading.DispatcherTimer();
+			_selectedItemChangedTimer.Interval = TimeSpan.FromMilliseconds(500);
+			_selectedItemChangedTimer.Tick += SelectedItemChanged_Elapsed;
 		}
 
 		/// <summary>
@@ -353,6 +382,7 @@ namespace RightMoveApp.ViewModel
 		private void InitializeCommands()
 		{
 			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync(), () => CanExecuteSearch(null));
+			SearchParamsUpdatedCommand = new RelayCommand((o) => SearchAsyncCommand.RaiseCanExecuteChanged(), (o) => !IsSearching);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
 			SearchParams = new SearchParams();
 			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
@@ -406,7 +436,7 @@ namespace RightMoveApp.ViewModel
 
 		private void ExecuteUpdateImages(object arg)
 		{
-			if (_selectedItemChangedTimer.Enabled)
+			if (_selectedItemChangedTimer.IsEnabled)
 			{
 				_selectedItemChangedTimer.Stop();
 			}
@@ -476,43 +506,35 @@ namespace RightMoveApp.ViewModel
 		/// <returns>true if can execute, false otherwise</returns>
 		private bool CanExecuteSearch(object parameter)
 		{
-			return SearchParams.IsValid();
+			return !IsSearching && SearchParams.IsValid();
 		}
 
 		#endregion
 
 		private void UpdateAveragePrice()
 		{
-			string info;
 			if (RightMoveList != null)
 			{
 				StringBuilder sb = new StringBuilder();
 
 				sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
-				sb.Append($"Count: {RightMoveList.Count}");
-				info = sb.ToString();
+				sb.Append($"Property count: {RightMoveList.Count}");
+				Info = sb.ToString();
 			}
 			else
 			{
-				info = "...";
+				Info = "...";
 			}
-
-			Info = info;
 		}
 
 		private void UpdateImageIndexView()
 		{
-			if (_selectedImageIndex < 0 || !HasImages)
-			{
-				ImageIndexView = null;
-			}
-			else
-			{
-				ImageIndexView = $"Image {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
-			}
+			ImageIndexView = _selectedImageIndex < 0 || !HasImages
+				? null
+				: $"Image {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
 		}
 
-		private void SelectedItemChanged_Elapsed(object sender, ElapsedEventArgs e)
+		private async void SelectedItemChanged_Elapsed(object sender, EventArgs e)
 		{
 			_selectedItemChangedTimer.Stop();
 
@@ -523,7 +545,7 @@ namespace RightMoveApp.ViewModel
 				_tokenSource = new CancellationTokenSource();
 				CancellationToken cancellationToken = _tokenSource.Token;
 
-				Task.Run(async () => await UpdateFullSelectedItemAndImage(cancellationToken), cancellationToken);
+				await UpdateFullSelectedItemAndImage(cancellationToken);
 			}
 			catch (Exception)
 			{

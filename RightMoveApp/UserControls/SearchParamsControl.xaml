@@ -19,10 +19,9 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <valueconverters:PropertyTypeConverter x:Key="PropertyTypeConverter" x:Shared="False"/>
-        <Style x:Key="comboStyle" TargetType="{x:Type ComboBox}">
-            <Setter Property="Margin" Value="1"/>
-        </Style>
-        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource comboStyle}"/>
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboStyle}">
+            <Setter Property="Margin" Value="0,0,0,1"/>
+        </Style> 
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot">
         <Grid.ColumnDefinitions>
@@ -41,13 +40,13 @@
 
         <local:AutoCompleteComboBox Grid.Row="0" Grid.Column="1"
                                        ItemsSource="{Binding ElementName=uc, Path=SearchString}" 
-                                       SelectedValue="{Binding ElementName=uc, Path=SearchParams.RegionLocation, Mode=TwoWay}"/>
+                                       SelectedValue="{Binding ElementName=uc, Path=RegionLocation, Mode=TwoWay}"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Search radius"/>
-        <ComboBox Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
+        <ComboBox Template="{DynamicResource ComboBoxTemplate1}" Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
                   ItemsSource="{Binding ElementName=uc, Path=RadiusEntries}" 
                   SelectedValuePath="Key" 
-                  SelectedValue="{Binding ElementName=uc, Path=SearchParams.Radius, Mode=TwoWay}">
+                  SelectedValue="{Binding ElementName=uc, Path=Radius, Mode=TwoWay}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -69,7 +68,7 @@
             </Grid.RowDefinitions>
             <ComboBox Grid.Column="0" Grid.Row="0" Name="comboMinPrice" 
                       ItemsSource="{Binding ElementName=uc, Path=Prices}" 
-                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MinPrice, Mode=TwoWay}">
+                      SelectedItem="{Binding ElementName=uc, Path=MinPrice, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -81,7 +80,7 @@
             <Label Grid.Column="1" Grid.Row="0" Content="to"/>
             <ComboBox Grid.Column="2" Grid.Row="0" Name="comboMaxPrice"
                       ItemsSource="{Binding ElementName=uc, Path=Prices}" 
-                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MaxPrice}">
+                      SelectedItem="{Binding ElementName=uc, Path=MaxPrice}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -103,7 +102,7 @@
             </Grid.RowDefinitions>
             <ComboBox Grid.Column="0" Grid.Row="0" Name="comboMinBedrooms" 
                       ItemsSource="{Binding ElementName=uc, Path=Bedrooms}"
-                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MinBedrooms, Mode=TwoWay}">
+                      SelectedItem="{Binding ElementName=uc, Path=MinBedrooms, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -114,7 +113,7 @@
             </ComboBox>
             <ComboBox Grid.Column="3" Grid.Row="0" Name="comboMaxBedrooms" 
                       ItemsSource="{Binding ElementName=uc, Path=Bedrooms}" 
-                      SelectedItem="{Binding ElementName=uc, Path=SearchParams.MaxBedrooms, Mode=TwoWay}">
+                      SelectedItem="{Binding ElementName=uc, Path=MaxBedrooms, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -129,9 +128,9 @@
 
         <ComboBox Grid.Column="1" Grid.Row="4" Name="comboSort" 
                           ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
-                          SelectedItem="{Binding ElementName=uc, Path=SearchParams.Sort, Mode=TwoWay}">
+                          SelectedItem="{Binding ElementName=uc, Path=SortType, Mode=TwoWay}">
         </ComboBox>
-        <ItemsControl Grid.Column="1" Grid.Row="5"
+        <!--<ItemsControl Grid.Column="1" Grid.Row="5"
                       ItemsSource="{Binding ElementName=uc, Path=PropertyTypes}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -143,14 +142,14 @@
                     <CheckBox Content="{Binding Value}">
                         <CheckBox.IsChecked>
                             <MultiBinding Converter="{StaticResource PropertyTypeConverter}">
-                                <Binding ElementName="uc" Path="SearchParams.PropertyType" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="PropertyType" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="Key" Mode="OneTime"/>
                             </MultiBinding>
                         </CheckBox.IsChecked>
                     </CheckBox>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        </ItemsControl>-->
     </Grid>
 
 </UserControl>

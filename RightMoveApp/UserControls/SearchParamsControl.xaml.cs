@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,13 +23,13 @@ namespace RightMoveApp.UserControls
 	/// <summary>
 	/// Interaction logic for SearchParamsControl.xaml
 	/// </summary>
-	public partial class SearchParamsControl
+	public partial class SearchParamsControl : INotifyPropertyChanged
 	{
+		public event EventHandler SearchParamsUpdated;
+
 		public SearchParamsControl()
 		{
 			InitializeComponent();
-
-			LayoutRoot.DataContext = this;
 		}
 
 		/// <summary>
@@ -123,17 +125,102 @@ namespace RightMoveApp.UserControls
 			5
 		};
 
-		public PropertyTypeEnum PropType
-		{
-			get;
-			set;
-		}
-
 		public StringTrieSet SearchString
 		{
 			get
 			{
 				return RightMoveCodes.RegionTree;
+			}
+		}
+
+		public string RegionLocation
+		{
+			get => SearchParams.RegionLocation;
+			set
+			{
+				if (SearchParams.RegionLocation != value)
+				{
+					SearchParams.RegionLocation = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+
+		public double Radius
+		{
+			get => SearchParams.Radius;
+			set
+			{
+				if (SearchParams.Radius != value)
+				{
+					SearchParams.Radius = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+
+		public int MinBedrooms
+		{
+			get { return SearchParams.MinBedrooms; }
+			set
+			{
+				if (SearchParams.MinBedrooms != value)
+				{
+					SearchParams.MinBedrooms = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+
+		public int MaxBedrooms
+		{
+			get { return SearchParams.MaxBedrooms; }
+			set 
+			{ 
+				if (SearchParams.MaxBedrooms != value)
+				{
+					SearchParams.MaxBedrooms = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+
+		public int MinPrice
+		{
+			get { return SearchParams.MinPrice; }
+			set 
+			{ 
+				if (SearchParams.MinPrice != value) 
+				{
+					SearchParams.MinPrice = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+
+		public int MaxPrice
+		{
+			get { return SearchParams.MaxPrice; }
+			set
+			{
+				if (SearchParams.MaxPrice != value)
+				{
+					SearchParams.MaxPrice = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+
+		public SortType SortType
+		{
+			get { return SearchParams.Sort; }
+			set
+			{
+				if (SearchParams.Sort != value)
+				{
+					SearchParams.Sort = value;
+					OnSearchParamsChanged();
+				}
 			}
 		}
 
@@ -152,6 +239,31 @@ namespace RightMoveApp.UserControls
 
 		// Using a DependencyProperty as the backing store for MySelectedItem.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty SearchParamsProperty =
-			DependencyProperty.Register("SearchParams", typeof(SearchParams), typeof(SearchParamsControl), new UIPropertyMetadata(new SearchParams()));
+			DependencyProperty.Register("SearchParams", typeof(SearchParams), typeof(SearchParamsControl), new PropertyMetadata(new SearchParams(), OnSearchParamsPropertyChanged));
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private static void OnSearchParamsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			//SearchParamsControl c = d as SearchParamsControl;
+
+			//if (c != null)
+			//{
+			//	c.OnSearchParamsChanged();
+			//}
+		}
+
+		private void OnSearchParamsChanged()
+		{
+			SearchParamsUpdated?.Invoke(this, new EventArgs());
+			OnPropertyChanged(nameof(SearchParams));
+		}
+
+		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChangedEventHandler handler = PropertyChanged;
+			if (handler != null)
+				handler(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
