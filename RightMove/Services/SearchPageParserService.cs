@@ -123,7 +123,7 @@ namespace RightMove.Services
 				// dateAndAgent is in the form "Added on 01/02/2021 by Melissa Berry Sales & Lettings, Prestwich"
 				if (!string.IsNullOrEmpty(dateAndAgentText))
 				{
-					date = RightMoveParserHelper.ParseDate(dateAndAgentText);
+					date = RightMoveParserHelper.ParseDateAdded(dateAndAgentText);
 					agent = RightMoveParserHelper.ParseAgent(dateAndAgentText);
 				}
 

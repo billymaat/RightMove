@@ -7,28 +7,38 @@ namespace RightMove.Services
 {
 	public static class RightMoveParserHelper
 	{
-		public static DateTime ParseDate(string dateText)
+		public static DateTime ParseDateReduced(string dateText)
+		{
+			DateTime date = DateTime.MinValue;
+			string reducedOn = "Reduced on ";
+			int ind = dateText.IndexOf(reducedOn, StringComparison.CurrentCultureIgnoreCase);
+			int length = reducedOn.Length;
+
+			if (ind >= 0)
+			{
+				// we might fail to get a string, but it doesn't matter
+				var dateString = dateText.Substring(ind + length, 10);
+				DateTime.TryParse(dateString, out date);
+			}
+
+			return date;
+		}
+
+
+
+		public static DateTime ParseDateAdded(string dateText)
 		{
 			DateTime date = DateTime.MinValue;
 
 			string addedOn = "Added on ";
-			string reducedOn = "Reduced on ";
 			int ind = dateText.IndexOf(addedOn, StringComparison.CurrentCultureIgnoreCase);
 			int length = addedOn.Length;
 
-			if (ind < 0)
-			{
-				ind = dateText.IndexOf(reducedOn, StringComparison.CurrentCultureIgnoreCase);
-				length = reducedOn.Length;
-			}
-
 			if (ind >= 0)
 			{
+				// we might fail to get a string, but it doesn't matter
 				var dateString = dateText.Substring(ind + length, 10);
-				if (!DateTime.TryParse(dateString, out date))
-				{
-
-				}
+				DateTime.TryParse(dateString, out date);
 			}
 
 			return date;

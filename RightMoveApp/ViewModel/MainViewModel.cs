@@ -169,7 +169,7 @@ namespace RightMoveApp.ViewModel
 					return na;
 				}
 
-				var dates = matchingProperty.DatesUpdated;
+				var dates = matchingProperty.Dates;
 				var prices = matchingProperty.Prices;
 
 				var combined = dates.Zip(prices, (d, p) => $"{DateTime.Parse(d).Date.ToString("dd/MM/yyyy")} : £{p}");
