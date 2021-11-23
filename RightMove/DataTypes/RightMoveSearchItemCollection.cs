@@ -34,7 +34,13 @@ namespace RightMove.DataTypes
 
 		public double CalculateAveragePrice()
 		{
-			return this.Where(o => o.Price != RightMoveParserService.PriceNotSet)
+			var properties = this.Where(o => o.Price != RightMoveParserService.PriceNotSet);
+			if (!properties.Any())
+			{
+				return double.MinValue;
+			}
+
+			return properties
 				.Select(o => o.Price)
 				.Average();
 		}
