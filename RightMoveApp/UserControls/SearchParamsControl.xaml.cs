@@ -25,6 +25,8 @@ namespace RightMoveApp.UserControls
 	/// </summary>
 	public partial class SearchParamsControl : INotifyPropertyChanged
 	{
+		public event EventHandler SearchParamsUpdated;
+
 		public SearchParamsControl()
 		{
 			InitializeComponent();
@@ -253,7 +255,7 @@ namespace RightMoveApp.UserControls
 
 		private void OnSearchParamsChanged()
 		{
-			SearchParams = new SearchParams(SearchParams);
+			SearchParamsUpdated?.Invoke(this, new EventArgs());
 			OnPropertyChanged(nameof(SearchParams));
 		}
 

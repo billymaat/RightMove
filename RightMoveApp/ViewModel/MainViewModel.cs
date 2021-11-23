@@ -215,7 +215,11 @@ namespace RightMoveApp.ViewModel
 		public bool IsSearching 
 		{ 
 			get => _isSearching;
-			set => Set(ref _isSearching, value);
+			set
+			{
+				Set(ref _isSearching, value);
+				SearchAsyncCommand.RaiseCanExecuteChanged();
+			}
 		}
 
 		/// <summary>
@@ -243,6 +247,12 @@ namespace RightMoveApp.ViewModel
 		/// Gets or sets the search command
 		/// </summary>
 		public IAsyncCommand SearchAsyncCommand
+		{
+			get;
+			set;
+		}
+
+		public ICommand SearchParamsUpdatedCommand
 		{
 			get;
 			set;
@@ -372,6 +382,7 @@ namespace RightMoveApp.ViewModel
 		private void InitializeCommands()
 		{
 			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync(), () => CanExecuteSearch(null));
+			SearchParamsUpdatedCommand = new RelayCommand((o) => SearchAsyncCommand.RaiseCanExecuteChanged(), (o) => !IsSearching);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
 			SearchParams = new SearchParams();
 			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
@@ -495,7 +506,7 @@ namespace RightMoveApp.ViewModel
 		/// <returns>true if can execute, false otherwise</returns>
 		private bool CanExecuteSearch(object parameter)
 		{
-			return SearchParams.IsValid();
+			return !IsSearching && SearchParams.IsValid();
 		}
 
 		#endregion
