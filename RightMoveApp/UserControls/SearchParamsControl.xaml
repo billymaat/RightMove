@@ -130,7 +130,7 @@
                           ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
                           SelectedItem="{Binding ElementName=uc, Path=SortType, Mode=TwoWay}">
         </ComboBox>
-        <!--<ItemsControl Grid.Column="1" Grid.Row="5"
+        <ItemsControl Grid.Column="1" Grid.Row="5"
                       ItemsSource="{Binding ElementName=uc, Path=PropertyTypes}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -142,14 +142,14 @@
                     <CheckBox Content="{Binding Value}">
                         <CheckBox.IsChecked>
                             <MultiBinding Converter="{StaticResource PropertyTypeConverter}">
-                                <Binding Path="PropertyType" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding ElementName="uc" Path="PropertyType" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="Key" Mode="OneTime"/>
                             </MultiBinding>
                         </CheckBox.IsChecked>
                     </CheckBox>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>-->
+        </ItemsControl>
     </Grid>
 
 </UserControl>

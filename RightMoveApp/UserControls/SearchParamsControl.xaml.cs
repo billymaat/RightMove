@@ -211,6 +211,22 @@ namespace RightMoveApp.UserControls
 			}
 		}
 
+		private PropertyTypeEnum _propertyType;
+
+		public PropertyTypeEnum PropertyType
+		{
+			get { return SearchParams.PropertyType; }
+			set
+			{
+				if (SearchParams.PropertyType != value)
+				{
+					SearchParams.PropertyType = value;
+					OnSearchParamsChanged();
+				}
+			}
+		}
+			
+
 		public SortType SortType
 		{
 			get { return SearchParams.Sort; }

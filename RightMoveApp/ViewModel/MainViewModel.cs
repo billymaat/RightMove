@@ -517,7 +517,10 @@ namespace RightMoveApp.ViewModel
 			{
 				StringBuilder sb = new StringBuilder();
 
-				sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
+				if (RightMoveList.AveragePrice != double.MinValue)
+				{
+					sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
+				}
 				sb.Append($"Property count: {RightMoveList.Count}");
 				Info = sb.ToString();
 			}
