@@ -30,7 +30,7 @@ namespace RightMove
 			private set;
 		}
 
-		public static StringTrieSet RegionTree
+		public static List<string> RegionTree
 		{
 			get;
 			set;
@@ -50,7 +50,7 @@ namespace RightMove
 
 				// load region dictionary
 				RegionDictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(Properties.Resources.Regions);
-				RegionTree = new StringTrieSet(new IgnoreCase());
+				RegionTree = new List<string>();
 				RegionTree.AddRange(RegionDictionary.Keys);
 			};
 
