@@ -10,6 +10,7 @@ using RightMove.Services;
 using RightMoveApp.Helpers;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
+using RightMoveApp.UserControls;
 using RightMoveApp.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,8 @@ namespace RightMoveApp.ViewModel
 		private readonly AppSettings _settings;
 		private readonly RightMoveParserServiceFactory _parserFactory;
 		private readonly Func<IPropertyPageParser> _propertyParserFactory;
+		private SearchParamsViewModel _searchParamsViewModel;
+
 
 		public MainViewModel(IOptions<AppSettings> settings,
 			RightMoveModel rightMoveModel,
@@ -72,6 +75,16 @@ namespace RightMoveApp.ViewModel
 			_rightMoveModel = rightMoveModel;
 			_rightMoveModel.PropertyChanged += RightMoveModel_PropertyChanged;
 			IsSearching = false;
+
+			_searchParamsViewModel = new SearchParamsViewModel();
+
+			TopViewModel = _searchParamsViewModel;
+			_searchParamsViewModel.SearchParamsUpdated += OnSearchParamsChanged;
+		}
+
+		private void OnSearchParamsChanged(object sender, EventArgs e)
+		{
+			SearchAsyncCommand.RaiseCanExecuteChanged();
 		}
 
 		private void RightMoveModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -83,6 +96,20 @@ namespace RightMoveApp.ViewModel
 			else if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyFullSelectedItem))
 			{
 				RaisePropertyChanged(nameof(RightMovePropertyFullSelectedItem));
+			}
+		}
+
+		private ViewModelBase _topViewModel;
+
+		public ViewModelBase TopViewModel
+		{
+			get
+			{
+				return _topViewModel;
+			}
+			set
+			{
+				Set(ref _topViewModel, value);
 			}
 		}
 
@@ -184,21 +211,6 @@ namespace RightMoveApp.ViewModel
 			set => Set(ref _loadingImage, value);
 		}
 
-		private SearchParams _searchParams;
-
-		/// <summary>
-		/// Gets or sets the <see cref="SearchParams"/>
-		/// </summary>
-		public SearchParams SearchParams
-		{
-			get => _searchParams;
-			set
-			{
-				Set(ref _searchParams, value);
-				SearchAsyncCommand.RaiseCanExecuteChanged();
-			}
-		}
-
 		/// <summary>
 		/// Gets or sets the displayed image
 		/// </summary>
@@ -247,12 +259,6 @@ namespace RightMoveApp.ViewModel
 		/// Gets or sets the search command
 		/// </summary>
 		public IAsyncCommand SearchAsyncCommand
-		{
-			get;
-			set;
-		}
-
-		public ICommand SearchParamsUpdatedCommand
 		{
 			get;
 			set;
@@ -382,9 +388,7 @@ namespace RightMoveApp.ViewModel
 		private void InitializeCommands()
 		{
 			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync(), () => CanExecuteSearch(null));
-			SearchParamsUpdatedCommand = new RelayCommand((o) => SearchAsyncCommand.RaiseCanExecuteChanged(), (o) => !IsSearching);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
-			SearchParams = new SearchParams();
 			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
 			PrevImageCommand = AsyncCommand.Create(() => ExecuteUpdatePrevImageAsync(null), () => CanExecuteUpdatePrevImage(null));
 			NextImageCommand = AsyncCommand.Create(() => ExecuteUpdateNextImageAsync(null), () => CanExecuteUpdateNextImage(null));
@@ -489,7 +493,7 @@ namespace RightMoveApp.ViewModel
 			IsSearching = true;
 
 			// create a copy if search params in case its changed during search
-			SearchParams searchParams = new SearchParams(SearchParams);
+			SearchParams searchParams = new SearchParams(_searchParamsViewModel.SearchParams);
 			await _rightMoveModel.GetRightMoveItems(searchParams);
 
 			UpdateAveragePrice();
@@ -506,7 +510,7 @@ namespace RightMoveApp.ViewModel
 		/// <returns>true if can execute, false otherwise</returns>
 		private bool CanExecuteSearch(object parameter)
 		{
-			return !IsSearching && SearchParams.IsValid();
+			return !IsSearching && _searchParamsViewModel.SearchParams.IsValid();
 		}
 
 		#endregion
