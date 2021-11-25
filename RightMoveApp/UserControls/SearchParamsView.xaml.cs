@@ -123,7 +123,7 @@ namespace RightMoveApp.UserControls
 			5
 		};
 
-		public StringTrieSet SearchString
+		public List<string> SearchString
 		{
 			get
 			{
