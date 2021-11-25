@@ -15,6 +15,9 @@
         DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
         Name="mainWindow">
     <Window.Resources>
+        <DataTemplate DataType="{x:Type controls:SearchParamsViewModel}">
+            <controls:SearchParamsView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <!--resources for data grid-->
@@ -40,17 +43,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.Row="0" Header="Search Params" Panel.ZIndex="10">
-            <controls:SearchParamsControl x:Name="searchControl"
-                                        SearchParams="{Binding Path=SearchParams, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        IsEnabled="{Binding Path=IsSearching, Converter={StaticResource BooleanToReverseConverter}}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SearchParamsUpdated">
-                        <i:InvokeCommandAction Command="{Binding Path=SearchParamsUpdatedCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                
-            </controls:SearchParamsControl>                                        
-
+            <ContentControl Content="{Binding TopViewModel}"/>
         </GroupBox>
         <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" 
                 Content="Search" 
