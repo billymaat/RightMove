@@ -23,6 +23,7 @@
                      Background="LightCyan" 
                      Visibility="Collapsed" 
                      MinWidth="150" 
+                     MaxHeight="100"
                      Margin="0,25,0,-25">
                 <ListBox.Width>
                     <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>

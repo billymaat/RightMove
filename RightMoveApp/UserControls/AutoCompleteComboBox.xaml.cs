@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Linq;
 using System.Threading.Tasks;
 using Utilities;
+using System.ComponentModel;
 
 namespace RightMoveApp.UserControls
 {
@@ -22,6 +23,12 @@ namespace RightMoveApp.UserControls
 	/// </summary>
 	public partial class AutoCompleteComboBox : UserControl
 	{
+		public ListCollectionView LstCollectionView
+		{
+			get;
+			set;
+		}
+
 		public AutoCompleteComboBox()
 		{
 			InitializeComponent();
@@ -38,23 +45,24 @@ namespace RightMoveApp.UserControls
 
 		#region Properties
 
-		/// 
-		/// Gets or sets the items source.
-		/// 
-		/// The items source.
-		public StringTrieSet ItemsSource
+		public List<string> ItemsSource
 		{
-			get { return (StringTrieSet)GetValue(ItemsSourceProperty); }
+			get { return (List<string>)GetValue(ItemsSourceProperty); }
 			set { SetValue(ItemsSourceProperty, value); }
 		}
 
-		// Using a DependencyProperty as the backing store for ItemsSource.  
-		// This enables animation, styling, binding, etc...
+		// Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty ItemsSourceProperty =
-			DependencyProperty.Register("ItemsSource"
-								, typeof(StringTrieSet)
-								, typeof(AutoCompleteComboBox)
-								, new UIPropertyMetadata(null));
+			DependencyProperty.Register("ItemsSource", typeof(List<string>), typeof(AutoCompleteComboBox), new UIPropertyMetadata(null, OnItemsSourceChanged));
+
+		private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			AutoCompleteComboBox ctrl = d as AutoCompleteComboBox;
+			if (ctrl != null)
+			{
+				ctrl.lstSuggestion.ItemsSource = (List<string>)e.NewValue;
+			}
+		}
 
 		/// 
 		/// Gets or sets the selected value.
@@ -79,33 +87,31 @@ namespace RightMoveApp.UserControls
 		/// 
 		/// <param name="sender">The source of the event.
 		/// <param name="e">The instance containing the event data.
-		private void TxtAuto_TextChanged(object sender, TextChangedEventArgs e)
+		private async void TxtAuto_TextChanged(object sender, TextChangedEventArgs e)
 		{
-
 			// Only autocomplete when there is text
 			if (txtAuto.Text.Length == 0)
 			{
 				lstSuggestion.Visibility = Visibility.Collapsed;
-				lstSuggestion.ItemsSource = null;
 				return;
 			}
+
+			lstSuggestion.ItemsSource = ItemsSource;
 
 			// Use Linq to Query ItemsSource for resultdata
 			string condition = string.Format("{0}%", txtAuto.Text);
 
-			// IEnumerable<string> results = ItemsSource.Where(o => o.ToLower().StartsWith(txtAuto.Text.ToLower()));
+			var text = txtAuto.Text;
+			ICollectionView view = CollectionViewSource.GetDefaultView(ItemsSource);
+			view.Filter = (o) => { return ((string)o).ToLower().StartsWith(text); };
 
-
-			IEnumerable<string> results = ItemsSource.GetByPrefix(txtAuto.Text);
-
-			if (!results.Any())
+			if (!view.Cast<string>().Any())
 			{
 				lstSuggestion.Visibility = Visibility.Collapsed;
-				lstSuggestion.ItemsSource = null;
 				return;
 			}
 
-			lstSuggestion.ItemsSource = results;
+			// this is where the filtering needs to happen
 			lstSuggestion.Visibility = Visibility.Visible;
 		}
 
@@ -138,7 +144,7 @@ namespace RightMoveApp.UserControls
 					break;
 				case Key.Escape:
 					// Cancel the selection
-					lstSuggestion.ItemsSource = null;
+					//lstSuggestion.ItemsSource = null;
 					lstSuggestion.Visibility = Visibility.Collapsed;
 					break;
 				default:

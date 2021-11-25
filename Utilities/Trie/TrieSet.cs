@@ -168,6 +168,29 @@ namespace Utilities
 			return GetByPrefix(node);
 		}
 
+		/// <summary>
+		/// Gets items by key prefix.
+		/// </summary>
+		/// <param name="prefix">Key prefix.</param>
+		/// <returns>Collection of <see cref="T"/> items.</returns>
+		public IEnumerable<IEnumerable<T>> GetByPrefixAsync(IEnumerable<T> prefix)
+		{
+			if (prefix == null) 
+				throw new ArgumentNullException(nameof(prefix));
+
+			var node = _root;
+
+			foreach (var item in prefix)
+			{
+				if (!node.Children.TryGetValue(item, out node))
+				{
+					return Enumerable.Empty<IEnumerable<T>>();
+				}
+			}
+
+			return GetByPrefix(node);
+		}
+
 		private static IEnumerable<TrieNode> GetAllNodes(TrieNode node)
 		{
 			foreach (var child in node.Children)
