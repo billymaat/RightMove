@@ -41,13 +41,9 @@ namespace RightMoveApp.UserControls
 
 			lstSuggestion.SelectionChanged +=
 				new SelectionChangedEventHandler(ListBox_SelectionChanged);
-
-			lstSuggestion.ItemsSource = ItemsSource;
 		}
 
 		#region Properties
-
-
 
 		public List<string> ItemsSource
 		{
@@ -57,25 +53,16 @@ namespace RightMoveApp.UserControls
 
 		// Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty ItemsSourceProperty =
-			DependencyProperty.Register("ItemsSource", typeof(List<string>), typeof(AutoCompleteComboBox), new UIPropertyMetadata(null));
+			DependencyProperty.Register("ItemsSource", typeof(List<string>), typeof(AutoCompleteComboBox), new UIPropertyMetadata(null, OnItemsSourceChanged));
 
-		///// 
-		///// Gets or sets the items source.
-		///// 
-		///// The items source.
-		//public StringTrieSet ItemsSource
-		//{
-		//	get { return (StringTrieSet)GetValue(ItemsSourceProperty); }
-		//	set { SetValue(ItemsSourceProperty, value); }
-		//}
-
-		//// Using a DependencyProperty as the backing store for ItemsSource.  
-		//// This enables animation, styling, binding, etc...
-		//public static readonly DependencyProperty ItemsSourceProperty =
-		//	DependencyProperty.Register("ItemsSource"
-		//						, typeof(StringTrieSet)
-		//						, typeof(AutoCompleteComboBox)
-		//						, new UIPropertyMetadata(null));
+		private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			AutoCompleteComboBox ctrl = d as AutoCompleteComboBox;
+			if (ctrl != null)
+			{
+				ctrl.lstSuggestion.ItemsSource = (List<string>)e.NewValue;
+			}
+		}
 
 		/// 
 		/// Gets or sets the selected value.
@@ -106,7 +93,6 @@ namespace RightMoveApp.UserControls
 			if (txtAuto.Text.Length == 0)
 			{
 				lstSuggestion.Visibility = Visibility.Collapsed;
-				//lstSuggestion.ItemsSource = null;
 				return;
 			}
 
@@ -115,26 +101,17 @@ namespace RightMoveApp.UserControls
 			// Use Linq to Query ItemsSource for resultdata
 			string condition = string.Format("{0}%", txtAuto.Text);
 
-			// IEnumerable<string> results = ItemsSource.Where(o => o.ToLower().StartsWith(txtAuto.Text.ToLower()));
-
-			var itemsSource = ItemsSource;
 			var text = txtAuto.Text;
-			//IEnumerable<string> results = await Task.Run(() => itemsSource.GetByPrefix(text), );
-			//var task = Task.Run(() => itemsSource.GetByPrefix(text));
-			//await task;
-			ICollectionView view = CollectionViewSource.GetDefaultView(itemsSource);
+			ICollectionView view = CollectionViewSource.GetDefaultView(ItemsSource);
 			view.Filter = (o) => { return ((string)o).ToLower().StartsWith(text); };
-			// var results = task.Result;
 
 			if (!view.Cast<string>().Any())
 			{
 				lstSuggestion.Visibility = Visibility.Collapsed;
-				//lstSuggestion.ItemsSource = null;
 				return;
 			}
 
 			// this is where the filtering needs to happen
-			//lstSuggestion.ItemsSource = results;
 			lstSuggestion.Visibility = Visibility.Visible;
 		}
 
