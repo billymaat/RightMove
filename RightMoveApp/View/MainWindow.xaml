@@ -50,7 +50,8 @@
         <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" 
                 Content="Search" 
                 IsDefault="True"
-                Command="{Binding SearchAsyncCommand}"/>
+                Command="{Binding SearchAsyncCommand}"
+                Style="{StaticResource MahApps.Styles.Button.Square}"/>
         <Grid x:Name="mainGrid" 
                   Grid.Column="0" Grid.Row="2">
                 <Grid.ColumnDefinitions>
