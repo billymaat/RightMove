@@ -8,8 +8,9 @@
 
         x:Class="RightMoveApp.MainWindow"
         xmlns:controls="clr-namespace:RightMoveApp.UserControls"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:valueconverter="clr-namespace:RightMoveApp.ValueConverters" xmlns:GridSplitterMinWidth="clr-namespace:RightMoveApp.Behaviors" xmlns:valueconverters="clr-namespace:RightMoveApp.UserControls.ValueConverters"
-    mc:Ignorable="d"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:valueconverters="clr-namespace:RightMoveApp.UserControls.ValueConverters"
+        mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="800" Language="en-GB"
         HorizontalAlignment="Stretch"
         DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
