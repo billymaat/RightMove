@@ -149,36 +149,23 @@
                 </TextBlock>
                 <Grid Grid.Row="2" HorizontalAlignment="Stretch">
                     <Grid.Resources>
-                        <!--<Style TargetType="{x:Type Button}">
-                            <Style.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="5"/>
-                                </Style>
-                            </Style.Resources>
-                            <Setter Property="Margin" Value="5"/>
-                        </Style>-->
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="5"/>
+                        </Style>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <!--<Button>
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="20"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>-->
                     <Button x:Name="btnLeft"
                             Grid.Column="0"
-                        Content="&lt;" 
-                        Padding="10"
-                        Command="{Binding PrevImageCommand}"/>
+                            Content="&lt;" 
+                            Command="{Binding PrevImageCommand}"/>
                     <Button x:Name="btnRight"
                             Grid.Column="1"
                         Content=">" 
-                        Command="{Binding NextImageCommand}"
-                        Padding="10"/>
+                        Command="{Binding NextImageCommand}"/>
                 </Grid>
             </Grid>
             </Grid>
