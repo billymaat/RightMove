@@ -14,13 +14,7 @@
              x:Name="uc"
              >
     <UserControl.Resources>
-        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="dataTypes:SortType"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
         <valueconverters:PropertyTypeConverter x:Key="PropertyTypeConverter" x:Shared="False"/>
-
         <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboStyle}">
             <Setter Property="Margin" Value="0,0,0,1"/>
         </Style>
