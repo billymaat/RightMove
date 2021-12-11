@@ -52,11 +52,10 @@
                 IsDefault="True"
                 Command="{Binding SearchAsyncCommand}"/>
         <Grid x:Name="mainGrid" 
-                  Grid.Column="0" Grid.Row="2"
-                  ShowGridLines="True">
+                  Grid.Column="0" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto" 
                                   MinWidth="{Binding RightMoveSelectedItem, Converter={StaticResource MinWidthConverter}}"/>
                 </Grid.ColumnDefinitions>
@@ -128,7 +127,7 @@
                     <Label Grid.Column="0" Grid.Row="1" 
                         Content="{Binding Path=Info}"/>
                 </Grid>
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
                               Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
                 <Grid Grid.Column="2" 
                     HorizontalAlignment="Stretch"
