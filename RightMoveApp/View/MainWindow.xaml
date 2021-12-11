@@ -131,45 +131,7 @@
                 </Grid>
                 <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
                               Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
-                <Grid Grid.Column="2" 
-                    HorizontalAlignment="Stretch"
-                    Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Image Grid.Row="0" 
-                    Source="{Binding DisplayedImage}" 
-                    />
-                <controls:BusySpinner Grid.Row="0"
-                                      Visibility="{Binding LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <TextBlock Grid.Row="1" Visibility="{Binding ImageIndexView, Converter={StaticResource NullToVisibilityConverter}}">
-                    <TextBlock.Text>
-                        <Binding Path="ImageIndexView"/>
-                    </TextBlock.Text>
-                </TextBlock>
-                <Grid Grid.Row="2" HorizontalAlignment="Stretch">
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroSquare.Accent}">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="Padding" Value="5"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="btnLeft"
-                            Grid.Column="0"
-                            Content="&lt;" 
-                            Command="{Binding PrevImageCommand}"/>
-                    <Button x:Name="btnRight"
-                            Grid.Column="1"
-                        Content=">" 
-                        Command="{Binding NextImageCommand}"/>
-                </Grid>
-            </Grid>
+                <view:RightMoveImageView Grid.Column="2"/>
             </Grid>
         <ProgressBar Grid.Column="0" Grid.Row="3"
                         Minimum="0" Maximum="100"

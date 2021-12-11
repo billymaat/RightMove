@@ -71,11 +71,9 @@ namespace RightMoveApp
 			// ...
 			// Register all ViewModels
 			services.AddSingleton<MainViewModel>();
-			services.AddTransient<ImageViewModel>();
 
 			// Register all the windows of the application
 			services.AddSingleton<MainWindow>();
-			services.AddTransient<ImageWindow>();
 		}
 
 		protected override async void OnStartup(StartupEventArgs e)
