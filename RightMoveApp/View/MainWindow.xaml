@@ -9,7 +9,8 @@
         x:Class="RightMoveApp.MainWindow"
         xmlns:controls="clr-namespace:RightMoveApp.UserControls"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-        xmlns:valueconverters="clr-namespace:RightMoveApp.UserControls.ValueConverters"
+        xmlns:valueconverters="clr-namespace:RightMoveApp.UserControls.ValueConverters" 
+        xmlns:view="clr-namespace:RightMoveApp.View"
         mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="800" Language="en-GB"
         HorizontalAlignment="Stretch"
@@ -17,7 +18,7 @@
         Name="mainWindow">
     <Window.Resources>
         <DataTemplate DataType="{x:Type controls:SearchParamsViewModel}">
-            <controls:SearchParamsView/>
+            <view:SearchParamsView/>
         </DataTemplate>
         <valueconverters:MinWidthConverter x:Key="MinWidthConverter"/>
     </Window.Resources>
