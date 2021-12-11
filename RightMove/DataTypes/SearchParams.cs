@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -10,9 +11,16 @@ namespace RightMove.DataTypes
 {
 	public enum SortType
 	{
+		[Description("Highest price")]
 		HighestPrice = 0,
+		
+		[Description("Lowest price")]
 		LowestPrice = 1,
+
+		[Description("Newest listed")]
 		NewestListed = 6,
+
+		[Description("Oldest listed")]
 		OldestListed = 10
 	}
 
@@ -136,6 +144,14 @@ namespace RightMove.DataTypes
 			20,
 			30,
 			40
+		};
+
+		public static readonly Dictionary<SortType, string> SortTypeDictionary = new Dictionary<SortType, string>()
+		{
+			{ SortType.HighestPrice, "Highest price"},
+			{ SortType.LowestPrice, "Lowest price" },
+			{ SortType.NewestListed, "Newest listed" },
+			{ SortType.OldestListed, "Oldest listed" }
 		};
 
 		public static readonly Dictionary<PropertyTypeEnum, string> PropertyTypeDictionary = new Dictionary<PropertyTypeEnum, string>()

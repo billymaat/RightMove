@@ -37,6 +37,8 @@ namespace RightMoveApp.View
 			{ 40, "Within 40 miles" }
 		};
 
+		public Dictionary<SortType, string> SortTypes => SortTypeDictionary;
+
 		public Dictionary<PropertyTypeEnum, string> PropertyTypes => PropertyTypeDictionary;
 
 		/// <summary>
