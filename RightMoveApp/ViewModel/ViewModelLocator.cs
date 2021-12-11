@@ -16,11 +16,5 @@ namespace RightMoveApp.ViewModel
 		/// </summary>
 		public MainViewModel MainViewModel
 			=> App.ServiceProvider.GetRequiredService<MainViewModel>();
-
-		/// <summary>
-		/// Gets the <see cref="ImageViewModel"/>
-		/// </summary>
-		public ImageViewModel ImageViewModel
-			=> App.ServiceProvider.GetRequiredService<ImageViewModel>();
 	}
 }
