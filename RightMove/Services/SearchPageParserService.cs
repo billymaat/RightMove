@@ -6,6 +6,7 @@ using AngleSharp.Dom;
 using RightMove.DataTypes;
 using RightMove.Extensions;
 using RightMove.Factory;
+using RightMove.Helpers;
 
 namespace RightMove.Services
 {
@@ -102,7 +103,8 @@ namespace RightMove.Services
 				string houseType;
 				string address;
 				string desc;
-				DateTime date = DateTime.MinValue;
+				DateTime dateAdded = DateTime.MinValue;
+				DateTime dateReduced = DateTime.MinValue;
 				string agent = null;
 				string link;
 				int price;
@@ -123,7 +125,8 @@ namespace RightMove.Services
 				// dateAndAgent is in the form "Added on 01/02/2021 by Melissa Berry Sales & Lettings, Prestwich"
 				if (!string.IsNullOrEmpty(dateAndAgentText))
 				{
-					date = RightMoveParserHelper.ParseDateAdded(dateAndAgentText);
+					dateAdded = RightMoveParserHelper.ParseDateAdded(dateAndAgentText);
+					dateReduced = RightMoveParserHelper.ParseDateReduced(dateAndAgentText);
 					agent = RightMoveParserHelper.ParseAgent(dateAndAgentText);
 				}
 
@@ -143,7 +146,8 @@ namespace RightMove.Services
 				rightMoveItem.Address = address;
 				rightMoveItem.Desc = desc;
 				rightMoveItem.Agent = agent;
-				rightMoveItem.DateAdded = date;
+				rightMoveItem.DateAdded = dateAdded;
+				rightMoveItem.DateReduced = dateReduced;
 				rightMoveItem.Link = link;
 				rightMoveItem.Price = price;
 				rightMoveItem.Featured = featured;
