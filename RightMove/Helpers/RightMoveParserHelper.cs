@@ -20,12 +20,10 @@ namespace RightMove.Helpers
 
 			if (ind >= 0)
 			{
-				// we might fail to get a string, but it doesn't matter
-				var dateString = dateText.Substring(ind + "Reduced on ".Length, 10);
-
-				if (!DateTime.TryParse(dateString, out date))
+				if (!ParseDate(dateText, out date))
 				{
-					date = ParseDate(dateText);
+					var dateString = dateText.Substring(ind + "Reduced on ".Length, 10);
+					DateTime.TryParse(dateString, out date);
 				}
 			}
 
@@ -47,11 +45,10 @@ namespace RightMove.Helpers
 
 			if (ind >= 0)
 			{
-				var dateString = dateText.Substring(ind + "Added on ".Length, 10);
-			
-				if (!DateTime.TryParse(dateString, out date))
+				if (!ParseDate(dateText, out date))
 				{
-					date = ParseDate(dateText);
+					var dateString = dateText.Substring(ind + "Added on ".Length, 10);
+					DateTime.TryParse(dateString, out date);
 				}
 			}
 
@@ -62,10 +59,10 @@ namespace RightMove.Helpers
 		/// Parse date from "yesterday" or "today"
 		/// </summary>
 		/// <param name="dateText">the text</param>
-		/// <returns>the date, or <see cref="DateTime.MinValue"/></returns>
-		private static DateTime ParseDate(string dateText)
+		/// <returns>true if successful, false otherwise</returns>
+		private static bool ParseDate(string dateText, out DateTime date)
 		{
-			DateTime date = DateTime.MinValue;
+			date = DateTime.MinValue;
 
 			string yesterday = "yesterday";
 			string today = "today";
@@ -73,13 +70,15 @@ namespace RightMove.Helpers
 			if (dateText.IndexOf(yesterday, StringComparison.InvariantCultureIgnoreCase) >= 0)
 			{
 				date = DateTime.Now.AddDays(-1);
+				return true;
 			}
 			else if (dateText.IndexOf(today, StringComparison.InvariantCultureIgnoreCase) >= 0)
 			{
 				date = DateTime.Now;
+				return true;
 			}
 
-			return date;
+			return false;
 		}
 
 		/// <summary>
