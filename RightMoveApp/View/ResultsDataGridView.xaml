@@ -4,9 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RightMoveApp.View" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:valueconverters="clr-namespace:RightMoveApp.ValueConverters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <valueconverters:RightMovePropertyToDateConverter x:Key="RightMovePropertyToDateConverter"/>
+    </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="listView" 
                               Grid.Row="0"
@@ -64,7 +67,7 @@
                 <DataGridTextColumn Header="House Type" Binding="{Binding HouseInfo}" Width="100"/>
                 <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="100"/>
                 <DataGridTextColumn Header="Desc" Binding="{Binding Desc}" Width="100"/>
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="100"/>
+                <DataGridTextColumn Header="Date" Binding="{Binding Path=., Converter={StaticResource RightMovePropertyToDateConverter}}" Width="100"/>
                 <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>

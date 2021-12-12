@@ -5,6 +5,7 @@ using AngleSharp.Dom;
 using Newtonsoft.Json;
 using RightMove.DataTypes;
 using RightMove.Factory;
+using RightMove.Helpers;
 using RightMove.JsonObjects;
 
 namespace RightMove.Services
@@ -72,7 +73,6 @@ namespace RightMove.Services
 		private void ParseRightMovePropertyPage(IDocument document)
 		{
 			Json = GetJson(document);
-
 
 			if (Json is null)
 			{
