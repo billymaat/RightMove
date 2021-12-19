@@ -9,6 +9,7 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RightMove.Db;
 using RightMove.Db.Repositories;
 using RightMove.Db.Services;
 using RightMove.Extensions;
@@ -41,7 +42,9 @@ namespace RightMoveApp
 					ConfigureServices(context.Configuration, services);
 
 					// register db writer
-					services.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>();
+					services.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
+						.AddTransient<IDbConfiguration, DbConfiguration>(o => new DbConfiguration("RightMoveDB.db"));
+
 				})
 				.Build();
 

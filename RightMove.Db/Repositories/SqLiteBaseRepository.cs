@@ -8,18 +8,27 @@ using System.Text;
 namespace RightMove.Db.Repositories
 {
 	public class SqLiteBaseRepository
-	{
-		// public static string DbFile => @"C:\RightMoveDB\RightMoveDB.db";
-		public static readonly string DbFile;
-
-		static SqLiteBaseRepository()
+	{		
+		public SqLiteBaseRepository(IDbConfiguration dbConfiguration)
 		{
-			var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-			DbFile = Path.Combine(path, "RightMoveDB_1.db");
+			DbConfiguration = dbConfiguration;
 		}
 
-		public static SQLiteConnection SimpleDbConnection()
+		public IDbConfiguration DbConfiguration
+		{
+			get;
+		}
+
+		public string DbFile
+		{
+			get
+			{
+				var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+				return Path.Combine(path, DbConfiguration.DbFile);
+			}
+		}
+
+		public SQLiteConnection SimpleDbConnection()
 		{
 			return new SQLiteConnection($"DataSource= {DbFile}");
 		}

@@ -9,6 +9,11 @@ namespace RightMove.Db.Services
 {
 	public interface IDatabaseService
 	{
+		IDbConfiguration DbConfiguration
+		{
+			get;
+		}
+
 		bool CreateTableIfNotExists();
 
 		List<RightMovePropertyModel> LoadProperties();

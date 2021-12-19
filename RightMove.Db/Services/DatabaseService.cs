@@ -25,6 +25,8 @@ namespace RightMove.Db.Services
 			Failed
 		}
 
+		public IDbConfiguration DbConfiguration => _db.DbConfiguration;
+
 		public bool TableCreated { get; set; }
 
 		public bool CreateTableIfNotExists()

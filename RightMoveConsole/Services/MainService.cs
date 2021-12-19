@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
-using RightMove.Db.Models;
-using RightMove.Db.Repositories;
 using RightMove.Db.Services;
 using RightMove.Factory;
-using static RightMove.Db.Services.DatabaseService;
 
 namespace RightMoveConsole.Services
 {
@@ -73,6 +67,10 @@ namespace RightMoveConsole.Services
 			}
 		}
 
+		/// <summary>
+		/// Get search params
+		/// </summary>
+		/// <returns>the search params</returns>
 		private SearchParams GetSearchParams()
 		{
 			SearchParams searchParams = new SearchParams()
@@ -89,6 +87,12 @@ namespace RightMoveConsole.Services
 			return searchParams;
 		}
 
+		/// <summary>
+		/// Do the search and update the database
+		/// </summary>
+		/// <param name="searchParams">the search params</param>
+		/// <param name="updateDb">true to update db, false otherwise</param>
+		/// <returns></returns>
 		private async Task DoSearch(SearchParams searchParams, bool updateDb = true)
 		{
 			_display.WriteLine("Search Parameters:");
@@ -115,14 +119,23 @@ namespace RightMoveConsole.Services
 			_display.WriteLine();
 		}
 
-		private async Task DoSearch()
+		private void WriteDetails()
 		{
-			// perform searches
+			// write details
+			Console.WriteLine($"Current time: {DateTime.Now}");
+			Console.WriteLine($"DbFile: {_db.DbConfiguration.DbFile}");
+		}
+
+		private async Task PerformSearch()
+		{			
+			// get the search locations
 			var searchLocations = _searchLocationsReader.GetLocations();
+
 			if (searchLocations != null)
 			{
 				foreach (var searchLocation in searchLocations)
 				{
+					// perform searches
 					var searchParams = GetSearchParams();
 					searchParams.RegionLocation = searchLocation;
 					await DoSearch(searchParams);
@@ -141,8 +154,8 @@ namespace RightMoveConsole.Services
 					try
 					{
 						_logger.LogInformation("Starting application");
-						CreateTable();
-						await DoSearch();
+						WriteDetails();
+						await PerformSearch();
 						_exitCode = 0;
 					}
 					catch (Exception ex)
@@ -158,11 +171,6 @@ namespace RightMoveConsole.Services
 			});
 
 			return Task.CompletedTask;
-		}
-
-		private static void CreateTable()
-		{
-			
 		}
 
 		public Task StopAsync(CancellationToken cancellationToken)

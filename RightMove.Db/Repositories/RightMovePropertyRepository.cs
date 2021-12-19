@@ -13,9 +13,8 @@ namespace RightMove.Db.Repositories
 {
 	public class RightMovePropertyRepository : SqLiteBaseRepository, IRightMovePropertyRepository
 	{
-		public RightMovePropertyRepository()
+		public RightMovePropertyRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
 		{
-
 		}
 
 		public void CreateTableIfNotExist()

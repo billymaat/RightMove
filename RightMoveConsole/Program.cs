@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
+using RightMove.Db;
 using RightMove.Db.Repositories;
 using RightMove.Db.Services;
 using RightMove.Extensions;
@@ -28,6 +29,7 @@ namespace RightMoveConsole
 						services.Register();
 						services.AddScoped<IDisplayService, DisplayService>()
 							.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
+							.AddSingleton<IDbConfiguration>(o => new DbConfiguration("RightMoveDB.db"))
 							.AddTransient<IDatabaseService, DatabaseService>()
 							.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
