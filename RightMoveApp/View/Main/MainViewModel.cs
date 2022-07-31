@@ -24,7 +24,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-namespace RightMoveApp.ViewModel
+namespace RightMoveApp.View.Main
 {
 	public class MainViewModel : ViewModelBase
 	{
@@ -87,7 +87,7 @@ namespace RightMoveApp.ViewModel
 			SearchAsyncCommand.RaiseCanExecuteChanged();
 		}
 
-		private void RightMoveModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RightMoveModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyItems))
 			{

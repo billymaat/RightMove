@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using RightMoveApp.View.Main;
 
 namespace RightMoveApp.ViewModel
 {
