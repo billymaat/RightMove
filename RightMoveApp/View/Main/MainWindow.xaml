@@ -22,38 +22,45 @@
         </DataTemplate>
         <valueconverters:MinWidthConverter x:Key="MinWidthConverter"/>
     </Window.Resources>
-    <Grid>
-        <!--resources for data grid-->
-        <Grid.Resources>
-            <Style TargetType="DataGridRow">
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
-                        <Setter Property="Background" Value="#FFFFFF" />
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
-                        <Setter Property="Background" Value="#E5F0FA" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Resources>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.Row="0" Header="Search Params" Panel.ZIndex="10">
-            <ContentControl Content="{Binding TopViewModel}"/>
-        </GroupBox>
-        <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" 
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Save Results"/>
+                <MenuItem Header="_Close"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <!--resources for data grid-->
+            <Grid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                            <Setter Property="Background" Value="#FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                            <Setter Property="Background" Value="#E5F0FA" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Column="0" Grid.Row="0" Header="Search Params" Panel.ZIndex="10">
+                <ContentControl Content="{Binding TopViewModel}"/>
+            </GroupBox>
+            <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" 
                 Content="Search" 
                 IsDefault="True"
                 Command="{Binding SearchAsyncCommand}"
                 Style="{StaticResource MahApps.Styles.Button.Square}"/>
-        <Grid x:Name="mainGrid" 
+            <Grid x:Name="mainGrid" 
                   Grid.Column="0" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -66,19 +73,20 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                <view:ResultsDataGridView/>
-                <Label Grid.Column="0" Grid.Row="1" 
+                    <view:ResultsDataGridView/>
+                    <Label Grid.Column="0" Grid.Row="1" 
                         Content="{Binding Path=Info}"/>
                 </Grid>
                 <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
                               Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
                 <view:RightMoveImageView Grid.Column="2"/>
             </Grid>
-        <ProgressBar Grid.Column="0" Grid.Row="3"
+            <ProgressBar Grid.Column="0" Grid.Row="3"
                         Minimum="0" Maximum="100"
                         MinHeight="10"
                         Name="pbStatus"
                         Visibility="{Binding IsSearching, Converter={StaticResource BooleanToCollapsedVisiblilityConverter}}"
                         IsIndeterminate="{Binding SearchAsyncCommand.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToReverseConverter}}"/>
-    </Grid>
+        </Grid>
+    </DockPanel>
 </mah:MetroWindow>
