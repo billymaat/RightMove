@@ -16,6 +16,7 @@ using RightMove.Extensions;
 using RightMove.Factory;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
+using RightMoveApp.View.Main;
 using RightMoveApp.ViewModel;
 
 namespace RightMoveApp
