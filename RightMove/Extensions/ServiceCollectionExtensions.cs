@@ -8,7 +8,7 @@ namespace RightMove.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static void Register(this IServiceCollection services)
+		public static void RegisterRightMoveLibrary(this IServiceCollection services)
 		{
 			services.AddTransient<IHttpService, HttpService>()
 				.AddScoped<ILoggerService, LoggerService>()

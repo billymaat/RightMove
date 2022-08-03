@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +9,10 @@ using RightMove.Db;
 using RightMove.Db.Repositories;
 using RightMove.Db.Services;
 using RightMove.Extensions;
-using RightMove.Factory;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
 using RightMoveApp.View.Main;
-using RightMoveApp.ViewModel;
+using Serilog;
 
 namespace RightMoveApp
 {
@@ -38,10 +33,10 @@ namespace RightMoveApp
 		public App()
 		{
 			host = Host.CreateDefaultBuilder()
+				.UseSerilog()
 				.ConfigureServices((context, services) =>
 				{
 					ConfigureServices(context.Configuration, services);
-
 					// register db writer
 					services.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
 						.AddTransient<IDbConfiguration, DbConfiguration>(o => new DbConfiguration("RightMoveDB.db"));
@@ -54,7 +49,7 @@ namespace RightMoveApp
 
 		private void ConfigureServices(IConfiguration configuration,
 			IServiceCollection services)
-		{
+		{			
 			services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
 			services.AddScoped<ISampleService, SampleService>();
 			services.AddScoped<IDatabaseService, DatabaseService>();
@@ -68,8 +63,12 @@ namespace RightMoveApp
 			});
 
 			// register RightMoveLibrary
-			services.Register();
+			services.RegisterRightMoveLibrary();
+			RegisterView(services);
+		}
 
+		private void RegisterView(IServiceCollection services)
+        {
 			services.AddSingleton<RightMoveModel>();
 
 			// ...
@@ -81,20 +80,40 @@ namespace RightMoveApp
 		}
 
 		protected override async void OnStartup(StartupEventArgs e)
-		{
-			await host.StartAsync();
-			var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
-			await navigationService.ShowAsync(WindowKeys.MainWindow);
+        {
+            CreateLogger();
 
-			base.OnStartup(e);
-		}
+            Log.Logger.Information("Starting up");
+            await host.StartAsync();
+            var navigationService = ServiceProvider.GetRequiredService<NavigationService>();
+            await navigationService.ShowAsync(WindowKeys.MainWindow);
 
-		protected override async void OnExit(ExitEventArgs e)
+            base.OnStartup(e);
+        }
+
+        private static void CreateLogger()
+        {
+            // register logger
+            var config = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true)
+                        .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
+        }
+
+        protected override async void OnExit(ExitEventArgs e)
 		{
 			using (host)
 			{
 				await host.StopAsync(TimeSpan.FromSeconds(5));
 			}
+
+			// Flush all Serilog sinks before the app closes
+			Log.CloseAndFlush();
 
 			base.OnExit(e);
 		}
