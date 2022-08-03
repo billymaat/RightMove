@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
 using RightMove.Db.Models;
@@ -56,13 +57,20 @@ namespace RightMoveApp.View.Main
 		private SearchParamsViewModel _searchParamsViewModel;
 
 
+		private ILogger<MainViewModel> _logger;
+
 		public MainViewModel(IOptions<AppSettings> settings,
 			RightMoveModel rightMoveModel,
 			RightMoveParserServiceFactory parserFactory,
 			NavigationService navigationService,
 			IDatabaseService dbService,
-			Func<IPropertyPageParser> propertyParserFactory)
+			Func<IPropertyPageParser> propertyParserFactory,
+			ILogger<MainViewModel> logger)
 		{
+			_logger = logger;
+
+			_logger.LogInformation("MainViewModel loaded");
+
 			_settings = settings.Value;
 			_parserFactory = parserFactory;
 			_navigationService = navigationService;
