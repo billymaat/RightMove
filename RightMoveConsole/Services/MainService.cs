@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -35,38 +36,6 @@ namespace RightMoveConsole.Services
 			_searchLocationsReader = searchLocationsReader;
 		}
 
-		private async Task DoLoopSearch()
-		{
-			// for (int minPrice = 0; minPrice <= 3000000; minPrice += 10000) {
-			for (int j = 0; j < SearchParams.AllowedPrices.Count - 1; j++)
-			{
-				SearchParams searchParams = new SearchParams()
-				{
-					RegionLocation = "Manchester, Greater Manchester",
-					Sort = SortType.HighestPrice,
-					MinBedrooms = 1,
-					MaxBedrooms = 10,
-					MinPrice = SearchParams.AllowedPrices[j],
-					MaxPrice = SearchParams.AllowedPrices[j + 1]
-				};
-
-				_logger.LogDebug("Starting search");
-				_logger.LogDebug("Search param:");
-				_logger.LogDebug(searchParams.ToString());
-
-				var rightMoveService = _rightMoveParserServiceFactory.CreateInstance(searchParams);
-				Task<bool> res = rightMoveService.SearchAsync();
-
-				await res;
-
-				if (res.Result)
-				{
-					_logger.LogDebug($"Results count: {rightMoveService.Results.Count}");
-					(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Get search params
 		/// </summary>
@@ -93,7 +62,7 @@ namespace RightMoveConsole.Services
 		/// <param name="searchParams">the search params</param>
 		/// <param name="updateDb">true to update db, false otherwise</param>
 		/// <returns></returns>
-		private async Task DoSearch(SearchParams searchParams, bool updateDb = true)
+		private async Task PerformSearch(SearchParams searchParams, bool updateDb = true)
 		{
 			_display.WriteLine("Search Parameters:");
 			_display.WriteLine(searchParams.ToString());
@@ -109,7 +78,9 @@ namespace RightMoveConsole.Services
 
 				if (updateDb)
 				{
-					(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results);
+					var table = new string(searchParams.RegionLocation
+						.Where(x => char.IsLetterOrDigit(x)).ToArray());
+					(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results, table);
 
 					_display.WriteLine($"New properties: {databaseUpdate.newPropertiesCount}");
 					_display.WriteLine($"Updated properties: {databaseUpdate.updatedPropertiesCount}");
@@ -119,7 +90,7 @@ namespace RightMoveConsole.Services
 			_display.WriteLine();
 		}
 
-		private void WriteDetails()
+		private void WriteTimeAndDbFileLocation()
 		{
 			// write details
 			Console.WriteLine($"Current time: {DateTime.Now}");
@@ -138,7 +109,7 @@ namespace RightMoveConsole.Services
 					// perform searches
 					var searchParams = GetSearchParams();
 					searchParams.RegionLocation = searchLocation;
-					await DoSearch(searchParams);
+					await PerformSearch(searchParams);
 				}
 			}
 		}
@@ -154,7 +125,7 @@ namespace RightMoveConsole.Services
 					try
 					{
 						_logger.LogInformation("Starting application");
-						WriteDetails();
+						WriteTimeAndDbFileLocation();
 						await PerformSearch();
 						_exitCode = 0;
 					}

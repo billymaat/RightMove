@@ -12,12 +12,12 @@ namespace RightMove.Db.Repositories
 			get;
 		}
 
-		void CreateTableIfNotExist();
+		void CreateTableIfNotExist(string tableName);
 
-		void SaveProperty(RightMovePropertyModel property);
+		void SaveProperty(RightMovePropertyModel property, string tableName);
 
-		List<RightMovePropertyModel> LoadProperties();
+		List<RightMovePropertyModel> LoadProperties(string tableName);
 
-		void AddPriceToProperty(int primaryId, int price);
+		void AddPriceToProperty(int primaryId, int price, string tableName);
 	}
 }

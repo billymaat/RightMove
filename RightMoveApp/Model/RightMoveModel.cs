@@ -113,7 +113,8 @@ namespace RightMoveApp.Model
 
 		private void UpdateDatabase()
 		{
-			(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _dbService.AddToDatabase(RightMovePropertyItems);
+			throw new NotImplementedException();
+			(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _dbService.AddToDatabase(RightMovePropertyItems, "blah");
 		}
 
 		private void OnPropertyChanged([CallerMemberName] string name = null)

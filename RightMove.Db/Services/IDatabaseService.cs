@@ -14,12 +14,10 @@ namespace RightMove.Db.Services
 			get;
 		}
 
-		bool CreateTableIfNotExists();
+		List<RightMovePropertyModel> LoadProperties(string tableName);
 
-		List<RightMovePropertyModel> LoadProperties();
+		Result AddToDatabase(RightMoveProperty property, string tableName);
 
-		Result AddToDatabase(RightMoveProperty property);
-
-		(int, int) AddToDatabase(IList<RightMoveProperty> properties);
+		(int, int) AddToDatabase(IList<RightMoveProperty> properties, string tableName);
 	}
 }

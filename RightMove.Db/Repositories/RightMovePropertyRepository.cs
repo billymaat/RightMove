@@ -17,7 +17,7 @@ namespace RightMove.Db.Repositories
 		{
 		}
 
-		public void CreateTableIfNotExist()
+		public void CreateTableIfNotExist(string tableName)
 		{
 			using (SQLiteConnection ccn = new SQLiteConnection(GetConnectionString()))
 			{
@@ -26,7 +26,7 @@ namespace RightMove.Db.Repositories
 				using (var cmd = new SQLiteCommand(ccn))
 				{
 					// cmd.CommandText = @"CREATE TABLE cars(id INTEGER PRIMARY KEY, name TEXT, price INT)";
-					cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Property(Id INTEGER NOT NULL PRIMARY KEY,
+					cmd.CommandText = @"CREATE TABLE IF NOT EXISTS " + tableName + @"(Id INTEGER NOT NULL PRIMARY KEY,
 						RightMoveId TEXT NOT NULL,
 						HouseInfo TEXT,
 						Address TEXT,
@@ -44,11 +44,11 @@ namespace RightMove.Db.Repositories
 		/// Save property to db
 		/// </summary>
 		/// <param name="property">the<see cref="RightMovePropertyModel"/></param>
-		public void SaveProperty(RightMovePropertyModel property)
+		public void SaveProperty(RightMovePropertyModel property, string tableName)
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
-				cnn.Execute("insert into Property (RightMoveId, HouseInfo, Address, DateAdded, DateReduced, Date, Price, Link) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @DateReduced, @Date, @Price, @Link)", property);
+				cnn.Execute("insert into " + tableName + " (RightMoveId, HouseInfo, Address, DateAdded, DateReduced, Date, Price, Link) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @DateReduced, @Date, @Price, @Link)", property);
 			}
 		}
 
@@ -56,11 +56,11 @@ namespace RightMove.Db.Repositories
 		/// Load propertues
 		/// </summary>
 		/// <returns>a list of <see cref="RightMovePropertyModel"/></returns>
-		public List<RightMovePropertyModel> LoadProperties()
+		public List<RightMovePropertyModel> LoadProperties(string tableName)
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
-				var output = cnn.Query<RightMovePropertyModel>("select * from Property", new DynamicParameters());
+				var output = cnn.Query<RightMovePropertyModel>("select * from " + tableName, new DynamicParameters());
 				return output.ToList();
 			}
 		}
@@ -70,12 +70,12 @@ namespace RightMove.Db.Repositories
 		/// </summary>
 		/// <param name="primaryId">the primary id of property in db, to add price</param>
 		/// <param name="price">the the price to add</param>
-		public void AddPriceToProperty(int primaryId, int price)
+		public void AddPriceToProperty(int primaryId, int price, string tableName)
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
 				// get the property from the id
-				var property = cnn.QuerySingle<RightMovePropertyModel>("select * from Property where Id = @id", new
+				var property = cnn.QuerySingle<RightMovePropertyModel>("select * from " + tableName + " where Id = @id", new
 				{
 					id = primaryId
 				});
