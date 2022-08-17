@@ -33,8 +33,7 @@ namespace RightMove.Db.Repositories
 						DateAdded TEXT,
 						DateReduced TEXT,
 						Date TEXT,
-						Price TEXT,
-						Link TEXT)";
+						Price TEXT)";
 					cmd.ExecuteNonQuery();
 				}
 			}
@@ -48,7 +47,7 @@ namespace RightMove.Db.Repositories
 		{
 			using (IDbConnection cnn = new SQLiteConnection(GetConnectionString()))
 			{
-				cnn.Execute("insert into " + tableName + " (RightMoveId, HouseInfo, Address, DateAdded, DateReduced, Date, Price, Link) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @DateReduced, @Date, @Price, @Link)", property);
+				cnn.Execute("insert into " + tableName + " (RightMoveId, HouseInfo, Address, DateAdded, DateReduced, Date, Price) values (@RightMoveId, @HouseInfo, @Address, @DateAdded, @DateReduced, @Date, @Price)", property);
 			}
 		}
 
@@ -89,10 +88,10 @@ namespace RightMove.Db.Repositories
 				// original price|new price
 				// original date|new date(now)
 				string newPriceString = $"{property.Price}|{price}";
-				string newDateString = $"{property.Date}|{DateTime.Now}";
+				string newDateString = $"{property.Date}|{DateTime.Now.ToString("dd/MM/yyyy")}";
 
 				// write it to the database
-				cnn.Execute(@"update Property set Price = @price, Date = @date where Id = @id", new
+				cnn.Execute(@"update " + tableName + " set Price = @price, Date = @date where Id = @id", new
 				{
 					price = newPriceString,
 					date = newDateString,
