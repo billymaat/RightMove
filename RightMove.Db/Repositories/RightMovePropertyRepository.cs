@@ -51,6 +51,23 @@ namespace RightMove.Db.Repositories
 			}
 		}
 
+		public List<string> GetAllTableNames()
+		{
+			using (SQLiteConnection cnn = new SQLiteConnection(GetConnectionString()))
+			{
+				cnn.Open();
+				var schema = cnn.GetSchema("Tables");
+				var tableNames = new List<string>();
+
+				foreach (DataRow row in schema.Rows)
+				{
+					tableNames.Add(row[2].ToString());
+				}
+
+				return tableNames;
+			}
+		}
+
 		/// <summary>
 		/// Load propertues
 		/// </summary>

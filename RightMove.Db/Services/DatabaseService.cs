@@ -32,6 +32,11 @@ namespace RightMove.Db.Services
 			return _db.LoadProperties(tableName);
 		}
 
+		public List<String> GetAllTableNames()
+		{
+			return _db.GetAllTableNames();
+		}
+
 		public (int, int) AddToDatabase(IList<RightMoveProperty> properties, string tableName)
 		{
 			Console.WriteLine(tableName);

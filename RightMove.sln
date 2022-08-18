@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove", "RightMove\RightMove.csproj", "{C9B801BC-18E3-4E86-B78F-721E0FA422FC}"
 EndProject
@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Tests", "RightMov
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMoveConsole", "RightMoveConsole\RightMoveConsole.csproj", "{6EA2322C-699E-4EC5-A26D-E05E133B7883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Db", "RightMove.Db\RightMove.Db.csproj", "{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Db", "RightMove.Db\RightMove.Db.csproj", "{D41F221F-B00C-41CA-8EA5-AEDD21FC7086}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Console.Tests", "RightMove.Console.Tests\RightMove.Console.Tests.csproj", "{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Console.Tests", "RightMove.Console.Tests\RightMove.Console.Tests.csproj", "{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Web", "RightMove.Web\RightMove.Web.csproj", "{E14F6D30-0765-489B-99F9-11C6FC2C8731}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E14F6D30-0765-489B-99F9-11C6FC2C8731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E14F6D30-0765-489B-99F9-11C6FC2C8731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E14F6D30-0765-489B-99F9-11C6FC2C8731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E14F6D30-0765-489B-99F9-11C6FC2C8731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
