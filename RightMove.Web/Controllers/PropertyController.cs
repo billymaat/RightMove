@@ -20,6 +20,12 @@ namespace RightMove.Web.Controllers
 			return Ok(properties);
 		}
 
+		[HttpGet("gettable/{table}")]
+		public IActionResult TestTwo(string table)
+		{
+			var properties = _databaseService.LoadProperties(table);
+			return Ok(properties);
+		}
 
 		[HttpGet("tables")]
 		public IActionResult GetTables()

@@ -1,0 +1,9 @@
+<h1>Table List</h1>
+
+<mat-nav-list>
+    <!-- <a mat-list-item href="" *ngFor="let table of (tables$ | async)"> {{ table }} </a> -->
+    <mat-list-item *ngFor="let table of (tables$ | async)"
+        (click)="onClick(table)"> 
+        {{ table }} 
+    </mat-list-item>
+ </mat-nav-list>

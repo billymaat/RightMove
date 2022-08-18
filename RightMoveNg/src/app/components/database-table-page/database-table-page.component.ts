@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DbService } from 'src/app/services/db.service';
 
 @Component({
   selector: 'app-database-table-page',
@@ -7,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatabaseTablePageComponent implements OnInit {
 
-  constructor() { }
+  tableName$: Observable<string>;
+  constructor(private db: DbService) { 
+    this.tableName$ = db.tableName$;
+  }
 
   ngOnInit(): void {
   }
