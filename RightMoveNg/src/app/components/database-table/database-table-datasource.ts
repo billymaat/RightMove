@@ -9,31 +9,10 @@ import { DbService } from 'src/app/services/db.service';
 export interface DatabaseTableItem {
   name: string;
   id: number;
+  price: number;
+  houseInfo: string;
+  address: string;
 }
-
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: DatabaseTableItem[] = [
-  {id: 1, name: 'Hydrogen'},
-  {id: 2, name: 'Helium'},
-  {id: 3, name: 'Lithium'},
-  {id: 4, name: 'Beryllium'},
-  {id: 5, name: 'Boron'},
-  {id: 6, name: 'Carbon'},
-  {id: 7, name: 'Nitrogen'},
-  {id: 8, name: 'Oxygen'},
-  {id: 9, name: 'Fluorine'},
-  {id: 10, name: 'Neon'},
-  {id: 11, name: 'Sodium'},
-  {id: 12, name: 'Magnesium'},
-  {id: 13, name: 'Aluminum'},
-  {id: 14, name: 'Silicon'},
-  {id: 15, name: 'Phosphorus'},
-  {id: 16, name: 'Sulfur'},
-  {id: 17, name: 'Chlorine'},
-  {id: 18, name: 'Argon'},
-  {id: 19, name: 'Potassium'},
-  {id: 20, name: 'Calcium'},
-];
 
 /**
  * Data source for the DatabaseTable view. This class should
@@ -41,7 +20,7 @@ const EXAMPLE_DATA: DatabaseTableItem[] = [
  * (including sorting, pagination, and filtering).
  */
 export class DatabaseTableDataSource extends DataSource<DatabaseTableItem> {
-  data: DatabaseTableItem[] = EXAMPLE_DATA;
+  data: DatabaseTableItem[] = [];
   paginator: MatPaginator | undefined;
   sort: MatSort | undefined;
 
@@ -102,6 +81,12 @@ export class DatabaseTableDataSource extends DataSource<DatabaseTableItem> {
       switch (this.sort?.active) {
         case 'name': return compare(a.name, b.name, isAsc);
         case 'id': return compare(+a.id, +b.id, isAsc);
+        case 'price': 
+          return compare(a.price, b.price, isAsc);
+        case 'houseInfo':
+          return compare(a.houseInfo, b.houseInfo, isAsc);
+        case 'address':
+          return compare(a.address, b.address, isAsc);
         default: return 0;
       }
     });

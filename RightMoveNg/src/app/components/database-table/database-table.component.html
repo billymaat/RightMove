@@ -6,7 +6,7 @@
       <td mat-cell *matCellDef="let row">{{row.id}}</td>
     </ng-container>
 
-    <!-- House Inof Column -->
+    <!-- House Info Column -->
     <ng-container matColumnDef="houseInfo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>House Info</th>
       <td mat-cell *matCellDef="let row">{{row.houseInfo}}</td>
@@ -26,7 +26,7 @@
     <!-- Price Column -->
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
-      <td mat-cell *matCellDef="let row">{{row.price}}</td>
+      <td mat-cell *matCellDef="let row">{{getPrice(row) | currency:'GBP'}}</td>
     </ng-container>
     
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -49,6 +49,14 @@ export class DatabaseTableComponent implements AfterViewInit {
       : dateAdded;
   }
 
+  getPrice(row: any): string {
+    console.log(row.price);
+    var parts: string[] = row.price.split('|');
+    // let ret = Number.parseInt(parts[parts.length - 1]);
+    let ret = parts[parts.length - 1];
+    return ret;
+  }
+
   parseDate(str: string) : Date {
     var parts = str.split("/");
     var dt = new Date(parseInt(parts[2], 10),
@@ -57,4 +65,5 @@ export class DatabaseTableComponent implements AfterViewInit {
 
     return dt;
   }
+
 }
