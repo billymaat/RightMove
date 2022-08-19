@@ -26,7 +26,6 @@ export class DatabaseTableDataSource extends DataSource<DatabaseTableItem> {
 
   constructor(data: any) {
     super();
-    console.log("HER");
     this.data = data;
   }
 

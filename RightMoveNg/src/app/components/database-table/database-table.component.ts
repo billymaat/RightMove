@@ -50,11 +50,18 @@ export class DatabaseTableComponent implements AfterViewInit {
   }
 
   getPrice(row: any): string {
+    return row.price;
+
     console.log(row.price);
     var parts: string[] = row.price.split('|');
     // let ret = Number.parseInt(parts[parts.length - 1]);
     let ret = parts[parts.length - 1];
     return ret;
+  }
+
+  getPrices(row: any) : string[] {
+    var parts: string[] = row.price.split('|');
+    return parts;
   }
 
   parseDate(str: string) : Date {
