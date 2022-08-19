@@ -17,7 +17,7 @@ export class DatabaseTableComponent implements AfterViewInit {
   dataSource!: DatabaseTableDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'houseInfo', 'address', 'price'];
+  displayedColumns = ['id', 'houseInfo', 'address', 'lastUpdateDate', 'price'];
 
   constructor(private db: DbService) {
     this.dataSource = new DatabaseTableDataSource([]);
@@ -38,5 +38,23 @@ export class DatabaseTableComponent implements AfterViewInit {
     let link: string = `https://www.rightmove.co.uk/properties/${row.rightMoveId}`;
     window.open(link, "_blank");
     console.log(row);
+  }
+
+  getLastUpdateDate(row: any) : Date {
+    let dateAdded: Date = this.parseDate(row.dateAdded);
+    let dateReduced: Date = this.parseDate(row.dateReduced);
+
+    return (dateReduced > dateAdded) 
+      ? dateReduced
+      : dateAdded;
+  }
+
+  parseDate(str: string) : Date {
+    var parts = str.split("/");
+    var dt = new Date(parseInt(parts[2], 10),
+    parseInt(parts[1], 10) - 1,
+    parseInt(parts[0], 10));
+
+    return dt;
   }
 }

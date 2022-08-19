@@ -17,8 +17,11 @@ import { DatabaseTableComponent } from './components/database-table/database-tab
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+
+
 import { SelectSearchPageComponent } from './components/select-search-page/select-search-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    FlexLayoutModule,
     HttpClientModule,
     MatToolbarModule,
     MatButtonModule,
