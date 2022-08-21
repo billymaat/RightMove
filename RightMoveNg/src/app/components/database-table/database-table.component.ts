@@ -1,9 +1,18 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { DbService } from 'src/app/services/db.service';
-import { DatabaseTableDataSource, DatabaseTableItem } from './database-table-datasource';
+
+// TODO: Replace this with your own data model type
+export interface IRightMoveItem {
+  name: string;
+  id: number;
+  price: number;
+  prices: number[];
+  houseInfo: string;
+  address: string;
+}
 
 @Component({
   selector: 'app-database-table',
@@ -11,26 +20,41 @@ import { DatabaseTableDataSource, DatabaseTableItem } from './database-table-dat
   styleUrls: ['./database-table.component.scss']
 })
 export class DatabaseTableComponent implements AfterViewInit {
+  @Input() items!: any;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<DatabaseTableItem>;
-  dataSource!: DatabaseTableDataSource;
+  @ViewChild(MatTable) table!: MatTable<IRightMoveItem>;
+  dataSource!: MatTableDataSource<IRightMoveItem>
+
+  shouldFilter: boolean = false;
+
+  filterValues = {
+    filterByReduced: false
+  };
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'houseInfo', 'address', 'lastUpdateDate', 'price'];
 
   constructor(private db: DbService) {
-    this.dataSource = new DatabaseTableDataSource([]);
+  }
 
-    db.properties$.subscribe(o => {
-      this.dataSource = new DatabaseTableDataSource(o);
-    });
+  ngOnInit() {
+    this.dataSource = new MatTableDataSource<IRightMoveItem>(this.items);
+    this.dataSource.filterPredicate = (data: IRightMoveItem, filterParams: string) => {
+      let filt = JSON.parse(filterParams);
+      if (filt.filterByReduced) {
+        return data.prices.length >= 2;
+      }
+      else {
+        return true;
+      }
+    }
   }
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    this.table.dataSource = this.dataSource;
   }
 
   onDoubleClick(row: any) {
@@ -59,9 +83,8 @@ export class DatabaseTableComponent implements AfterViewInit {
     return ret;
   }
 
-  getPrices(row: any) : string[] {
-    var parts: string[] = row.price.split('|');
-    return parts;
+  getPrices(row: IRightMoveItem) : number[] {
+    return row.prices;
   }
 
   parseDate(str: string) : Date {
@@ -73,4 +96,18 @@ export class DatabaseTableComponent implements AfterViewInit {
     return dt;
   }
 
+  filterChanged() {
+    console.log("Filter changed: " + this.shouldFilter)
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.filterValues.filterByReduced = this.shouldFilter;
+
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

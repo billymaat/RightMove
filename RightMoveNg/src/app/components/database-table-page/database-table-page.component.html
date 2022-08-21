@@ -3,5 +3,11 @@
     fxLayout="column"
     fxLayoutGap="5px">
     <h1>{{ tableName$ | async }}</h1>
-    <app-database-table></app-database-table>
+    <ng-container *ngIf="rightMoveItems$ | async as items; else notAvailable">
+        <app-database-table [items]="items">
+        </app-database-table>
+    </ng-container>
+    <ng-template #notAvailable>
+        No data avaliable!
+    </ng-template>
 </div>

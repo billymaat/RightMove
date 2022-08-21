@@ -10,8 +10,11 @@ import { DbService } from 'src/app/services/db.service';
 export class DatabaseTablePageComponent implements OnInit {
 
   tableName$: Observable<string>;
+  rightMoveItems$: Observable<any>;
+
   constructor(private db: DbService) { 
     this.tableName$ = db.tableName$;
+    this.rightMoveItems$ = db.properties$;
   }
 
   ngOnInit(): void {
