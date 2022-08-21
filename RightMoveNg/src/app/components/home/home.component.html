@@ -1,0 +1,31 @@
+<h1>Home</h1>
+<p>
+    This is part of a little side project I am playing with. This began as a web scraping
+    project. I wanted to scrape house prices from RightMove. I then decided I wanted to build
+    a WPF application to navigate the results from scraping.
+</p>
+<p>
+    After that, I decided I'd like to store the results from scraping into a database. I use SQLite to store the results
+    into a table. 
+</p>
+<p>
+    I then thought maybe it would be nice to run this on a raspberry pi, every day, and collect some prices. I picked
+    some locations in Manchester to check the house prices and save to the database. I now do this every day using
+    a crontab every 4 hours. I have separate tables per search location. For simplicity, I use the search string without
+    spaces - for example, PrestwichGreaterManchester - as the name of each table.
+</p>
+<p>
+    Next I decided I'd like to use an API to read the database. Initiially I did this in the WPF application, but then
+    decided I'd like to pracitce a bit of web development. So I built a basic angular front end to allow me to 
+    load each table of results into a table and sort the results. I wanted to show the price reductions and be able
+    to filter results so I could see houses that were reduced only.
+</p>
+<p>
+    ... And that's where I'm at so far!
+</p>
+<p>
+    For future... I think I have a memory leak in the RightMoveLibrary as my raspberry seems to crash. I know there are 
+    plenty of bugs in the code that could be tidied up.
+    I'd like to host the angular webpage, right move parser, and database on the cloud.    
+</p>
+   
