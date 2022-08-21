@@ -1,8 +1,16 @@
-<mat-checkbox 
-  [(ngModel)]="shouldFilter"
+<div fxLayout="row"
+  fxLayoutGap="5px">
+  <mat-checkbox 
+    [(ngModel)]="shouldFilter"
+    (ngModelChange)="filterChanged()">
+    Show reduced only
+  </mat-checkbox>
+  <mat-checkbox
+  [(ngModel)]="showTerrace"
   (ngModelChange)="filterChanged()">
-  Show reduced only
-</mat-checkbox>
+    Terrace
+  </mat-checkbox>
+</div>
 <div class="mat-elevation-z8">
   <table 
     mat-table 
@@ -24,7 +32,7 @@
 
     <ng-container matColumnDef="lastUpdateDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Update</th>
-      <td mat-cell *matCellDef="let row">{{ getLastUpdateDate(row) | date:'shortDate' }}</td>
+      <td mat-cell *matCellDef="let row">{{ getLastUpdateDate(row) | date:'dd/MM/yyyy' }}</td>
     </ng-container>
 
     <!-- Address Column -->
@@ -52,7 +60,8 @@
   </table>
 
   <mat-paginator 
-    [pageSizeOptions]="[5, 10, 25, 100]" 
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    [pageSize]="10"
     aria-label="Select page of users">
   </mat-paginator>
 

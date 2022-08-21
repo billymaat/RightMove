@@ -24,6 +24,7 @@ import { SelectSearchPageComponent } from './components/select-search-page/selec
 import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { FormsModule } from '@angular/forms';
     DatabaseTablePageComponent,
     DatabaseTableComponent,
     SelectSearchPageComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

@@ -28,9 +28,11 @@ export class DatabaseTableComponent implements AfterViewInit {
   dataSource!: MatTableDataSource<IRightMoveItem>
 
   shouldFilter: boolean = false;
+  showTerrace: boolean = true;
 
   filterValues = {
-    filterByReduced: false
+    filterByReduced: false,
+    showTerrace: true
   };
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -43,12 +45,8 @@ export class DatabaseTableComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource<IRightMoveItem>(this.items);
     this.dataSource.filterPredicate = (data: IRightMoveItem, filterParams: string) => {
       let filt = JSON.parse(filterParams);
-      if (filt.filterByReduced) {
-        return data.prices.length >= 2;
-      }
-      else {
-        return true;
-      }
+      return !(filt.filterByReduced && data.prices.length >= 2) &&
+        !(!filt.showTerrace && data.houseInfo.indexOf("terrace") > -1)
     }
   }
 
@@ -103,6 +101,7 @@ export class DatabaseTableComponent implements AfterViewInit {
 
   applyFilter() {
     this.filterValues.filterByReduced = this.shouldFilter;
+    this.filterValues.showTerrace = this.showTerrace;
 
     this.dataSource.filter = JSON.stringify(this.filterValues);
 
