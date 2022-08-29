@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,24 +30,34 @@ export class DatabaseTableComponent implements AfterViewInit {
 
   shouldFilter: boolean = false;
   showTerrace: boolean = true;
+  showHouse: boolean = true;
+  showApartment: boolean = true;
+  showFlat: boolean = true;
 
   filterValues = {
     filterByReduced: false,
-    showTerrace: true
+    showTerrace: true,
+    showHouse: true,
+    showApartment: true,
+    showFlat: true
   };
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'houseInfo', 'address', 'lastUpdateDate', 'price'];
 
-  constructor(private db: DbService) {
+  constructor(private db: DbService,
+    private currencyPipe: CurrencyPipe) {
   }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource<IRightMoveItem>(this.items);
     this.dataSource.filterPredicate = (data: IRightMoveItem, filterParams: string) => {
       let filt = JSON.parse(filterParams);
-      return !(filt.filterByReduced && data.prices.length >= 2) &&
-        !(!filt.showTerrace && data.houseInfo.indexOf("terrace") > -1)
+      return !(filt.filterByReduced && data.prices.length < 2) &&
+        !(!filt.showTerrace && data.houseInfo.indexOf("terrace") > -1) &&
+        !(!filt.showHouse && data.houseInfo.indexOf("house") > -1) &&
+        !(!filt.showApartment && data.houseInfo.indexOf("apartment") > -1) &&
+        !(!filt.showFlat && data.houseInfo.indexOf("flat") > -1);
     }
   }
 
@@ -85,6 +96,11 @@ export class DatabaseTableComponent implements AfterViewInit {
     return row.prices;
   }
 
+  getPricesAsString(row: IRightMoveItem) : string {
+    var prices = this.getPrices(row);
+    return prices.map(o => this.currencyPipe.transform(o, "GBP")).join(', ');
+  }
+
   parseDate(str: string) : Date {
     var parts = str.split("/");
     var dt = new Date(parseInt(parts[2], 10),
@@ -102,6 +118,9 @@ export class DatabaseTableComponent implements AfterViewInit {
   applyFilter() {
     this.filterValues.filterByReduced = this.shouldFilter;
     this.filterValues.showTerrace = this.showTerrace;
+    this.filterValues.showHouse = this.showHouse;
+    this.filterValues.showApartment = this.showApartment;
+    this.filterValues.showFlat = this.showFlat;
 
     this.dataSource.filter = JSON.stringify(this.filterValues);
 

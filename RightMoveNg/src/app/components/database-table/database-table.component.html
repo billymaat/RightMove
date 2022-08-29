@@ -10,6 +10,21 @@
   (ngModelChange)="filterChanged()">
     Terrace
   </mat-checkbox>
+  <mat-checkbox
+  [(ngModel)]="showHouse"
+  (ngModelChange)="filterChanged()">
+    House
+  </mat-checkbox>
+  <mat-checkbox
+  [(ngModel)]="showApartment"
+  (ngModelChange)="filterChanged()">
+    Apartment
+  </mat-checkbox>
+  <mat-checkbox
+  [(ngModel)]="showFlat"
+  (ngModelChange)="filterChanged()">
+    Flat
+  </mat-checkbox>
 </div>
 <div class="mat-elevation-z8">
   <table 
@@ -45,11 +60,12 @@
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
       <td mat-cell *matCellDef="let row">
-        <div fxLayout="column">
+        {{ getPricesAsString(row) }}
+        <!-- <div fxLayout="column">
           <p *ngFor="let p of getPrices(row)">
             {{p | currency:'GBP'}}
           </p>
-        </div>
+        </div> -->
         <!-- {{getPrice(row) | currency:'GBP'}} -->
       </td>
     </ng-container>
