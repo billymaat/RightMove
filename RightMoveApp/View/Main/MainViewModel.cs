@@ -163,22 +163,24 @@ namespace RightMoveApp.View.Main
 		{
 			get
 			{
-				if (RightMoveSelectedItem is null)
-				{
-					return null;
-				}
+				return null;
 
-				var dbProperties = _dbService.LoadProperties();
-				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
+				//if (RightMoveSelectedItem is null)
+				//{
+				//	return null;
+				//}
 
-				if (matchingProperty is null)
-				{
-					return null;
-				}
+				//var dbProperties = _dbService.LoadProperties();
+				//var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
 
-				var prices = matchingProperty.Prices;
+				//if (matchingProperty is null)
+				//{
+				//	return null;
+				//}
 
-				return prices;
+				//var prices = matchingProperty.Prices;
+
+				//return prices;
 			}
 		}
 
@@ -191,25 +193,26 @@ namespace RightMoveApp.View.Main
 			{
 				string na = "N/A";
 
-				if (RightMoveSelectedItem is null)
-				{
-					return na;
-				}
+				return na;
+				//if (RightMoveSelectedItem is null)
+				//{
+				//	return na;
+				//}
 
-				var dbProperties = _dbService.LoadProperties();
-				var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
+				//var dbProperties = _dbService.LoadProperties();
+				//var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(RightMoveSelectedItem.RightMoveId));
 
-				if (matchingProperty is null)
-				{
-					return na;
-				}
+				//if (matchingProperty is null)
+				//{
+				//	return na;
+				//}
 
-				var dates = matchingProperty.Dates;
-				var prices = matchingProperty.Prices;
+				//var dates = matchingProperty.Dates;
+				//var prices = matchingProperty.Prices;
 
-				var combined = dates.Zip(prices, (d, p) => $"{DateTime.Parse(d).Date.ToString("dd/MM/yyyy")} : £{p}");
-				var priceString = string.Join("\n", combined);
-				return priceString;
+				//var combined = dates.Zip(prices, (d, p) => $"{DateTime.Parse(d).Date.ToString("dd/MM/yyyy")} : £{p}");
+				//var priceString = string.Join("\n", combined);
+				//return priceString;
 			}
 		}
 
