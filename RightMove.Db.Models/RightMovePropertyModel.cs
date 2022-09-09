@@ -17,7 +17,7 @@ namespace RightMove.Db.Models
 			RightMoveId = rightMoveProperty.RightMoveId;
 			HouseInfo = rightMoveProperty.HouseInfo;
 			Address = rightMoveProperty.Address;
-			Link = rightMoveProperty.Link;
+			//Link = rightMoveProperty.Link;
 			Price = rightMoveProperty.Price.ToString(CultureInfo.CurrentCulture);
 
 			// initialise the dates
@@ -65,11 +65,11 @@ namespace RightMove.Db.Models
 			get; 
 		}
 
-		public string Link
-		{
-			get;
-			set;
-		}
+		//public string Link
+		//{
+		//	get;
+		//	set;
+		//}
 
 		public string Price
 		{
