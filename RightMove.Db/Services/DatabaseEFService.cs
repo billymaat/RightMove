@@ -1,5 +1,4 @@
-﻿using RightMove.DataTypes;
-using RightMove.Db.Models;
+﻿using RightMove.Db.Entities;
 using RightMove.Db.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,18 +7,18 @@ using System.Text;
 
 namespace RightMove.Db.Services
 {
-	public class DatabaseService : IDatabaseService<RightMovePropertyModel>
+	public class DatabaseEFService : IDatabaseService<RightMoveProperty>
 	{
-		private readonly IRightMovePropertyRepository<RightMovePropertyModel> _db;
+		private readonly IRightMovePropertyRepository<RightMoveProperty> _db;
 
-		public DatabaseService(IRightMovePropertyRepository<RightMovePropertyModel> db)
+		public DatabaseEFService(IRightMovePropertyRepository<RightMoveProperty> db)
 		{
 			_db = db;
 		}
 
 		public IDbConfiguration DbConfiguration => _db.DbConfiguration;
 
-		public List<RightMovePropertyModel> LoadProperties(string tableName)
+		public List<RightMoveProperty> LoadProperties(string tableName)
 		{
 			return _db.LoadProperties(tableName);
 		}
@@ -29,7 +28,7 @@ namespace RightMove.Db.Services
 			return _db.GetAllTableNames();
 		}
 
-		public (int, int) AddToDatabase(IList<RightMoveProperty> properties, string tableName)
+		public (int, int) AddToDatabase(IList<DataTypes.RightMoveProperty> properties, string tableName)
 		{
 			Console.WriteLine(tableName);
 			_db.CreateTableIfNotExist(tableName);
@@ -55,7 +54,7 @@ namespace RightMove.Db.Services
 			return (newPropertiesCount, updatedPropertiesCount);
 		}
 
-		public Result AddToDatabase(RightMoveProperty property, string tableName)
+		public Result AddToDatabase(DataTypes.RightMoveProperty property, string tableName)
 		{
 			var dbProperties = _db.LoadProperties(tableName);
 			return AddToDatabase(dbProperties, property, tableName);
@@ -68,7 +67,7 @@ namespace RightMove.Db.Services
 		/// <param name="property">the property to add</param>
 		/// <returns><see cref="Result.Updated"/> if updated, <see cref="Result.NotModified"/> if not modified,
 		/// <see cref="Result.Added"/> if new proprety added</returns>
-		private Result AddToDatabase(List<RightMovePropertyModel> dbProperties, RightMoveProperty property, string tableName)
+		private Result AddToDatabase(List<RightMoveProperty> dbProperties, DataTypes.RightMoveProperty property, string tableName)
 		{
 			var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
 
@@ -85,7 +84,17 @@ namespace RightMove.Db.Services
 			}
 
 			// save a new record of the new property
-			_db.SaveProperty(new RightMovePropertyModel(property), tableName);
+			var rmp = new RightMoveProperty()
+			{
+				RightMoveId = property.RightMoveId,
+				Address = property.Address,
+				HouseInfo = property.HouseInfo,
+				DateAdded = property.DateAdded,
+				DateReduced = property.DateReduced,
+				Date = DateTime.Now
+			};
+
+			_db.SaveProperty(rmp, tableName);
 			return Result.Added;
 		}
 	}

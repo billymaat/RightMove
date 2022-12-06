@@ -6,12 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Dapper;
-using RightMove.DataTypes;
 using RightMove.Db.Models;
 
 namespace RightMove.Db.Repositories
 {
-	public class RightMovePropertyRepository : SqLiteBaseRepository, IRightMovePropertyRepository
+	public class RightMovePropertyRepository : SqLiteBaseRepository, IRightMovePropertyRepository<RightMovePropertyModel>
 	{
 		public RightMovePropertyRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
 		{

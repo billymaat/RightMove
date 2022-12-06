@@ -21,9 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web", "RightMove.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.EF", "RightMove.EF\RightMove.EF.csproj", "{8457C646-0E43-4544-99E7-33FAF762F2A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.ConsoleEF", "RightMove.ConsoleEF\RightMove.ConsoleEF.csproj", "{1BE7C126-ACD9-4615-8E5B-AAEF23CC01C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.ConsoleEF", "RightMove.ConsoleEF\RightMove.ConsoleEF.csproj", "{1BE7C126-ACD9-4615-8E5B-AAEF23CC01C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Db.Models", "RightMove.Db.Models\RightMove.Db.Models.csproj", "{4BAC03B6-54D5-47D5-8133-74C357815D01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Db.Models", "RightMove.Db.Models\RightMove.Db.Models.csproj", "{4BAC03B6-54D5-47D5-8133-74C357815D01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Db.Entities", "RightMove.Db.Entities\RightMove.Db.Entities.csproj", "{751F60BD-643F-4A77-89E5-28567624897C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{751F60BD-643F-4A77-89E5-28567624897C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{751F60BD-643F-4A77-89E5-28567624897C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{751F60BD-643F-4A77-89E5-28567624897C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{751F60BD-643F-4A77-89E5-28567624897C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

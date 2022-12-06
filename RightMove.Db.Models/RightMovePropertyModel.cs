@@ -55,7 +55,7 @@ namespace RightMove.Db.Models
 			get;
 			set;
 		}
-		public string DateReduced { get; }
+		public string DateReduced { get; set; }
 
 		/// <summary>
 		/// Gets the Date the model was created

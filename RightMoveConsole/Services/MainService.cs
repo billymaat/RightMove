@@ -15,7 +15,7 @@ namespace RightMoveConsole.Services
 		private int? _exitCode;
 
 		private readonly RightMoveParserServiceFactory _rightMoveParserServiceFactory;
-		private readonly IDatabaseService _db;
+		private readonly IDatabaseService<RightMove.Db.Entities.RightMoveProperty> _db;
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
 		private readonly IDisplayService _display;
@@ -24,7 +24,7 @@ namespace RightMoveConsole.Services
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			RightMoveParserServiceFactory rightMoveParseServiceFactory,
-			IDatabaseService db,
+			IDatabaseService<RightMove.Db.Entities.RightMoveProperty> db,
 			IDisplayService display,
 			ISearchLocationsReader searchLocationsReader)
 		{

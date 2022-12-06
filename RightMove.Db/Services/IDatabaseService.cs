@@ -1,20 +1,19 @@
-﻿using RightMove.DataTypes;
-using RightMove.Db.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using RightMove.DataTypes;
 using static RightMove.Db.Services.DatabaseService;
 
 namespace RightMove.Db.Services
 {
-	public interface IDatabaseService
+	public interface IDatabaseService<T>
 	{
 		IDbConfiguration DbConfiguration
 		{
 			get;
 		}
 
-		List<RightMovePropertyModel> LoadProperties(string tableName);
+		List<T> LoadProperties(string tableName);
 
 		Result AddToDatabase(RightMoveProperty property, string tableName);
 
