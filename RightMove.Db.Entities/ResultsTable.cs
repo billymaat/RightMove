@@ -8,7 +8,9 @@ namespace RightMove.Db.Entities
 {
 	public class ResultsTable
 	{
-		public int Id { get; set; }
+		public int ResultsTableId { get; set; }
+
+		//public int RightMovePropertyId { get; set; }
 
 		public string? Name { get; set; }
 

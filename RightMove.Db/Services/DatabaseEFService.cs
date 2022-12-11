@@ -69,14 +69,14 @@ namespace RightMove.Db.Services
 		/// <see cref="Result.Added"/> if new proprety added</returns>
 		private Result AddToDatabase(List<RightMoveProperty> dbProperties, DataTypes.RightMoveProperty property, string tableName)
 		{
-			var matchingProperty = dbProperties.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
+			var matchingProperty = dbProperties?.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
 
 			if (matchingProperty != null)
 			{
 				// if the price has changed, add the new price
 				if (matchingProperty.Prices.Last() != property.Price)
 				{
-					_db.AddPriceToProperty(matchingProperty.Id, property.Price, tableName);
+					_db.AddPriceToProperty(matchingProperty.RightMoveId, property.Price, tableName);
 					return Result.Updated;
 				}
 
@@ -91,8 +91,12 @@ namespace RightMove.Db.Services
 				HouseInfo = property.HouseInfo,
 				DateAdded = property.DateAdded,
 				DateReduced = property.DateReduced,
-				Date = DateTime.Now
+				Date = DateTime.Now,
+				Prices = new List<int>() { property.Price },
+				Dates = new List<DateTime>() { DateTime.Now }
 			};
+
+
 
 			_db.SaveProperty(rmp, tableName);
 			return Result.Added;

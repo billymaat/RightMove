@@ -17,19 +17,7 @@
 			Date = DateTime.Now;
 		}
 
-		public int Id
-		{
-			get;
-			set;
-		}
-
-		public int ResultsTableId
-		{
-			get;
-			set;
-		}
-
-		public ResultsTable ResultsTable
+		public int RightMovePropertyId
 		{
 			get;
 			set;
@@ -84,5 +72,17 @@
 			get;
 			set;
 		} = new List<DateTime>();
+
+		public int ResultsTableId
+		{
+			get;
+			set;
+		}
+
+		public ResultsTable ResultsTable
+		{
+			get;
+			set;
+		}
 	}
 }

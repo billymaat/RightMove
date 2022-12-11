@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RightMove.Db.Models\RightMove.Db.Models.csproj" />
-    <ProjectReference Include="..\RightMove.EF\RightMove.EF.csproj" />
+    <ProjectReference Include="..\RightMove.Db.Entities\RightMove.Db.Entities.csproj" />
+    <ProjectReference Include="..\RightMove.Db\RightMove.Db.csproj" />
   </ItemGroup>
 
 </Project>

@@ -144,6 +144,36 @@ namespace RightMoveConsole.Services
 			return Task.CompletedTask;
 		}
 
+		//public Task StartAsync(CancellationToken cancellationToken)
+		//{
+		//	_logger.LogDebug($"Starting with arguments: {string.Join(" ", Environment.GetCommandLineArgs())}");
+
+		//	_appLifetime.ApplicationStarted.Register(() =>
+		//	{
+		//		Task.Run(async () =>
+		//		{
+		//			try
+		//			{
+		//				_logger.LogInformation("Starting application");
+		//				WriteTimeAndDbFileLocation();
+		//				await PerformSearch();
+		//				_exitCode = 0;
+		//			}
+		//			catch (Exception ex)
+		//			{
+		//				_logger.LogError(ex, "Unhandled exception!");
+		//			}
+		//			finally
+		//			{
+		//				// Stop the application once the work is done
+		//				_appLifetime.StopApplication();
+		//			}
+		//		});
+		//	});
+
+		//	return Task.CompletedTask;
+		//}
+
 		public Task StopAsync(CancellationToken cancellationToken)
 		{
 			_logger.LogDebug($"Exiting with return code: {_exitCode}");

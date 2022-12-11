@@ -1,14 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-using RightMove.EF;
+﻿using RightMove.Db.Entities;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Starting!");
 
-using var db = new RightMoveContext();
+// create a list of right move properties in a results table
 
-//var rightMoveItems = db.AshtonUnderLyneGreaterManchester;
-
-//foreach (var item in rightMoveItems)
-//{
-//	Console.WriteLine(item);
-//}
-Console.WriteLine("HERE");
+Rig

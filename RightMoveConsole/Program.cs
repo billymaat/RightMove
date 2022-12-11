@@ -30,7 +30,7 @@ namespace RightMoveConsole
 						services.RegisterRightMoveLibrary();
 						services.AddScoped<IDisplayService, DisplayService>()
 							//.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
-							.AddSingleton<RightMoveContext>()
+							//.AddTransient<RightMoveContext>()
 							.AddTransient<IRightMovePropertyRepository<RightMove.Db.Entities.RightMoveProperty>, RightMovePropertyEFRepository>()
 							.AddSingleton<IDbConfiguration>(o => new DbConfiguration("RightMoveDB.db"))
 							//.AddTransient<IDatabaseService, DatabaseService>()
@@ -38,6 +38,8 @@ namespace RightMoveConsole
 							.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 							.AddHostedService<MainService>();
+
+						services.AddDbContext<RightMoveContext>();
 					}
 				);
 	}

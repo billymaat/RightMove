@@ -19,21 +19,21 @@ namespace RightMove.EF.Migrations
 
             modelBuilder.Entity("RightMove.Db.Entities.ResultsTable", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ResultsTableId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("ResultsTableId");
 
                     b.ToTable("ResultsTable");
                 });
 
             modelBuilder.Entity("RightMove.Db.Entities.RightMoveProperty", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RightMovePropertyId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -68,7 +68,7 @@ namespace RightMove.EF.Migrations
                     b.Property<int>("RightMoveId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("RightMovePropertyId");
 
                     b.HasIndex("ResultsTableId");
 

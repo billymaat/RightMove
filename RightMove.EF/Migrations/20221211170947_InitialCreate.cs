@@ -15,22 +15,21 @@ namespace RightMove.EF.Migrations
                 name: "ResultsTable",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    ResultsTableId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ResultsTable", x => x.Id);
+                    table.PrimaryKey("PK_ResultsTable", x => x.ResultsTableId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Properties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    RightMovePropertyId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ResultsTableId = table.Column<int>(type: "INTEGER", nullable: false),
                     RightMoveId = table.Column<int>(type: "INTEGER", nullable: false),
                     HouseInfo = table.Column<string>(type: "TEXT", nullable: false),
                     Address = table.Column<string>(type: "TEXT", nullable: false),
@@ -38,16 +37,17 @@ namespace RightMove.EF.Migrations
                     DateReduced = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Prices = table.Column<string>(type: "TEXT", nullable: false),
-                    Dates = table.Column<string>(type: "TEXT", nullable: false)
+                    Dates = table.Column<string>(type: "TEXT", nullable: false),
+                    ResultsTableId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Properties", x => x.Id);
+                    table.PrimaryKey("PK_Properties", x => x.RightMovePropertyId);
                     table.ForeignKey(
                         name: "FK_Properties_ResultsTable_ResultsTableId",
                         column: x => x.ResultsTableId,
                         principalTable: "ResultsTable",
-                        principalColumn: "Id",
+                        principalColumn: "ResultsTableId",
                         onDelete: ReferentialAction.Cascade);
                 });
 

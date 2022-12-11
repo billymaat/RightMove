@@ -17,14 +17,23 @@ namespace RightMove.EF
 		{
 			var folder = Environment.SpecialFolder.LocalApplicationData;
 			var path = Environment.GetFolderPath(folder);
+
 			DbPath = System.IO.Path.Join(path, "rightmove.db");
-			//DbPath = @"C:\cygwin64\home\Billy\RightMoveDB.db";
+
+			//DbPath = @"C:\Users\Billy\source\repos\RightMove\rightmove.db";
 		}
 
 		// The following configures EF to create a Sqlite database file in the
 		// special "local" folder for your platform.
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
 			=> options.UseSqlite($"Data Source={DbPath}");
+
+		//protected override void OnModelCreating(Modelbuilder modelBuilder)
+		//{
+		//	modelBuilder.Entity<Company>()
+		//		.HasMany(c => c.Employees)
+		//		.WithOne(e => e.Company);
+		//}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -40,6 +49,21 @@ namespace RightMove.EF
 								.HasConversion(new ValueConverter<List<int>, string>(
 									v => JsonConvert.SerializeObject(v), // Convert to string for persistence
 									v => JsonConvert.DeserializeObject<List<int>>(v)));
+
+			modelBuilder.Entity<ResultsTable>()
+				.HasMany(c => c.Properties)
+				.WithOne(e => e.ResultsTable);
+		}
+
+		private void ConvertFrom()
+		{
+
+		}
+
+		private List<int> ConvertTo(string prices)
+		{
+			var ret = JsonConvert.DeserializeObject<List<int>>(prices);
+			return ret;
 		}
 	}
 }
