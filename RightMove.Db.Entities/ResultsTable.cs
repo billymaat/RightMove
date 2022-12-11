@@ -10,8 +10,6 @@ namespace RightMove.Db.Entities
 	{
 		public int ResultsTableId { get; set; }
 
-		//public int RightMovePropertyId { get; set; }
-
 		public string? Name { get; set; }
 
 		public List<RightMoveProperty> Properties { get; set; } = new List<RightMoveProperty>();

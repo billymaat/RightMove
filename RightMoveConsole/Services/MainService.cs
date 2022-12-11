@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
 using RightMove.Db.Services;
 using RightMove.Factory;
+using RightMoveConsole.Models;
 
 namespace RightMoveConsole.Services
 {
@@ -40,16 +41,16 @@ namespace RightMoveConsole.Services
 		/// Get search params
 		/// </summary>
 		/// <returns>the search params</returns>
-		private SearchParams GetSearchParams()
+		private SearchParams GetSearchParams(string regionLocation)
 		{
 			SearchParams searchParams = new SearchParams()
 			{
-				RegionLocation = "Ashton-Under-Lyne, Greater Manchester",
+				RegionLocation = regionLocation,
 				Sort = SortType.HighestPrice,
-				MinBedrooms = 2,
-				MaxBedrooms = 3,
-				MinPrice = 100000,
-				MaxPrice = 500000,
+				MinBedrooms = 1,
+				MaxBedrooms = 10,
+				MinPrice = 0,
+				MaxPrice = 20000000,
 				PropertyType = PropertyTypeEnum.None
 			};
 
@@ -62,39 +63,38 @@ namespace RightMoveConsole.Services
 		/// <param name="searchParams">the search params</param>
 		/// <param name="updateDb">true to update db, false otherwise</param>
 		/// <returns></returns>
-		private async Task PerformSearch(SearchParams searchParams, bool updateDb = true)
+		private async Task<RightMoveSearchResult> PerformSearch(SearchParams searchParams, bool updateDb = true)
 		{
-			_display.WriteLine("Search Parameters:");
-			_display.WriteLine(searchParams.ToString());
-
 			var rightMoveService = _rightMoveParserServiceFactory.CreateInstance(searchParams);
-			Task<bool> res = rightMoveService.SearchAsync();
-
-			await res;
-
-			if (res.Result)
+			bool res = await rightMoveService.SearchAsync();
+			
+			if (!res)
 			{
-				_display.WriteLine($"Results count: {rightMoveService.Results.Count}");
-
-				if (updateDb)
-				{
-					var table = new string(searchParams.RegionLocation
-						.Where(x => char.IsLetterOrDigit(x)).ToArray());
-					(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results, table);
-
-					_display.WriteLine($"New properties: {databaseUpdate.newPropertiesCount}");
-					_display.WriteLine($"Updated properties: {databaseUpdate.updatedPropertiesCount}");
-				}
+				// failed
+				return null;
 			}
 
-			_display.WriteLine();
+			var rightMoveSearchResult = new RightMoveSearchResult();
+			rightMoveSearchResult.ResultsCount = rightMoveService.Results.Count;
+
+			if (updateDb)
+			{
+				var table = new string(searchParams.RegionLocation
+					.Where(x => char.IsLetterOrDigit(x)).ToArray());
+				(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results, table);
+
+				rightMoveSearchResult.NewPropertiesCount = databaseUpdate.newPropertiesCount;
+				rightMoveSearchResult.UpdatedPropertiesCount = databaseUpdate.updatedPropertiesCount;
+			}
+
+			return rightMoveSearchResult;
 		}
 
-		private void WriteTimeAndDbFileLocation()
+		private void DisplayTimeAndDbFileLocation()
 		{
 			// write details
-			Console.WriteLine($"Current time: {DateTime.Now}");
-			Console.WriteLine($"DbFile: {_db.DbConfiguration.DbFile}");
+			_display.WriteLine($"Current time: {DateTime.Now}");
+			_display.WriteLine($"DbFile: {_db.DbConfiguration.DbFile}");
 		}
 
 		private async Task PerformSearch()
@@ -107,9 +107,17 @@ namespace RightMoveConsole.Services
 				foreach (var searchLocation in searchLocations)
 				{
 					// perform searches
-					var searchParams = GetSearchParams();
-					searchParams.RegionLocation = searchLocation;
-					await PerformSearch(searchParams);
+					var searchParams = GetSearchParams(searchLocation);
+
+					// show the the properties
+					_display.WriteLine("Search Parameters:");
+					_display.WriteLine(searchParams.ToString());
+
+					var results = await PerformSearch(searchParams);
+					_display.WriteLine($"Results count: {results.ResultsCount}");
+					_display.WriteLine($"New properties: {results.NewPropertiesCount}");
+					_display.WriteLine($"Updated properties: {results.UpdatedPropertiesCount}");
+					_display.WriteLine();
 				}
 			}
 		}
@@ -125,7 +133,7 @@ namespace RightMoveConsole.Services
 					try
 					{
 						_logger.LogInformation("Starting application");
-						WriteTimeAndDbFileLocation();
+						DisplayTimeAndDbFileLocation();
 						await PerformSearch();
 						_exitCode = 0;
 					}
@@ -143,36 +151,6 @@ namespace RightMoveConsole.Services
 
 			return Task.CompletedTask;
 		}
-
-		//public Task StartAsync(CancellationToken cancellationToken)
-		//{
-		//	_logger.LogDebug($"Starting with arguments: {string.Join(" ", Environment.GetCommandLineArgs())}");
-
-		//	_appLifetime.ApplicationStarted.Register(() =>
-		//	{
-		//		Task.Run(async () =>
-		//		{
-		//			try
-		//			{
-		//				_logger.LogInformation("Starting application");
-		//				WriteTimeAndDbFileLocation();
-		//				await PerformSearch();
-		//				_exitCode = 0;
-		//			}
-		//			catch (Exception ex)
-		//			{
-		//				_logger.LogError(ex, "Unhandled exception!");
-		//			}
-		//			finally
-		//			{
-		//				// Stop the application once the work is done
-		//				_appLifetime.StopApplication();
-		//			}
-		//		});
-		//	});
-
-		//	return Task.CompletedTask;
-		//}
 
 		public Task StopAsync(CancellationToken cancellationToken)
 		{

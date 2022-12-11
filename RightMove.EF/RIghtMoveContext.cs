@@ -28,16 +28,9 @@ namespace RightMove.EF
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
 			=> options.UseSqlite($"Data Source={DbPath}");
 
-		//protected override void OnModelCreating(Modelbuilder modelBuilder)
-		//{
-		//	modelBuilder.Entity<Company>()
-		//		.HasMany(c => c.Employees)
-		//		.WithOne(e => e.Company);
-		//}
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			// Configure the value converter for the Animal
+			// Configure the value converter for the RightMoveProperty
 			modelBuilder.Entity<RightMoveProperty>()
 				.Property(x => x.Dates)
 					.HasConversion(new ValueConverter<List<DateTime>, string>(
@@ -53,17 +46,6 @@ namespace RightMove.EF
 			modelBuilder.Entity<ResultsTable>()
 				.HasMany(c => c.Properties)
 				.WithOne(e => e.ResultsTable);
-		}
-
-		private void ConvertFrom()
-		{
-
-		}
-
-		private List<int> ConvertTo(string prices)
-		{
-			var ret = JsonConvert.DeserializeObject<List<int>>(prices);
-			return ret;
 		}
 	}
 }
