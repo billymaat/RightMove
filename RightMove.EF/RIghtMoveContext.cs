@@ -11,22 +11,19 @@ namespace RightMove.EF
 		public DbSet<ResultsTable> ResultsTable { get; set; }
 		public DbSet<RightMoveProperty> Properties { get; set; }
 
-		public string DbPath { get; }
-
+		private const string ConnectionString =
+			"Server=(localdb)\\mssqllocaldb;Database=RightMove;Trusted_Connection=True;MultipleActiveResultSets=true";
 		public RightMoveContext()
 		{
-			var folder = Environment.SpecialFolder.LocalApplicationData;
-			var path = Environment.GetFolderPath(folder);
-
-			DbPath = System.IO.Path.Join(path, "rightmove.db");
-
-			//DbPath = @"C:\Users\Billy\source\repos\RightMove\rightmove.db";
 		}
 
 		// The following configures EF to create a Sqlite database file in the
 		// special "local" folder for your platform.
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
-			=> options.UseSqlite($"Data Source={DbPath}");
+		{
+			base.OnConfiguring(options);
+			options.UseSqlServer(ConnectionString);
+		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

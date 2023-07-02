@@ -15,9 +15,9 @@ namespace RightMove.EF.Migrations
                 name: "ResultsTable",
                 columns: table => new
                 {
-                    ResultsTableId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    ResultsTableId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,17 +28,17 @@ namespace RightMove.EF.Migrations
                 name: "Properties",
                 columns: table => new
                 {
-                    RightMovePropertyId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RightMoveId = table.Column<int>(type: "INTEGER", nullable: false),
-                    HouseInfo = table.Column<string>(type: "TEXT", nullable: false),
-                    Address = table.Column<string>(type: "TEXT", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DateReduced = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Prices = table.Column<string>(type: "TEXT", nullable: false),
-                    Dates = table.Column<string>(type: "TEXT", nullable: false),
-                    ResultsTableId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RightMovePropertyId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RightMoveId = table.Column<int>(type: "int", nullable: false),
+                    HouseInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateReduced = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Prices = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Dates = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ResultsTableId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
