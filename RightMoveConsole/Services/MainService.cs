@@ -82,10 +82,10 @@ namespace RightMoveConsole.Services
 			{
 				var table = new string(searchParams.RegionLocation
 					.Where(x => char.IsLetterOrDigit(x)).ToArray());
-				(int newPropertiesCount, int updatedPropertiesCount) databaseUpdate = _db.AddToDatabase(rightMoveService.Results, table);
+				var databaseUpdate = _db.AddToDatabase(rightMoveService.Results, table);
 
-				rightMoveSearchResult.NewPropertiesCount = databaseUpdate.newPropertiesCount;
-				rightMoveSearchResult.UpdatedPropertiesCount = databaseUpdate.updatedPropertiesCount;
+				rightMoveSearchResult.NewPropertiesCount = databaseUpdate.NewProperties;
+				rightMoveSearchResult.UpdatedPropertiesCount = databaseUpdate.UpdatedProperties;
 			}
 
 			return rightMoveSearchResult;
