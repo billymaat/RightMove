@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using RightMove.DataTypes;
-using static RightMove.Db.Services.DatabaseService;
 
 namespace RightMove.Db.Services
 {
