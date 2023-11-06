@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RightMove.DataTypes;
+using RightMove.Db.Types;
 
 namespace RightMove.Db.Services
 {
@@ -29,7 +30,7 @@ namespace RightMove.Db.Services
 			return _db.GetAllTableNames();
 		}
 
-		public (int, int) AddToDatabase(IList<RightMoveProperty> properties, string tableName)
+		public PropertyCounts AddToDatabase(IList<RightMoveProperty> properties, string tableName)
 		{
 			Console.WriteLine(tableName);
 			_db.CreateTableIfNotExist(tableName);
@@ -52,7 +53,11 @@ namespace RightMove.Db.Services
 				}
 			}
 
-			return (newPropertiesCount, updatedPropertiesCount);
+			return new PropertyCounts()
+			{
+				NewProperties = newPropertiesCount,
+				UpdatedProperties = updatedPropertiesCount
+			};
 		}
 
 		public Result AddToDatabase(DataTypes.RightMoveProperty property, string tableName)

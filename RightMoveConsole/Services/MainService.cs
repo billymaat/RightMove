@@ -7,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
 using RightMove.Db.Entities;
 using RightMove.Db.Services;
-using RightMove.Factory;
-using RightMoveConsole.Models;
 
 namespace RightMoveConsole.Services
 {
@@ -16,26 +14,26 @@ namespace RightMoveConsole.Services
 	{
 		private int? _exitCode;
 
-		private readonly RightMoveParserServiceFactory _rightMoveParserServiceFactory;
-		private readonly IDatabaseService<RightMovePropertyEntity> _db;
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
 		private readonly IDisplayService _display;
+		private readonly ISearchService _searchService;
 		private readonly ISearchLocationsReader _searchLocationsReader;
+		private readonly IDatabaseService<RightMovePropertyEntity> _db;
 
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
-			RightMoveParserServiceFactory rightMoveParseServiceFactory,
-			IDatabaseService<RightMovePropertyEntity> db,
 			IDisplayService display,
-			ISearchLocationsReader searchLocationsReader)
+			ISearchService searchService,
+			ISearchLocationsReader searchLocationsReader,
+			IDatabaseService<RightMovePropertyEntity> db)
 		{
 			_appLifetime = appLifetime;
 			_logger = logger;
-			_rightMoveParserServiceFactory = rightMoveParseServiceFactory;
-			_db = db;
 			_display = display;
+			_searchService = searchService;
 			_searchLocationsReader = searchLocationsReader;
+			_db = db;
 		}
 
 		/// <summary>
@@ -58,44 +56,10 @@ namespace RightMoveConsole.Services
 			return searchParams;
 		}
 
-		/// <summary>
-		/// Do the search and update the database
-		/// </summary>
-		/// <param name="searchParams">the search params</param>
-		/// <param name="updateDb">true to update db, false otherwise</param>
-		/// <returns></returns>
-		private async Task<RightMoveSearchResult> PerformSearch(SearchParams searchParams, bool updateDb = true)
-		{
-			var rightMoveService = _rightMoveParserServiceFactory.CreateInstance(searchParams);
-			bool res = await rightMoveService.SearchAsync();
-			
-			if (!res)
-			{
-				// failed
-				return null;
-			}
-
-			var rightMoveSearchResult = new RightMoveSearchResult();
-			rightMoveSearchResult.ResultsCount = rightMoveService.Results.Count;
-
-			if (updateDb)
-			{
-				var table = new string(searchParams.RegionLocation
-					.Where(x => char.IsLetterOrDigit(x)).ToArray());
-				var databaseUpdate = _db.AddToDatabase(rightMoveService.Results, table);
-
-				rightMoveSearchResult.NewPropertiesCount = databaseUpdate.NewProperties;
-				rightMoveSearchResult.UpdatedPropertiesCount = databaseUpdate.UpdatedProperties;
-			}
-
-			return rightMoveSearchResult;
-		}
-
 		private void DisplayTimeAndDbFileLocation()
 		{
 			// write details
 			_display.WriteLine($"Current time: {DateTime.Now}");
-			_display.WriteLine($"DbFile: {_db.DbConfiguration.DbFile}");
 		}
 
 		private async Task PerformSearch()
@@ -114,10 +78,15 @@ namespace RightMoveConsole.Services
 					_display.WriteLine("Search Parameters:");
 					_display.WriteLine(searchParams.ToString());
 
-					var results = await PerformSearch(searchParams);
-					_display.WriteLine($"Results count: {results.ResultsCount}");
-					_display.WriteLine($"New properties: {results.NewPropertiesCount}");
-					_display.WriteLine($"Updated properties: {results.UpdatedPropertiesCount}");
+					var results = await _searchService.Search(searchParams);
+
+					var table = new string(searchParams.RegionLocation
+						.Where(x => char.IsLetterOrDigit(x)).ToArray());
+					var databaseUpdate = _db.AddToDatabase(results, table);
+
+					_display.WriteLine($"Results count: {results.Count}");
+					_display.WriteLine($"New properties: {databaseUpdate.NewProperties}");
+					_display.WriteLine($"Updated properties: {databaseUpdate.UpdatedProperties}");
 					_display.WriteLine();
 				}
 			}

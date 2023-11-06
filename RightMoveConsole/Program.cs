@@ -28,6 +28,8 @@ namespace RightMoveConsole
 					{
 						services.RegisterRightMoveLibrary();
 						services
+							.AddScoped<ISearchService, SearchService>()
+							.AddScoped<IRightMoveParserServiceFactory, RightMoveParserServiceFactory>()
 							.AddScoped<IDisplayService, DisplayService>()
 							.AddTransient<IRightMovePropertyRepository<RightMove.Db.Entities.RightMovePropertyEntity>, RightMovePropertyEFRepository>()
 							.AddSingleton<IDbConfiguration>(o => new DbConfiguration("RightMoveDB.db"))
