@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using RightMove.Db.Entities;
-using RightMove.Db.Models;
 
-namespace RightMove.EF
+namespace RightMove.Db
 {
 	public class RightMoveContext : DbContext
 	{

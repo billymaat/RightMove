@@ -15,13 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Db", "RightMove.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Console.Tests", "RightMove.Console.Tests\RightMove.Console.Tests.csproj", "{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.EF", "RightMove.EF\RightMove.EF.csproj", "{8457C646-0E43-4544-99E7-33FAF762F2A9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Db.Models", "RightMove.Db.Models\RightMove.Db.Models.csproj", "{4BAC03B6-54D5-47D5-8133-74C357815D01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Db.Entities", "RightMove.Db.Entities\RightMove.Db.Entities.csproj", "{751F60BD-643F-4A77-89E5-28567624897C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Services", "RightMove.Services\RightMove.Services.csproj", "{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Services", "RightMove.Services\RightMove.Services.csproj", "{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,18 +49,10 @@ Global
 		{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A23430F-1094-46DE-A8A5-2AFEF2DED1EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8457C646-0E43-4544-99E7-33FAF762F2A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8457C646-0E43-4544-99E7-33FAF762F2A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8457C646-0E43-4544-99E7-33FAF762F2A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8457C646-0E43-4544-99E7-33FAF762F2A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BAC03B6-54D5-47D5-8133-74C357815D01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{751F60BD-643F-4A77-89E5-28567624897C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{751F60BD-643F-4A77-89E5-28567624897C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{751F60BD-643F-4A77-89E5-28567624897C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{751F60BD-643F-4A77-89E5-28567624897C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU

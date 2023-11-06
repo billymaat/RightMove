@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RightMove.Db\RightMove.Db.csproj" />
-    <ProjectReference Include="..\RightMove.EF\RightMove.EF.csproj" />
     <ProjectReference Include="..\RightMove\RightMove.csproj" />
   </ItemGroup>
 

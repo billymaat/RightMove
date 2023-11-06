@@ -8,11 +8,11 @@ using RightMove.DataTypes;
 
 namespace RightMove.Db.Services
 {
-	public class DatabaseEFService : IDatabaseService<RightMovePropertyEntity>
+	public class DatabaseService : IDatabaseService<RightMovePropertyEntity>
 	{
 		private readonly IRightMovePropertyRepository<RightMovePropertyEntity> _db;
 
-		public DatabaseEFService(IRightMovePropertyRepository<RightMovePropertyEntity> db)
+		public DatabaseService(IRightMovePropertyRepository<RightMovePropertyEntity> db)
 		{
 			_db = db;
 		}

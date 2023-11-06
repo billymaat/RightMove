@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using RightMove.Db.Entities;
-using RightMove.Db.Models;
-using RightMove.EF;
 
 namespace RightMove.Db.Repositories
 {

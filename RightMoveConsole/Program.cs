@@ -8,7 +8,6 @@ using RightMove.DataTypes;
 using RightMove.Db;
 using RightMove.Db.Repositories;
 using RightMove.Db.Services;
-using RightMove.EF;
 using RightMove.Extensions;
 using RightMove.Factory;
 using RightMove.Services;
@@ -32,7 +31,7 @@ namespace RightMoveConsole
 							.AddScoped<IDisplayService, DisplayService>()
 							.AddTransient<IRightMovePropertyRepository<RightMove.Db.Entities.RightMovePropertyEntity>, RightMovePropertyEFRepository>()
 							.AddSingleton<IDbConfiguration>(o => new DbConfiguration("RightMoveDB.db"))
-							.AddTransient<IDatabaseService<RightMove.Db.Entities.RightMovePropertyEntity>, DatabaseEFService>()
+							.AddTransient<IDatabaseService<RightMove.Db.Entities.RightMovePropertyEntity>, DatabaseService>()
 							.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 							.AddHostedService<MainService>();
