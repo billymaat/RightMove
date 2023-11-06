@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
+using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
 using RightMove.Extensions;
 using RightMove.Factory;
@@ -33,11 +34,11 @@ namespace RightMove.Services
 
 		private readonly RightMovePropertyFactory _propertyFactory;
 		private readonly IHttpService _httpService;
-		private readonly ILoggerService _logger;
+		private readonly ILogger _logger;
 
 		public SearchPageParserService(
 			IHttpService httpService,
-			ILoggerService logger,
+			ILogger logger,
 			RightMovePropertyFactory propertyFactory)
 		{
 			_httpService = httpService;
@@ -185,7 +186,7 @@ namespace RightMove.Services
 		{
 			if (document is null)
 			{
-				_logger?.WriteLine($"{nameof(document)} was null");
+				_logger.LogError($"{nameof(document)} was null");
 				return null;
 			}
 

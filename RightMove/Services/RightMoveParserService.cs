@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
+using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
 using RightMove.Factory;
 
@@ -14,7 +13,7 @@ namespace RightMove.Services
 
 		private readonly IHttpService _httpService;
 		private readonly SearchPageParserServiceFactory _searchPageParseFactory;
-		private readonly ILoggerService _logger;
+		private readonly ILogger _logger;
 		private readonly string _searchUrl;
 
 		/// <summary>
@@ -25,7 +24,7 @@ namespace RightMove.Services
 		/// <param name="searchParams">the <see cref="SearchParams"/></param>
 		public RightMoveParserService(IHttpService httpService,
 			SearchPageParserServiceFactory searchPageParseFactory,
-			ILoggerService logger,
+			ILogger logger,
 			SearchParams searchParams)
 		{
 			_httpService = httpService;
@@ -76,13 +75,13 @@ namespace RightMove.Services
 
 			if (rightMoveFirstPageSearch is null)
 			{
-				_logger?.WriteLine("First search page is null");
+				_logger.LogInformation("First search page is null");
 				return false;
 			}
 
 			pageCount = GetPageCount(rightMoveFirstPageSearch, pageCount);
 
-			_logger?.WriteLine($"Page count: {pageCount}");
+			_logger.LogInformation($"Page count: {pageCount}");
 
 			// extract the items
 			var listOfTasks = ExtractRightMoveItems(pageCount);
@@ -114,7 +113,7 @@ namespace RightMove.Services
 			// check the page count
 			if (pageCount > 42)
 			{
-				_logger?.WriteLine("Fixed pagecount to 42");
+				_logger.LogInformation("Fixed pagecount to 42");
 				pageCount = 42;
 			}
 
@@ -144,13 +143,13 @@ namespace RightMove.Services
 
 			if (rightMovePage is null)
 			{
-				_logger?.WriteLine($"{nameof(rightMovePage)} was null");
+				_logger.LogInformation($"{nameof(rightMovePage)} was null");
 				return null;
 			}
 
 			if (rightMovePage.RightMoveSearchItems is null)
 			{
-				_logger?.WriteLine($"{nameof(rightMovePage.RightMoveSearchItems)} was null");
+				_logger.LogInformation($"{nameof(rightMovePage.RightMoveSearchItems)} was null");
 				return null;
 			}
 
