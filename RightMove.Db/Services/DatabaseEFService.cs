@@ -4,31 +4,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RightMove.DataTypes;
 
 namespace RightMove.Db.Services
 {
-	public class DatabaseEFService : IDatabaseService<RightMoveProperty>
+	public class DatabaseEFService : IDatabaseService<RightMovePropertyEntity>
 	{
-		private readonly IRightMovePropertyRepository<RightMoveProperty> _db;
+		private readonly IRightMovePropertyRepository<RightMovePropertyEntity> _db;
 
-		public DatabaseEFService(IRightMovePropertyRepository<RightMoveProperty> db)
+		public DatabaseEFService(IRightMovePropertyRepository<RightMovePropertyEntity> db)
 		{
 			_db = db;
 		}
 
 		public IDbConfiguration DbConfiguration => _db.DbConfiguration;
 
-		public List<RightMoveProperty> LoadProperties(string tableName)
+		public List<RightMovePropertyEntity> LoadProperties(string tableName)
 		{
 			return _db.LoadProperties(tableName);
 		}
 
-		public List<String> GetAllTableNames()
+		public List<string> GetAllTableNames()
 		{
 			return _db.GetAllTableNames();
 		}
 
-		public (int, int) AddToDatabase(IList<DataTypes.RightMoveProperty> properties, string tableName)
+		public (int, int) AddToDatabase(IList<RightMoveProperty> properties, string tableName)
 		{
 			Console.WriteLine(tableName);
 			_db.CreateTableIfNotExist(tableName);
@@ -67,7 +68,7 @@ namespace RightMove.Db.Services
 		/// <param name="property">the property to add</param>
 		/// <returns><see cref="Result.Updated"/> if updated, <see cref="Result.NotModified"/> if not modified,
 		/// <see cref="Result.Added"/> if new proprety added</returns>
-		private Result AddToDatabase(List<RightMoveProperty> dbProperties, DataTypes.RightMoveProperty property, string tableName)
+		private Result AddToDatabase(List<RightMovePropertyEntity> dbProperties, DataTypes.RightMoveProperty property, string tableName)
 		{
 			var matchingProperty = dbProperties?.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
 
@@ -84,7 +85,7 @@ namespace RightMove.Db.Services
 			}
 
 			// save a new record of the new property
-			var rmp = new RightMoveProperty()
+			var rmp = new RightMovePropertyEntity()
 			{
 				RightMoveId = property.RightMoveId,
 				Address = property.Address,

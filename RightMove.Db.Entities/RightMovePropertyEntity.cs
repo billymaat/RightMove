@@ -1,12 +1,12 @@
 ﻿namespace RightMove.Db.Entities
 {
-	public class RightMoveProperty
+	public class RightMovePropertyEntity
 	{
-		public RightMoveProperty()
+		public RightMovePropertyEntity()
 		{
 		}
 
-		public RightMoveProperty(RightMoveProperty rightMoveProperty)
+		public RightMovePropertyEntity(RightMovePropertyEntity rightMoveProperty)
 		{
 			RightMoveId = rightMoveProperty.RightMoveId;
 			HouseInfo = rightMoveProperty.HouseInfo;

@@ -12,6 +12,6 @@ namespace RightMove.Db.Entities
 
 		public string? Name { get; set; }
 
-		public List<RightMoveProperty> Properties { get; set; } = new List<RightMoveProperty>();
+		public List<RightMovePropertyEntity> Properties { get; set; } = new List<RightMovePropertyEntity>();
 	}
 }

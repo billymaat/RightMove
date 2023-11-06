@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
+using RightMove.Db.Entities;
 using RightMove.Db.Services;
 using RightMove.Factory;
 using RightMoveConsole.Models;
@@ -16,7 +17,7 @@ namespace RightMoveConsole.Services
 		private int? _exitCode;
 
 		private readonly RightMoveParserServiceFactory _rightMoveParserServiceFactory;
-		private readonly IDatabaseService<RightMove.Db.Entities.RightMoveProperty> _db;
+		private readonly IDatabaseService<RightMovePropertyEntity> _db;
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
 		private readonly IDisplayService _display;
@@ -25,7 +26,7 @@ namespace RightMoveConsole.Services
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			RightMoveParserServiceFactory rightMoveParseServiceFactory,
-			IDatabaseService<RightMove.Db.Entities.RightMoveProperty> db,
+			IDatabaseService<RightMovePropertyEntity> db,
 			IDisplayService display,
 			ISearchLocationsReader searchLocationsReader)
 		{

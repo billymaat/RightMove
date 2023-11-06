@@ -9,7 +9,7 @@ namespace RightMove.EF
 	public class RightMoveContext : DbContext
 	{
 		public DbSet<ResultsTable> ResultsTable { get; set; }
-		public DbSet<RightMoveProperty> Properties { get; set; }
+		public DbSet<RightMovePropertyEntity> Properties { get; set; }
 
 		private const string ConnectionString =
 			"Server=(localdb)\\mssqllocaldb;Database=RightMove;Trusted_Connection=True;MultipleActiveResultSets=true";
@@ -28,13 +28,13 @@ namespace RightMove.EF
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			// Configure the value converter for the RightMoveProperty
-			modelBuilder.Entity<RightMoveProperty>()
+			modelBuilder.Entity<RightMovePropertyEntity>()
 				.Property(x => x.Dates)
 					.HasConversion(new ValueConverter<List<DateTime>, string>(
 						v => JsonConvert.SerializeObject(v), // Convert to string for persistence
 						v => JsonConvert.DeserializeObject<List<DateTime>>(v))); // Convert to List<String> for use
 
-			modelBuilder.Entity<RightMoveProperty>()
+			modelBuilder.Entity<RightMovePropertyEntity>()
 				.Property(x => x.Prices)
 								.HasConversion(new ValueConverter<List<int>, string>(
 									v => JsonConvert.SerializeObject(v), // Convert to string for persistence

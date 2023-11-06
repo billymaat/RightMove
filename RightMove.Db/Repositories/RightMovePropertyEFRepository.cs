@@ -9,7 +9,7 @@ using RightMove.EF;
 
 namespace RightMove.Db.Repositories
 {
-	public class RightMovePropertyEFRepository : SqLiteBaseRepository, IRightMovePropertyRepository<RightMoveProperty>
+	public class RightMovePropertyEFRepository : SqLiteBaseRepository, IRightMovePropertyRepository<RightMovePropertyEntity>
 	{
 		private readonly RightMoveContext _rightMoveContext;
 
@@ -75,14 +75,14 @@ namespace RightMove.Db.Repositories
 			return _rightMoveContext.ResultsTable.Select(o => o.Name).ToList();
 		}
 
-		public List<RightMoveProperty> LoadProperties(string tableName)
+		public List<RightMovePropertyEntity> LoadProperties(string tableName)
 		{
-			var rightMovePropertyModels = new List<RightMoveProperty>();
+			var rightMovePropertyModels = new List<RightMovePropertyEntity>();
 			var table = _rightMoveContext.ResultsTable.Include(table => table.Properties).FirstOrDefault(o => o.Name.Equals(tableName));
 			return table?.Properties;
 		}
 
-		public void SaveProperty(RightMoveProperty property, string tableName)
+		public void SaveProperty(RightMovePropertyEntity property, string tableName)
 		{
 			var table = _rightMoveContext.ResultsTable.FirstOrDefault(o => o.Name.Equals(tableName));
 			table.Properties.Add(property);
