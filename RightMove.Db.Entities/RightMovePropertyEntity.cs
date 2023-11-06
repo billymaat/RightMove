@@ -1,4 +1,6 @@
-﻿namespace RightMove.Db.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RightMove.Db.Entities
 {
 	public class RightMovePropertyEntity
 	{
@@ -17,6 +19,7 @@
 			Date = DateTime.Now;
 		}
 
+		[Key]
 		public int RightMovePropertyId
 		{
 			get;
