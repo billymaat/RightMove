@@ -74,7 +74,9 @@ namespace RightMove.Db.Repositories
 
 		public List<RightMovePropertyEntity> LoadProperties(string tableName)
 		{
-			var table = _rightMoveContext.ResultsTable.Include(table => table.Properties).FirstOrDefault(o => o.Name.Equals(tableName));
+			var table = _rightMoveContext.ResultsTable
+				.Include(table => table.Properties)
+				.FirstOrDefault(o => o.Name.Equals(tableName));
 			return table?.Properties;
 		}
 

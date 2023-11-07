@@ -32,7 +32,6 @@ namespace RightMove.Db.Services
 
 		public PropertyCounts AddToDatabase(IList<RightMoveProperty> properties, string tableName)
 		{
-			Console.WriteLine(tableName);
 			_db.CreateTableIfNotExist(tableName);
 
 			var dbProperties = _db.LoadProperties(tableName);
