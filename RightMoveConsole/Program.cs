@@ -40,6 +40,7 @@ namespace RightMoveConsole
 
 						services.AddScoped<ILogger>(x => logger);
 						services.RegisterRightMoveLibrary();
+
 						services
 							.AddScoped<ISearchService, SearchService>()
 							.AddScoped<IRightMoveParserServiceFactory, RightMoveParserServiceFactory>()

@@ -16,21 +16,18 @@ namespace RightMoveConsole.Services
 
 		private readonly IHostApplicationLifetime _appLifetime;
 		private readonly ILogger _logger;
-		private readonly IDisplayService _display;
 		private readonly ISearchService _searchService;
 		private readonly ISearchLocationsReader _searchLocationsReader;
 		private readonly IDatabaseService<RightMovePropertyEntity> _db;
 
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
-			IDisplayService display,
 			ISearchService searchService,
 			ISearchLocationsReader searchLocationsReader,
 			IDatabaseService<RightMovePropertyEntity> db)
 		{
 			_appLifetime = appLifetime;
 			_logger = logger;
-			_display = display;
 			_searchService = searchService;
 			_searchLocationsReader = searchLocationsReader;
 			_db = db;
@@ -59,7 +56,7 @@ namespace RightMoveConsole.Services
 		private void DisplayTimeAndDbFileLocation()
 		{
 			// write details
-			_display.WriteLine($"Current time: {DateTime.Now}");
+			_logger.LogInformation($"Current time: {DateTime.Now}");
 		}
 
 		private async Task PerformSearch()
@@ -75,8 +72,8 @@ namespace RightMoveConsole.Services
 					var searchParams = GetSearchParams(searchLocation);
 
 					// show the the properties
-					_display.WriteLine("Search Parameters:");
-					_display.WriteLine(searchParams.ToString());
+					_logger.LogInformation("Search Parameters:");
+					_logger.LogInformation(searchParams.ToString());
 
 					var results = await _searchService.Search(searchParams);
 
@@ -84,10 +81,9 @@ namespace RightMoveConsole.Services
 						.Where(x => char.IsLetterOrDigit(x)).ToArray());
 					var databaseUpdate = _db.AddToDatabase(results, table);
 
-					_display.WriteLine($"Results count: {results.Count}");
-					_display.WriteLine($"New properties: {databaseUpdate.NewProperties}");
-					_display.WriteLine($"Updated properties: {databaseUpdate.UpdatedProperties}");
-					_display.WriteLine();
+					_logger.LogInformation($"Results count: {results.Count}");
+					_logger.LogInformation($"New properties: {databaseUpdate.NewProperties}");
+					_logger.LogInformation($"Updated properties: {databaseUpdate.UpdatedProperties}");
 				}
 			}
 		}
