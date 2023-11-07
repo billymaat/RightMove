@@ -44,7 +44,6 @@ namespace RightMoveConsole
 						services
 							.AddScoped<ISearchService, SearchService>()
 							.AddScoped<IRightMoveParserServiceFactory, RightMoveParserServiceFactory>()
-							.AddScoped<IDisplayService, DisplayService>()
 							.AddTransient<IRightMovePropertyRepository<RightMovePropertyEntity>, RightMovePropertyEFRepository>()
 							.AddSingleton<IDbConfiguration>(o => new DbConfiguration("RightMoveDB.db"))
 							.AddTransient<IDatabaseService<RightMovePropertyEntity>, DatabaseService>()

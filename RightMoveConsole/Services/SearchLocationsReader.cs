@@ -8,7 +8,7 @@ namespace RightMoveConsole.Services
 {
 	public interface ISearchLocationsReader : IFileReader
 	{
-		List<String> GetLocations();
+		List<string> GetLocations();
 	}
 
 	public class SearchLocationsReader : FileReaderService, ISearchLocationsReader
