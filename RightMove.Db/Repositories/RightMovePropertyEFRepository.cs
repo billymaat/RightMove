@@ -6,11 +6,11 @@ using RightMove.Db.Entities;
 
 namespace RightMove.Db.Repositories
 {
-	public class RightMovePropertyEFRepository : SqLiteBaseRepository, IRightMovePropertyRepository<RightMovePropertyEntity>
+	public class RightMovePropertyEFRepository : IRightMovePropertyRepository<RightMovePropertyEntity>
 	{
 		private readonly RightMoveContext _rightMoveContext;
 
-		public RightMovePropertyEFRepository(IDbConfiguration dbConfiguration, RightMoveContext rightMoveContext) : base(dbConfiguration)
+		public RightMovePropertyEFRepository(RightMoveContext rightMoveContext)
 		{
 			_rightMoveContext = rightMoveContext;
 		}

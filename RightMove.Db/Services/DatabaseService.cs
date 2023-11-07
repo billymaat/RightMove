@@ -18,8 +18,6 @@ namespace RightMove.Db.Services
 			_db = db;
 		}
 
-		public IDbConfiguration DbConfiguration => _db.DbConfiguration;
-
 		public List<RightMovePropertyEntity> LoadProperties(string tableName)
 		{
 			return _db.LoadProperties(tableName);

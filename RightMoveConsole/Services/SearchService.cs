@@ -27,7 +27,6 @@ namespace RightMoveConsole.Services
 		/// Do the search and update the database
 		/// </summary>
 		/// <param name="searchParams">the search params</param>
-		/// <param name="updateDb">true to update db, false otherwise</param>
 		/// <returns></returns>
 		public async Task<RightMoveSearchItemCollection> Search(SearchParams searchParams)
 		{
