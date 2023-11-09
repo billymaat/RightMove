@@ -7,27 +7,24 @@ using RightMove.Factory;
 
 namespace RightMove.Services
 {
-	public class RightMoveParserService
+	public class RightMoveParser
 	{
 		public const int PriceNotSet = -1;
 
-		private readonly IHttpService _httpService;
 		private readonly SearchPageParserServiceFactory _searchPageParseFactory;
 		private readonly ILogger _logger;
 		private readonly string _searchUrl;
 
 		/// <summary>
-		/// Initializes a new instance <see cref="RightMoveParserService"/> class
+		/// Initializes a new instance <see cref="RightMoveParser"/> class
 		/// </summary>
 		/// <param name="httpService">the http service</param>
 		/// <param name="searchPageParseFactory">the <see cref="SearchPageParserServiceFactory"> service</param>
 		/// <param name="searchParams">the <see cref="SearchParams"/></param>
-		public RightMoveParserService(IHttpService httpService,
-			SearchPageParserServiceFactory searchPageParseFactory,
+		public RightMoveParser(SearchPageParserServiceFactory searchPageParseFactory,
 			ILogger logger,
 			SearchParams searchParams)
 		{
-			_httpService = httpService;
 			_searchPageParseFactory = searchPageParseFactory;
 			_logger = logger;
 

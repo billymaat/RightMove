@@ -12,13 +12,13 @@ namespace RightMoveConsole.Services
 {
 	public class SearchService : ISearchService
 	{
-		private readonly IRightMoveParserServiceFactory _rightMoveParserServiceFactory;
+		private readonly IRightMoveParserFactory _rightMoveParserFactory;
 		private readonly IDatabaseService<RightMovePropertyEntity> _db;
 
-		public SearchService(IRightMoveParserServiceFactory rightMoveParserServiceFactory,
+		public SearchService(IRightMoveParserFactory rightMoveParserFactory,
 			IDatabaseService<RightMovePropertyEntity> db)
 		{
-			_rightMoveParserServiceFactory = rightMoveParserServiceFactory;
+			_rightMoveParserFactory = rightMoveParserFactory;
 			_db = db;
 		}
 
@@ -30,7 +30,7 @@ namespace RightMoveConsole.Services
 		/// <returns></returns>
 		public async Task<RightMoveSearchItemCollection> Search(SearchParams searchParams)
 		{
-			var rightMoveService = _rightMoveParserServiceFactory.CreateInstance(searchParams);
+			var rightMoveService = _rightMoveParserFactory.CreateInstance(searchParams);
 			bool res = await rightMoveService.SearchAsync();
 
 			if (!res)

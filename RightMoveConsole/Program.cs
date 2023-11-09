@@ -44,7 +44,7 @@ namespace RightMoveConsole
 						services.RegisterRightMoveDb();
 						services
 							.AddScoped<ISearchService, SearchService>()
-							.AddScoped<IRightMoveParserServiceFactory, RightMoveParserServiceFactory>()
+							.AddScoped<IRightMoveParserFactory, RightMoveParserFactory>()
 							.AddTransient<IRightMovePropertyRepository<RightMovePropertyEntity>, RightMovePropertyEFRepository>()
 							.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))

@@ -33,7 +33,7 @@ namespace RightMoveTests
 		[Test]
 		public void ParseSearchPage_Null()
 		{
-			RightMoveParserServiceFactory factory = CreateRightMoveParserServiceFactory();
+			RightMoveParserFactory factory = CreateRightMoveParserServiceFactory();
 			Assert.That(() => factory.CreateInstance(null), Throws.ArgumentNullException);
 		}
 
@@ -50,10 +50,10 @@ namespace RightMoveTests
 		}
 
 		/// <summary>
-		/// Create a <see cref="RightMoveParserServiceFactory"/>
+		/// Create a <see cref="RightMoveParserFactory"/>
 		/// </summary>
-		/// <returns>A <see cref="RightMoveParserServiceFactory"/></returns>
-		private RightMoveParserServiceFactory CreateRightMoveParserServiceFactory()
+		/// <returns>A <see cref="RightMoveParserFactory"/></returns>
+		private RightMoveParserFactory CreateRightMoveParserServiceFactory()
 		{
 			IHttpService httpService = CreateHttpService();
 
@@ -84,7 +84,7 @@ namespace RightMoveTests
 				null,
 				(SearchParams)o[0]));
 
-			RightMoveParserServiceFactory rightMoveParserServiceFactory = new RightMoveParserServiceFactory(activatorRightMoveParserServiceFactory.Object, serviceProvider.Object);
+			RightMoveParserFactory rightMoveParserServiceFactory = new RightMoveParserFactory(activatorRightMoveParserServiceFactory.Object, serviceProvider.Object);
 
 			return rightMoveParserServiceFactory;
 		}

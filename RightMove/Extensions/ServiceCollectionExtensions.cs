@@ -13,10 +13,10 @@ namespace RightMove.Extensions
 			services.AddTransient<IHttpService, HttpService>()
 				.AddScoped<RightMoveOutcodeService>()
 				.AddScoped<RightMoveRegionService>()
-				.AddScoped<RightMoveParserServiceFactory>()
+				.AddScoped<RightMoveParserFactory>()
 				.AddScoped<RightMovePropertyFactory>()
 				.AddTransient<PropertyPageParser>()
-				.AddTransient<RightMoveParserService>()
+				.AddTransient<RightMoveParser>()
 				.AddTransient<SearchPageParserServiceFactory>()
 				.AddTransient<IActivator, ActivatorInjector>()
 				.AddFactory<IPropertyPageParser, PropertyPageParser>();
