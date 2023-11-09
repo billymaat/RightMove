@@ -1,18 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RightMove.DataTypes;
 using RightMove.Db;
 using RightMove.Db.Entities;
 using RightMove.Db.Extensions;
 using RightMove.Db.Repositories;
-using RightMove.Db.Services;
 using RightMove.Extensions;
 using RightMove.Factory;
-using RightMove.Services;
 using RightMoveConsole.Services;
 
 namespace RightMoveConsole
