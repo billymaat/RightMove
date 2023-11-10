@@ -79,8 +79,7 @@ namespace RightMoveTests
 			var instance = searchPageParserServiceFactory.CreateInstance();
 
 			activatorRightMoveParserServiceFactory.Setup(a => a.CreateInstance(serviceProvider.Object, It.IsAny<Type>(), It.IsAny<object[]>()))
-				.Returns<IServiceProvider, Type, object[]>((sp, t, o) => new RightMoveParserService(httpService,
-				searchPageParserServiceFactory,
+				.Returns<IServiceProvider, Type, object[]>((sp, t, o) => new RightMoveParser(searchPageParserServiceFactory,
 				null,
 				(SearchParams)o[0]));
 
