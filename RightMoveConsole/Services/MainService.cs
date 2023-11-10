@@ -18,13 +18,13 @@ namespace RightMoveConsole.Services
 		private readonly ILogger _logger;
 		private readonly ISearchService _searchService;
 		private readonly ISearchLocationsReader _searchLocationsReader;
-		private readonly IDatabaseService<RightMovePropertyEntity> _db;
+		private readonly IDatabaseWritingService _db;
 
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			ISearchService searchService,
 			ISearchLocationsReader searchLocationsReader,
-			IDatabaseService<RightMovePropertyEntity> db)
+			IDatabaseWritingService db)
 		{
 			_appLifetime = appLifetime;
 			_logger = logger;
@@ -77,9 +77,14 @@ namespace RightMoveConsole.Services
 
 					var results = await _searchService.Search(searchParams);
 
+					if (_db == null)
+					{
+						continue;
+					}
+
 					var table = new string(searchParams.RegionLocation
 						.Where(x => char.IsLetterOrDigit(x)).ToArray());
-					var databaseUpdate = _db.AddToDatabase(results, table);
+					var databaseUpdate = _db.AddProperty(results, table);
 
 					_logger.LogInformation($"Results count: {results.Count}");
 					_logger.LogInformation($"New properties: {databaseUpdate.NewProperties}");

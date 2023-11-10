@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -34,6 +36,14 @@ namespace RightMoveConsole
 						ILogger logger = loggerFactory.CreateLogger<Program>();
 						logger.LogInformation("Example log message");
 
+						var builder = new ConfigurationBuilder()
+							.SetBasePath(Directory.GetCurrentDirectory())
+							.AddJsonFile("appsettings.json", optional: false);
+						IConfiguration config = builder.Build();
+
+						//services.AddScoped<IDatabaseWritingService, DatabaseWritingService>();
+						services.AddScoped<IDatabaseWritingService>(x => null);
+						services.AddSingleton<IConfiguration>(x => config);
 						services.AddScoped<ILogger>(x => logger);
 						services.RegisterRightMoveLibrary();
 						services.RegisterRightMoveDb();

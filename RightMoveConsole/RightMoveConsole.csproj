@@ -29,6 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="RightMoveDB.db">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
