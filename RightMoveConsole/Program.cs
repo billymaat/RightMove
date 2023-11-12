@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RightMove.Db;
 using RightMove.Db.Entities;
 using RightMove.Db.Extensions;
@@ -41,8 +43,9 @@ namespace RightMoveConsole
 							.AddJsonFile("appsettings.json", optional: false);
 						IConfiguration config = builder.Build();
 
-						//services.AddScoped<IDatabaseWritingService, DatabaseWritingService>();
-						services.AddScoped<IDatabaseWritingService>(x => null);
+						//var connectionString = config["ConnectionStrings:Default"];
+						services.AddScoped<IDatabaseWritingService, DatabaseWritingService>();
+						//services.AddScoped<IDatabaseWritingService>(x => null);
 						services.AddSingleton<IConfiguration>(x => config);
 						services.AddScoped<ILogger>(x => logger);
 						services.RegisterRightMoveLibrary();
@@ -55,7 +58,13 @@ namespace RightMoveConsole
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 							.AddHostedService<MainService>();
 
-						services.AddDbContext<RightMoveContext>();
+						services.AddDbContext<RightMoveContext>(options =>
+						{
+							var cal = config.GetSection("ConnectionStrings:Default").Value;
+							options.UseSqlServer(cal);
+							options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+						});
+						//services.AddDbContext<RightMoveContext>();
 					}
 				);
 	}
