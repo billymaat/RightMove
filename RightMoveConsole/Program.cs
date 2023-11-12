@@ -58,13 +58,7 @@ namespace RightMoveConsole
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 							.AddHostedService<MainService>();
 
-						services.AddDbContext<RightMoveContext>(options =>
-						{
-							var cal = config.GetSection("ConnectionStrings:Default").Value;
-							options.UseSqlServer(cal);
-							options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-						});
-						//services.AddDbContext<RightMoveContext>();
+						services.AddDbContext<RightMoveContext>(options => options.UseSqlServer(config.GetSection("ConnectionStrings:Default").Value));
 					}
 				);
 	}
