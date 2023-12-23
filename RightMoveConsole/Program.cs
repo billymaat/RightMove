@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,25 +41,35 @@ namespace RightMoveConsole
 
 						var builder = new ConfigurationBuilder()
 							.SetBasePath(Directory.GetCurrentDirectory())
-							.AddJsonFile("appsettings.json", optional: false);
+							.AddJsonFile("appsettings.json", optional: false)
+							.AddEnvironmentVariables();
+
 						IConfiguration config = builder.Build();
 
-						//var connectionString = config["ConnectionStrings:Default"];
-						services.AddScoped<IDatabaseWritingService, DatabaseWritingService>();
-						//services.AddScoped<IDatabaseWritingService>(x => null);
+						//services.AddSingleton<IDatabaseWritingService>(x => null);
+						services.AddSingleton<IDatabaseWritingService, DatabaseWritingService>();
 						services.AddSingleton<IConfiguration>(x => config);
 						services.AddScoped<ILogger>(x => logger);
 						services.RegisterRightMoveLibrary();
 						services.RegisterRightMoveDb();
 						services
-							.AddScoped<ISearchService, SearchService>()
-							.AddScoped<IRightMoveParserFactory, RightMoveParserFactory>()
+							.AddSingleton<ISearchService, SearchService>()
+							.AddSingleton<IRightMoveParserFactory, RightMoveParserFactory>()
 							.AddTransient<IRightMovePropertyRepository<RightMovePropertyEntity>, RightMovePropertyEFRepository>()
 							.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
 							.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 							.AddHostedService<MainService>();
 
-						services.AddDbContext<RightMoveContext>(options => options.UseSqlServer(config.GetSection("ConnectionStrings:Default").Value));
+						var envVar = Environment.GetEnvironmentVariable("ConnectionString");
+						Console.WriteLine($"envVar: {envVar}");
+						//services.AddDbContext<RightMoveContext>(options => options.UseSqlServer(config.GetSection("ConnectionStrings:Default").Value));
+
+						var connectionString = !string.IsNullOrEmpty(envVar)
+							? envVar
+							: config.GetSection("ConnectionStrings:MariaDb").Value;
+						services.AddDbContext<RightMoveContext>(
+							options => options.UseMySql(connectionString,
+							new MariaDbServerVersion(new Version(10, 3, 39))));
 					}
 				);
 	}

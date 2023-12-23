@@ -387,3 +387,7 @@ FodyWeavers.xsd
 .idea/
 *.sln.iml
 /RightMove.Web/wwwroot
+
+/dockerdb/
+/dockerdb2/
+/scripts/

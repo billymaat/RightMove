@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RightMoveConsole": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "SomeVar": "Testing123"
+      }
+    }
+  }
+}

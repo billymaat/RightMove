@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  rmdb:
+    container_name: rightmove_db_2
+    image: rightmove_db
+    networks:
+     - rmnetwork
+    ports:
+      - "3307:3306"
+    volumes:
+      - C:\Users\Billy\source\repos\RightMove\dockerdb2:/var/lib/mysql
+      - C:\Users\Billy\source\repos\RightMove\scripts:/scripts rightmove_db
+    depends_on:
+      - rmapp
+  rmapp:
+    container_name: rightmove_app_2
+    image: rightmove_app
+    networks:
+     - rmnetwork
+    environment:
+      ConnectionString: "server=rightmove_db_2;database=rmdb;user id=rmuser;password=ponnect4;" 
+networks:
+  rmnetwork:
+    driver: bridge
+    

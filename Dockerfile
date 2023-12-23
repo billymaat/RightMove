@@ -15,4 +15,5 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /RM/RightMoveConsole/out
 COPY --from=build-env /RM/RightMoveConsole/out .
+ENV SomeVar="Testing a string"
 ENTRYPOINT ["dotnet", "RightMoveConsole.dll"]
