@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RightMove.Db.Entities;
 using RightMove.Db.Services;
+using RightMove.Web.Dto;
 
 namespace RightMove.Web.Controllers
 {
@@ -7,8 +9,8 @@ namespace RightMove.Web.Controllers
 	[Route("api/property")]
 	public class PropertyController : Controller
 	{
-		private readonly IDatabaseService _databaseService;
-		public PropertyController(IDatabaseService db) : base()
+		private readonly IDatabaseService<RightMovePropertyEntity> _databaseService;
+		public PropertyController(IDatabaseService<RightMovePropertyEntity> db) : base()
 		{
 			_databaseService = db;
 		}
@@ -17,14 +19,17 @@ namespace RightMove.Web.Controllers
 		public IActionResult TestMethod()
 		{
 			var properties = _databaseService.LoadProperties("AshtonUnderLyneGreaterManchester");
-			return Ok(properties);
+
+			var dto = properties.Select(p => p.ToDto());
+			return Ok(dto);
 		}
 
 		[HttpGet("gettable/{table}")]
 		public IActionResult TestTwo(string table)
 		{
 			var properties = _databaseService.LoadProperties(table);
-			return Ok(properties);
+			var dto = properties.Select(p => p.ToDto());
+			return Ok(dto);
 		}
 
 		[HttpGet("tables")]

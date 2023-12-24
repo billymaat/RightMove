@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using RightMove.Db;
+using RightMove.Db.Entities;
+using RightMove.Db.Extensions;
 using RightMove.Db.Repositories;
 using RightMove.Db.Services;
 using RightMove.Web;
@@ -26,9 +29,18 @@ builder.Services.AddSwaggerGen();
 var settings = builder.Configuration.GetSection("Settings").Get<Settings>();
 
 builder.Services
-	.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
-	.AddSingleton<IDbConfiguration>(o => new DbConfiguration(settings.DbPath))
-	.AddTransient<IDatabaseService, DatabaseService>();
+	.AddTransient<IRightMovePropertyRepository<RightMovePropertyEntity>, RightMovePropertyEFRepository>()
+	.AddSingleton<IDbConfiguration>(o => new DbConfiguration(settings.DbPath));
+builder.Services.RegisterRightMoveDb();
+
+var envVar = Environment.GetEnvironmentVariable("ConnectionString");
+
+var connectionString = !string.IsNullOrEmpty(envVar)
+	? envVar
+	: builder.Configuration.GetSection("ConnectionStrings:MariaDb").Value;
+builder.Services.AddDbContext<RightMoveContext>(
+	options => options.UseMySql(connectionString,
+		new MariaDbServerVersion(new Version(10, 3, 39))));
 
 var app = builder.Build();
 

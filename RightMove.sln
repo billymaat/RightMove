@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Console.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Services", "RightMove.Services\RightMove.Services.csproj", "{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web", "RightMove.Web\RightMove.Web.csproj", "{22B9A950-F082-468A-B23B-77C7DF80CC8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Web.Dto", "RightMove.Web.Dto\RightMove.Web.Dto.csproj", "{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0271E1F-B926-4EBE-9266-C139F6C3AD8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22B9A950-F082-468A-B23B-77C7DF80CC8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B9A950-F082-468A-B23B-77C7DF80CC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B9A950-F082-468A-B23B-77C7DF80CC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B9A950-F082-468A-B23B-77C7DF80CC8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
