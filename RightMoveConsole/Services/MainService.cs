@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
-using RightMove.Db.Entities;
-using RightMove.Db.Services;
 
 namespace RightMoveConsole.Services
 {

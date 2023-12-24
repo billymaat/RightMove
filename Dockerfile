@@ -2,7 +2,14 @@
 WORKDIR /RM
 
 # Copy everything
-COPY . ./
+COPY ./RightMove ./RightMove
+COPY ./RightMove.Console.Tests ./RightMove.Console.Tests
+COPY ./RightMove.Db ./RightMove.Db
+COPY ./RightMove.Services ./RightMove.Services
+COPY ./RightMoveTests ./RightMoveTests
+COPY ./RightMoveConsole ./RightMoveConsole
+COPY ./Utilities ./Utilities
+COPY ./RightMove.sln ./RightMove.sln
 
 WORKDIR /RM/RightMoveConsole
 

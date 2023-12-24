@@ -301,7 +301,7 @@ namespace RightMove.DataTypes
 		{
 			Type t = this.GetType();
 			PropertyInfo[] props = t.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-			return string.Join(System.Environment.NewLine, props.Select(prop => $"{prop.Name}: {prop.GetValue(this, null)}"));
+			return string.Join(',', props.Select(prop => $"{prop.Name}: {prop.GetValue(this, null)}"));
 		}
 
 		public bool IsValid()

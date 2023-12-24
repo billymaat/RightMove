@@ -1,24 +1,40 @@
 version: "3.7"
 services:
   rmdb:
-    container_name: rightmove_db_2
-    image: rightmove_db
+    container_name: rightmove_db_3
+    image: mariadb:latest
     networks:
      - rmnetwork
     ports:
       - "3307:3306"
     volumes:
-      - C:\Users\Billy\source\repos\RightMove\dockerdb2:/var/lib/mysql
-      - C:\Users\Billy\source\repos\RightMove\scripts:/scripts rightmove_db
-    depends_on:
-      - rmapp
+      - ./dockerdb3:/var/lib/mysql
+      - ./scripts:/scripts
+      - ./dbinit:/docker-entrypoint-initdb.d
+    # depends_on:
+    #   - rmapp
+    environment:
+      - MARIADB_USER=rmuser
+      - MARIADB_PASSWORD=ponnect4
+      - MARIADB_ROOT_PASSWORD=ponnect4
+      - MARIADB_DATABASE=rmdb
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 1m
+      # start_interval: 10s
+      interval: 1m
+      timeout: 5s
+      retries: 3
   rmapp:
-    container_name: rightmove_app_2
+    container_name: rightmove_app_3
     image: rightmove_app
     networks:
      - rmnetwork
     environment:
-      ConnectionString: "server=rightmove_db_2;database=rmdb;user id=rmuser;password=ponnect4;" 
+      ConnectionString: "server=rightmove_db_3;database=rmdb;user id=rmuser;password=ponnect4;" # pass the database string
+    depends_on:
+      rmdb:
+        condition: service_healthy # wait for the service to start
 networks:
   rmnetwork:
     driver: bridge
