@@ -388,6 +388,5 @@ FodyWeavers.xsd
 *.sln.iml
 /RightMove.Web/wwwroot
 
-/dockerdb/
-/dockerdb2/
-/scripts/
+/docker
+/TestDb
