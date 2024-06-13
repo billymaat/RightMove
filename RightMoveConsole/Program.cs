@@ -68,7 +68,7 @@ namespace RightMoveConsole
 					services.AddLogging(x => x.AddSerilog());
 
 					//services.AddSingleton<IDatabaseWritingService>(x => null);
-					services.AddSingleton<IDatabaseWritingService, DatabaseWritingService>();
+					services.AddTransient<IDatabaseWritingService, DatabaseWritingService>();
 					services.AddSingleton<IConfiguration>(x => config);
 					//services.AddScoped<ILogger>(x => logger);
 					services.RegisterRightMoveLibrary();
@@ -85,10 +85,10 @@ namespace RightMoveConsole
 
 					var connectionString = !string.IsNullOrEmpty(envVar)
 						? envVar
-						: config.GetSection("ConnectionStrings:MariaDb").Value;
+						: config.GetSection("ConnectionStrings:PostGre").Value;
+
 					services.AddDbContext<RightMoveContext>(
-						options => options.UseMySql(connectionString,
-						new MariaDbServerVersion(new Version(10, 3, 39))));
+						options => options.UseNpgsql(connectionString));
 				});
 
 			host.ConfigureLogging(logger =>

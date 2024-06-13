@@ -37,10 +37,15 @@ var envVar = Environment.GetEnvironmentVariable("ConnectionString");
 
 var connectionString = !string.IsNullOrEmpty(envVar)
 	? envVar
-	: builder.Configuration.GetSection("ConnectionStrings:MariaDb").Value;
+	//: builder.Configuration.GetSection("ConnectionStrings:MariaDb").Value;
+	: builder.Configuration.GetSection("ConnectionStrings:PostGre").Value;
+
+//builder.Services.AddDbContext<RightMoveContext>(
+//	options => options.UseMySql(connectionString,
+//		new MariaDbServerVersion(new Version(10, 3, 39))));
+
 builder.Services.AddDbContext<RightMoveContext>(
-	options => options.UseMySql(connectionString,
-		new MariaDbServerVersion(new Version(10, 3, 39))));
+	options => options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 

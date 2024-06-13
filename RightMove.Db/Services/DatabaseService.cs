@@ -92,11 +92,11 @@ namespace RightMove.Db.Services
 				RightMoveId = property.RightMoveId,
 				Address = property.Address,
 				HouseInfo = property.HouseInfo,
-				DateAdded = property.DateAdded,
-				DateReduced = property.DateReduced,
-				Date = DateTime.Now,
+				DateAdded = property.DateAdded.ToUniversalTime(),
+				DateReduced = property.DateReduced.ToUniversalTime(),
+				Date = DateTime.Now.ToUniversalTime(),
 				Prices = new List<int>() { property.Price },
-				Dates = new List<DateTime>() { DateTime.Now }
+				Dates = new List<DateTime>() { DateTime.Now.ToUniversalTime() }
 			};
 
 

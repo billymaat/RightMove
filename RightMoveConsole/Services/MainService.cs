@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.DataTypes;
@@ -16,19 +17,29 @@ namespace RightMoveConsole.Services
 		private readonly ILogger _logger;
 		private readonly ISearchService _searchService;
 		private readonly ISearchLocationsReader _searchLocationsReader;
-		private readonly IDatabaseWritingService _db;
+		private readonly IServiceProvider _services;
 
 		public MainService(IHostApplicationLifetime appLifetime,
 			ILogger logger,
 			ISearchService searchService,
 			ISearchLocationsReader searchLocationsReader,
-			IDatabaseWritingService db)
+			IServiceProvider services)
 		{
 			_appLifetime = appLifetime;
 			_logger = logger;
 			_searchService = searchService;
 			_searchLocationsReader = searchLocationsReader;
-			_db = db;
+			_services = services;
+		}
+
+		private IDatabaseWritingService CreateDatabaseWritingService()
+		{
+			using (var scope = _services.CreateScope())
+			{
+				IServiceProvider serviceProvider = scope.ServiceProvider;
+				var service = serviceProvider.GetRequiredService<IDatabaseWritingService>();
+				return service;
+			}
 		}
 
 		/// <summary>
@@ -62,31 +73,31 @@ namespace RightMoveConsole.Services
 			// get the search locations
 			var searchLocations = _searchLocationsReader.GetLocations();
 
-			if (searchLocations != null)
-			{
-				foreach (var searchLocation in searchLocations)
+
+				if (searchLocations != null)
 				{
-					// perform searches
-					var searchParams = GetSearchParams(searchLocation);
-
-					// show the the properties
-					_logger.LogInformation("Search Parameters:");
-					_logger.LogInformation(searchParams.ToString());
-
-					var results = await _searchService.Search(searchParams);
-
-					if (_db == null)
+					foreach (var searchLocation in searchLocations)
 					{
-						continue;
+						// perform searches
+						var searchParams = GetSearchParams(searchLocation);
+
+						// show the the properties
+						_logger.LogInformation("Search Parameters:");
+						_logger.LogInformation(searchParams.ToString());
+
+						var results = await _searchService.Search(searchParams);
+
+						var table = new string(searchParams.RegionLocation
+							.Where(x => char.IsLetterOrDigit(x)).ToArray());
+						using (var scope = _services.CreateScope())
+						{
+							IServiceProvider serviceProvider = scope.ServiceProvider;
+							var db = serviceProvider.GetRequiredService<IDatabaseWritingService>();
+							var databaseUpdate = db.AddProperty(results, table);
+							_logger.LogInformation($"Results count: {results.Count}");
+							_logger.LogInformation($"New properties: {databaseUpdate.NewProperties}");
+							_logger.LogInformation($"Updated properties: {databaseUpdate.UpdatedProperties}");
 					}
-
-					var table = new string(searchParams.RegionLocation
-						.Where(x => char.IsLetterOrDigit(x)).ToArray());
-					var databaseUpdate = _db.AddProperty(results, table);
-
-					_logger.LogInformation($"Results count: {results.Count}");
-					_logger.LogInformation($"New properties: {databaseUpdate.NewProperties}");
-					_logger.LogInformation($"Updated properties: {databaseUpdate.UpdatedProperties}");
 				}
 			}
 		}
