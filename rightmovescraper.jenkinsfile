@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'agent2'
+    }
 
     stages {
         stage('Checkout') {
@@ -11,8 +13,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def msBuild = tool name: 'MSBuild', type: 'hudson.plugins.msbuild.MsBuildBuilder$DescriptorImpl'
-                    bat "${msBuild}/MSBuild.exe RightMove.sln /p:Configuration=Release"
+                    sh """
+                        dotnet build ightMove.sln
+                    """
                 }
             }
         }
