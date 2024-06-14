@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        label 'agent2'
+        docker {
+            image 'agent-net8'
+        }
+        // label 'agent2'
     }
 
     stages {
