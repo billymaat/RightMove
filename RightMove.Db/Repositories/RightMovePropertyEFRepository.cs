@@ -20,6 +20,7 @@ namespace RightMove.Db.Repositories
 			var table =_rightMoveContext
 				.ResultsTable
 				.Include(table => table.Properties)
+				.ThenInclude(p => p.Prices)
 				.FirstOrDefault(o => o.Name.Equals(tableName));
 
 			if (table is null)
@@ -32,7 +33,8 @@ namespace RightMove.Db.Repositories
 				_rightMoveContext.ResultsTable.Add(table);
 			}
 
-			var property = table.Properties.FirstOrDefault(o => o.RightMoveId == primaryId);
+			var property = table.Properties
+				.FirstOrDefault(o => o.RightMoveId == primaryId);
 
 			if (property is null)
 			{
@@ -40,15 +42,24 @@ namespace RightMove.Db.Repositories
 				return;
 			}
 
-			property.Prices.Add(new DatePrice()
+			var prices = new List<DatePrice>(property.Prices);
+			prices.Add(new DatePrice()
 			{
 				Price = price,
 				Date = DateTime.Now.ToUniversalTime()
 			});
 
+			property.Prices = prices;
+
+			//property.Prices.Add(new DatePrice()
+			//{
+			//	Price = price,
+			//	Date = DateTime.Now.ToUniversalTime()
+			//});
+
 			// need to notify that the property has changed
 			// I think I need to do this because it's a list / because I use a custom conversion?
-			_rightMoveContext.Entry(property).Property(p => p.Prices).IsModified = true;
+			//_rightMoveContext.Entry(property).Property(p => p.Prices).IsModified = true;
 
 			_rightMoveContext.SaveChanges();
 		}
