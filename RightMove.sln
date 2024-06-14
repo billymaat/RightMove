@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Services", "Right
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web", "RightMove.Web\RightMove.Web.csproj", "{22B9A950-F082-468A-B23B-77C7DF80CC8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightMove.Web.Dto", "RightMove.Web.Dto\RightMove.Web.Dto.csproj", "{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web.Dto", "RightMove.Web.Dto\RightMove.Web.Dto.csproj", "{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
