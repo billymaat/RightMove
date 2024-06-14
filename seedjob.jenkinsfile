@@ -7,7 +7,7 @@ pipelineJob('RightMove Scraper') {
                         url('git@github.com:billymaat/RightMove.git') // Replace with your Git repository URL
                         credentials('billymaat-git') // Replace with your credentials ID
                     }
-                    branch('*/main') // Replace with your branch name if different
+                    branch('*/eflatest') // Replace with your branch name if different
                 }
             }
             scriptPath('rightmovescraper.jenkinfiles')
