@@ -10,7 +10,7 @@ pipelineJob('RightMove Scraper') {
                     branch('*/eflatest') // Replace with your branch name if different
                 }
             }
-            scriptPath('rightmovescraper.jenkinfiles')
+            scriptPath('rightmovescraper.jenkinsfile')
         }
     }
     description('Job for scraping data from RightMove website.')
