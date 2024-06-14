@@ -50,17 +50,6 @@ namespace RightMove.Db.Repositories
 			});
 
 			property.Prices = prices;
-
-			//property.Prices.Add(new DatePrice()
-			//{
-			//	Price = price,
-			//	Date = DateTime.Now.ToUniversalTime()
-			//});
-
-			// need to notify that the property has changed
-			// I think I need to do this because it's a list / because I use a custom conversion?
-			//_rightMoveContext.Entry(property).Property(p => p.Prices).IsModified = true;
-
 			_rightMoveContext.SaveChanges();
 		}
 
