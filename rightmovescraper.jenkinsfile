@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        dotnet build RightMove.sln
+                        dotnet build RightMove.sln --configuration Release --runtime linux-x64 -p:Version=0.0.0.0
                     """
                 }
             }
