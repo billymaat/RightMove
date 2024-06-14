@@ -14,10 +14,10 @@ pipeline {
                 git branch: 'eflatest', url: 'git@github.com:billymaat/RightMove.git', credentialsId: 'billymaat-git'
             }
         }
-        steps('Prep') {
+        stage('Prep') {
             steps {
                 script {
-                    sh 'chmod +x ./scripts'
+                    sh 'chmod +x ./scripts/*'
                 }
             }
         }
