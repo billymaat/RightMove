@@ -18,10 +18,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh """
-                        # dotnet build RightMove.sln --configuration Release --runtime linux-x64 -p:Version=0.0.0.0
-                        dotnet build RightMove.sln --configuration Release
-                    """
+                    sh './scripts/build.sh'
+                }
+            }
+        }
+        stage('Package') {
+            steps {
+                script {
+                    sh './scripts/package.sh'
                 }
             }
         }
@@ -30,6 +34,7 @@ pipeline {
     post {
         success {
             echo 'Build completed successfully.'
+            archiveArtifacts artifacts: '**/rightmove.tar.gz', allowEmptyArchive: true
         }
         failure {
             echo 'Build failed.'
