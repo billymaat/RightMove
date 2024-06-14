@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        dotnet build ightMove.sln
+                        dotnet build RightMove.sln
                     """
                 }
             }
