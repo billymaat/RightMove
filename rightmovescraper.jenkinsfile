@@ -4,6 +4,11 @@ pipeline {
     }
 
     stages {
+        stage('Clean') {
+            steps {
+                cleanWs()
+            }
+        }
         stage('Checkout') {
             steps {
                 git branch: 'eflatest', url: 'git@github.com:billymaat/RightMove.git', credentialsId: 'billymaat-git'
