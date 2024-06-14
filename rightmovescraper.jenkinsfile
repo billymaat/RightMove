@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'eflatest', url: 'git@github.com:billymaat/RightMove.git', credentialsId: 'billymaat-git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    def msBuild = tool name: 'MSBuild', type: 'hudson.plugins.msbuild.MsBuildBuilder$DescriptorImpl'
+                    bat "${msBuild}/MSBuild.exe RightMove.sln /p:Configuration=Release"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build completed successfully.'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+        always {
+            cleanWs()
+        }
+    }
+}

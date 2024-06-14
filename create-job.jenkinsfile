@@ -1,0 +1,24 @@
+pipelineJob('RightMove Scraper') {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url('git@github.com:billymaat/RightMove.git') // Replace with your Git repository URL
+                        credentials('billymaat-git') // Replace with your credentials ID
+                    }
+                    branch('*/main') // Replace with your branch name if different
+                }
+            }
+            scriptPath('rightmovescraper.jenkinfiles')
+        }
+    }
+    description('Job for scraping data from RightMove website.')
+    logRotator {
+        daysToKeep(30)
+        numToKeep(10)
+    }
+    properties {
+        disableConcurrentBuilds()
+    }
+}
