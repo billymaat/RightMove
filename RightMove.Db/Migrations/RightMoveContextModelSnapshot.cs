@@ -22,6 +22,30 @@ namespace RightMove.Db.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("RightMove.Db.Entities.DatePrice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RightMovePropertyEntityRightMovePropertyId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RightMovePropertyEntityRightMovePropertyId");
+
+                    b.ToTable("Prices");
+                });
+
             modelBuilder.Entity("RightMove.Db.Entities.ResultsTable", b =>
                 {
                     b.Property<int>("ResultsTableId")
@@ -58,13 +82,7 @@ namespace RightMove.Db.Migrations
                     b.Property<DateTime>("DateReduced")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Dates")
-                        .HasColumnType("text");
-
                     b.Property<string>("HouseInfo")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Prices")
                         .HasColumnType("text");
 
                     b.Property<int>("ResultsTableId")
@@ -78,6 +96,13 @@ namespace RightMove.Db.Migrations
                     b.HasIndex("ResultsTableId");
 
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("RightMove.Db.Entities.DatePrice", b =>
+                {
+                    b.HasOne("RightMove.Db.Entities.RightMovePropertyEntity", null)
+                        .WithMany("Prices")
+                        .HasForeignKey("RightMovePropertyEntityRightMovePropertyId");
                 });
 
             modelBuilder.Entity("RightMove.Db.Entities.RightMovePropertyEntity", b =>
@@ -94,6 +119,11 @@ namespace RightMove.Db.Migrations
             modelBuilder.Entity("RightMove.Db.Entities.ResultsTable", b =>
                 {
                     b.Navigation("Properties");
+                });
+
+            modelBuilder.Entity("RightMove.Db.Entities.RightMovePropertyEntity", b =>
+                {
+                    b.Navigation("Prices");
                 });
 #pragma warning restore 612, 618
         }

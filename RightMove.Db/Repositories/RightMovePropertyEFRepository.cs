@@ -40,13 +40,15 @@ namespace RightMove.Db.Repositories
 				return;
 			}
 
-			property.Prices.Add(price);
-			property.Dates.Add(DateTime.Now);
+			property.Prices.Add(new DatePrice()
+			{
+				Price = price,
+				Date = DateTime.Now.ToUniversalTime()
+			});
 
 			// need to notify that the property has changed
 			// I think I need to do this because it's a list / because I use a custom conversion?
 			_rightMoveContext.Entry(property).Property(p => p.Prices).IsModified = true;
-			_rightMoveContext.Entry(property).Property(p => p.Dates).IsModified = true;
 
 			_rightMoveContext.SaveChanges();
 		}
@@ -70,6 +72,21 @@ namespace RightMove.Db.Repositories
 		public List<string> GetAllTableNames()
 		{
 			return _rightMoveContext.ResultsTable.Select(o => o.Name).ToList();
+		}
+
+		public RightMovePropertyEntity GetPropertyByPropertyId(int propertyId, string tableName)
+		{
+			var resultsTableId = _rightMoveContext.ResultsTable
+				.FirstOrDefault(o => o.Name.Equals(tableName))?
+				.ResultsTableId;
+
+			var property = _rightMoveContext.Properties
+				.Where(o => o.ResultsTableId == resultsTableId)
+				.Where(o => o.RightMoveId == propertyId)
+				.Include(p => p.Prices)
+				.FirstOrDefault();
+
+			return property;
 		}
 
 		public List<RightMovePropertyEntity> LoadProperties(string tableName)

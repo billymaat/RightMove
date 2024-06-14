@@ -37,8 +37,6 @@ namespace RightMove.Db.Migrations
                     DateAdded = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DateReduced = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Prices = table.Column<string>(type: "text", nullable: true),
-                    Dates = table.Column<string>(type: "text", nullable: true),
                     ResultsTableId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -52,6 +50,31 @@ namespace RightMove.Db.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Prices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Price = table.Column<int>(type: "integer", nullable: false),
+                    RightMovePropertyEntityRightMovePropertyId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Prices_Properties_RightMovePropertyEntityRightMovePropertyId",
+                        column: x => x.RightMovePropertyEntityRightMovePropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "RightMovePropertyId");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prices_RightMovePropertyEntityRightMovePropertyId",
+                table: "Prices",
+                column: "RightMovePropertyEntityRightMovePropertyId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_ResultsTableId",
                 table: "Properties",
@@ -61,6 +84,9 @@ namespace RightMove.Db.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Prices");
+
             migrationBuilder.DropTable(
                 name: "Properties");
 

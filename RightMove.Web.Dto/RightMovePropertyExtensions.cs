@@ -15,27 +15,9 @@ namespace RightMove.Web.Dto
 				DateAdded = entity.DateAdded,
 				DateReduced = entity.DateReduced,
 				Date = entity.Date,
-				Prices = new List<int>(entity.Prices),
-				Dates = new List<DateTime>(entity.Dates),
+				Prices = new List<int>(entity.Prices.Select(o => o.Price)),
+				Dates = new List<DateTime>(entity.Prices.Select(o => o.Date)),
 				ResultsTableId = entity.ResultsTableId
-			};
-		}
-
-		public static RightMovePropertyEntity ToEntity(this RightMovePropertyDto dto)
-		{
-			return new RightMovePropertyEntity
-			{
-				RightMovePropertyId = dto.RightMovePropertyId,
-				RightMoveId = dto.RightMoveId,
-				HouseInfo = dto.HouseInfo,
-				Address = dto.Address,
-				DateAdded = dto.DateAdded,
-				DateReduced = dto.DateReduced,
-				Date = dto.Date,
-				Prices = new List<int>(dto.Prices),
-				Dates = new List<DateTime>(dto.Dates),
-				ResultsTableId = dto.ResultsTableId
-				// ResultsTable is not included in DTO, so it's not converted
 			};
 		}
 	}

@@ -11,6 +11,7 @@ namespace RightMove.Db
 	{
 		public DbSet<ResultsTable> ResultsTable { get; set; }
 		public DbSet<RightMovePropertyEntity> Properties { get; set; }
+		public DbSet<DatePrice> Prices { get; set; }
 
 		public RightMoveContext(DbContextOptions<RightMoveContext> options) : base(options)
 		{
@@ -18,19 +19,6 @@ namespace RightMove.Db
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			// Configure the value converter for the RightMoveProperty
-			modelBuilder.Entity<RightMovePropertyEntity>()
-				.Property(x => x.Dates)
-					.HasConversion(new ValueConverter<List<DateTime>, string>(
-						v => JsonConvert.SerializeObject(v), // Convert to string for persistence
-						v => JsonConvert.DeserializeObject<List<DateTime>>(v))); // Convert to List<String> for use
-
-			modelBuilder.Entity<RightMovePropertyEntity>()
-				.Property(x => x.Prices)
-								.HasConversion(new ValueConverter<List<int>, string>(
-									v => JsonConvert.SerializeObject(v), // Convert to string for persistence
-									v => JsonConvert.DeserializeObject<List<int>>(v)));
-
 			modelBuilder.Entity<ResultsTable>()
 				.HasMany(c => c.Properties)
 				.WithOne(e => e.ResultsTable);

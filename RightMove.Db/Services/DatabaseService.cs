@@ -32,13 +32,12 @@ namespace RightMove.Db.Services
 		{
 			_db.CreateTableIfNotExist(tableName);
 
-			var dbProperties = _db.LoadProperties(tableName);
 			int newPropertiesCount = 0;
 			int updatedPropertiesCount = 0;
 
 			foreach (var property in properties)
 			{
-				var result = AddToDatabase(dbProperties, property, tableName);
+				var result = AddToDatabase(property, tableName);
 				switch (result)
 				{
 					case Result.Added:
@@ -57,12 +56,6 @@ namespace RightMove.Db.Services
 			};
 		}
 
-		public Result AddToDatabase(DataTypes.RightMoveProperty property, string tableName)
-		{
-			var dbProperties = _db.LoadProperties(tableName);
-			return AddToDatabase(dbProperties, property, tableName);
-		}
-
 		/// <summary>
 		/// Add property to database
 		/// </summary>
@@ -70,14 +63,14 @@ namespace RightMove.Db.Services
 		/// <param name="property">the property to add</param>
 		/// <returns><see cref="Result.Updated"/> if updated, <see cref="Result.NotModified"/> if not modified,
 		/// <see cref="Result.Added"/> if new proprety added</returns>
-		private Result AddToDatabase(List<RightMovePropertyEntity> dbProperties, DataTypes.RightMoveProperty property, string tableName)
+		public Result AddToDatabase(RightMoveProperty property, string tableName)
 		{
-			var matchingProperty = dbProperties?.FirstOrDefault(o => o.RightMoveId.Equals(property.RightMoveId));
+			var matchingProperty = _db.GetPropertyByPropertyId(property.RightMoveId, tableName);
 
 			if (matchingProperty != null)
 			{
 				// if the price has changed, add the new price
-				if (matchingProperty.Prices.Last() != property.Price)
+				if (matchingProperty.Prices.Last().Price != property.Price)
 				{
 					_db.AddPriceToProperty(matchingProperty.RightMoveId, property.Price, tableName);
 					return Result.Updated;
@@ -95,8 +88,14 @@ namespace RightMove.Db.Services
 				DateAdded = property.DateAdded.ToUniversalTime(),
 				DateReduced = property.DateReduced.ToUniversalTime(),
 				Date = DateTime.Now.ToUniversalTime(),
-				Prices = new List<int>() { property.Price },
-				Dates = new List<DateTime>() { DateTime.Now.ToUniversalTime() }
+				Prices = new List<DatePrice>()
+				{
+					new DatePrice()
+					{
+						Price = property.Price,
+						Date = DateTime.Now.ToUniversalTime()
+					}
+				}
 			};
 
 

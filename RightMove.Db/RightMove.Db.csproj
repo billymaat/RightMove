@@ -16,4 +16,8 @@
     <ProjectReference Include="..\RightMove\RightMove.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

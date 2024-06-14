@@ -9,18 +9,7 @@ namespace RightMove.Db.Entities
 		public RightMovePropertyEntity()
 		{
 		}
-
-		public RightMovePropertyEntity(RightMovePropertyEntity rightMoveProperty)
-		{
-			RightMoveId = rightMoveProperty.RightMoveId;
-			HouseInfo = rightMoveProperty.HouseInfo;
-			Address = rightMoveProperty.Address;
-
-			DateAdded = rightMoveProperty.DateAdded;
-			DateReduced = rightMoveProperty.DateReduced;
-			Date = DateTime.Now;
-		}
-
+		
 		[Key]
 		public int RightMovePropertyId
 		{
@@ -66,17 +55,11 @@ namespace RightMove.Db.Entities
 			set;
 		}
 
-		public List<int> Prices
+		public List<DatePrice> Prices
 		{
 			get;
 			set;
-		} = new List<int>();
-
-		public List<DateTime> Dates
-		{
-			get;
-			set;
-		} = new List<DateTime>();
+		} = new List<DatePrice>();
 
 		public int ResultsTableId
 		{
