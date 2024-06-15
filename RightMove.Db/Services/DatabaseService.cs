@@ -28,6 +28,13 @@ namespace RightMove.Db.Services
 			return _db.GetAllTableNames();
 		}
 
+		public List<RightMovePropertyEntity> ReducedProperties()
+		{
+			var properties = _db.GetAllProperties();
+			var reducedProperties = properties.Where(p => p.Prices.Count > 1);
+			return reducedProperties.ToList();
+		}
+
 		public PropertyCounts AddToDatabase(IList<RightMoveProperty> properties, string tableName)
 		{
 			_db.CreateTableIfNotExist(tableName);

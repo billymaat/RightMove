@@ -16,5 +16,6 @@ namespace RightMove.Db.Repositories
 		void AddPriceToProperty(int primaryId, int price, string tableName);
 		List<string> GetAllTableNames();
 		RightMovePropertyEntity GetPropertyByPropertyId(int propertyId, string tableName);
+		List<T> GetAllProperties();
 	}
 }

@@ -15,8 +15,7 @@ namespace RightMove.Web.Dto
 		public DateTime DateAdded { get; set; }
 		public DateTime DateReduced { get; set; }
 		public DateTime Date { get; set; }
-		public List<int> Prices { get; set; }
-		public List<DateTime> Dates { get; set; }
+		public List<DatePriceDto> Prices { get; set; }
 		public int ResultsTableId { get; set; }
 		// Note: We're excluding the ResultsTable object to keep the DTO simple
 	}

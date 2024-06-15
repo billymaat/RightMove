@@ -24,6 +24,14 @@ namespace RightMove.Web.Controllers
 			return Ok(dto);
 		}
 
+		[HttpGet("reduced")]
+		public IActionResult ReducedPrices()
+		{
+			var properties = _databaseService.ReducedProperties();
+			var dto = properties.Select(p => p.ToDto());
+			return Ok(dto);
+		}
+
 		[HttpGet("gettable/{table}")]
 		public IActionResult TestTwo(string table)
 		{

@@ -14,5 +14,6 @@ namespace RightMove.Db.Services
 
 		PropertyCounts AddToDatabase(IList<RightMoveProperty> properties, string tableName);
 		List<string> GetAllTableNames();
+		List<T> ReducedProperties();
 	}
 }

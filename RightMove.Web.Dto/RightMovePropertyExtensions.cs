@@ -15,8 +15,11 @@ namespace RightMove.Web.Dto
 				DateAdded = entity.DateAdded,
 				DateReduced = entity.DateReduced,
 				Date = entity.Date,
-				Prices = new List<int>(entity.Prices.Select(o => o.Price)),
-				Dates = new List<DateTime>(entity.Prices.Select(o => o.Date)),
+				Prices = new List<DatePriceDto>(entity.Prices.Select(o => new DatePriceDto()
+				{
+					Date = o.Date,
+					Price = o.Price
+				})),
 				ResultsTableId = entity.ResultsTableId
 			};
 		}
