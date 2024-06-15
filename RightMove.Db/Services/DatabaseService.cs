@@ -1,9 +1,8 @@
 ﻿using RightMove.Db.Entities;
-using RightMove.Db.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 using RightMove.DataTypes;
 using RightMove.Db.Types;
 
@@ -11,33 +10,56 @@ namespace RightMove.Db.Services
 {
 	public class DatabaseService : IDatabaseService<RightMovePropertyEntity>
 	{
-		private readonly IRightMovePropertyRepository<RightMovePropertyEntity> _db;
+		private readonly RightMoveContext _context;
 
-		public DatabaseService(IRightMovePropertyRepository<RightMovePropertyEntity> db)
+		public DatabaseService(RightMoveContext context)
 		{
-			_db = db;
+			_context = context;
 		}
 
 		public List<RightMovePropertyEntity> LoadProperties(string tableName)
 		{
-			return _db.LoadProperties(tableName);
+			var table = _context.ResultsTable
+				.Include(table => table.Properties)
+				.ThenInclude(p => p.Prices)
+				.Include(table => table.Properties)
+				.FirstOrDefault(o => o.Name.Equals(tableName));
+			return table?.Properties;
 		}
 
 		public List<string> GetAllTableNames()
 		{
-			return _db.GetAllTableNames();
+			return _context.ResultsTable.Select(o => o.Name).ToList();
 		}
 
 		public List<RightMovePropertyEntity> ReducedProperties()
 		{
-			var properties = _db.GetAllProperties();
-			var reducedProperties = properties.Where(p => p.Prices.Count > 1);
+			var reducedProperties = _context.Properties
+				.Where(p => p.Prices.Count > 1)
+				.Include(p => p.Prices);
+
 			return reducedProperties.ToList();
+		}
+
+		private void CreateIfTableDoesNotExist(string tableName)
+		{
+			var table = _context.ResultsTable.FirstOrDefault(o => o.Name.Equals(tableName));
+			if (table is null)
+			{
+				// create new table
+				table = new ResultsTable()
+				{
+					Name = tableName
+				};
+				_context.ResultsTable.Add(table);
+			}
+
+			_context.SaveChanges();
 		}
 
 		public PropertyCounts AddToDatabase(IList<RightMoveProperty> properties, string tableName)
 		{
-			_db.CreateTableIfNotExist(tableName);
+			CreateIfTableDoesNotExist(tableName);
 
 			int newPropertiesCount = 0;
 			int updatedPropertiesCount = 0;
@@ -63,6 +85,51 @@ namespace RightMove.Db.Services
 			};
 		}
 
+		private void AddPriceToProperty(int primaryId, int price, string tableName)
+		{
+			var table = _context
+				.ResultsTable
+				.Include(table => table.Properties)
+				.ThenInclude(p => p.Prices)
+				.FirstOrDefault(o => o.Name.Equals(tableName));
+
+			if (table is null)
+			{
+				// create new table
+				table = new ResultsTable()
+				{
+					Name = tableName
+				};
+				_context.ResultsTable.Add(table);
+			}
+
+			var property = table.Properties
+				.FirstOrDefault(o => o.RightMoveId == primaryId);
+
+			if (property is null)
+			{
+				// shouldn't get here
+				return;
+			}
+
+			var prices = new List<DatePrice>(property.Prices);
+			prices.Add(new DatePrice()
+			{
+				Price = price,
+				Date = DateTime.Now.ToUniversalTime()
+			});
+
+			property.Prices = prices;
+			_context.SaveChanges();
+		}
+
+		private void SaveProperty(RightMovePropertyEntity property, string tableName)
+		{
+			var table = _context.ResultsTable.FirstOrDefault(o => o.Name.Equals(tableName));
+			table.Properties.Add(property);
+			_context.SaveChanges();
+		}
+
 		/// <summary>
 		/// Add property to database
 		/// </summary>
@@ -72,14 +139,22 @@ namespace RightMove.Db.Services
 		/// <see cref="Result.Added"/> if new proprety added</returns>
 		public Result AddToDatabase(RightMoveProperty property, string tableName)
 		{
-			var matchingProperty = _db.GetPropertyByPropertyId(property.RightMoveId, tableName);
+			var resultsTableId = _context.ResultsTable
+				.FirstOrDefault(o => o.Name.Equals(tableName))?
+				.ResultsTableId;
+
+			var matchingProperty = _context.Properties
+				.Where(o => o.ResultsTableId == resultsTableId)
+				.Where(o => o.RightMoveId == property.RightMoveId)
+				.Include(p => p.Prices)
+				.FirstOrDefault();
 
 			if (matchingProperty != null)
 			{
 				// if the price has changed, add the new price
 				if (matchingProperty.Prices.Last().Price != property.Price)
 				{
-					_db.AddPriceToProperty(matchingProperty.RightMoveId, property.Price, tableName);
+					AddPriceToProperty(matchingProperty.RightMoveId, property.Price, tableName);
 					return Result.Updated;
 				}
 
@@ -107,7 +182,7 @@ namespace RightMove.Db.Services
 
 
 
-			_db.SaveProperty(rmp, tableName);
+			SaveProperty(rmp, tableName);
 			return Result.Added;
 		}
 	}

@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RightMove.Db;
-using RightMove.Db.Entities;
 using RightMove.Db.Extensions;
-using RightMove.Db.Repositories;
-using RightMove.Db.Services;
 using RightMove.Web;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -29,7 +26,6 @@ builder.Services.AddSwaggerGen();
 var settings = builder.Configuration.GetSection("Settings").Get<Settings>();
 
 builder.Services
-	.AddTransient<IRightMovePropertyRepository<RightMovePropertyEntity>, RightMovePropertyEFRepository>()
 	.AddSingleton<IDbConfiguration>(o => new DbConfiguration(settings.DbPath));
 builder.Services.RegisterRightMoveDb();
 
