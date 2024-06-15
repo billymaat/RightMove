@@ -41,7 +41,7 @@ pipeline {
     post {
         success {
             echo 'Build completed successfully.'
-            archiveArtifacts artifacts: '**/rightmove.tar.gz', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/rightmove*.tar.gz', allowEmptyArchive: true
         }
         failure {
             echo 'Build failed.'
