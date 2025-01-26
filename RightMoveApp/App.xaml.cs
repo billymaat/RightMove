@@ -61,7 +61,8 @@ namespace RightMove.Desktop
 			// register RightMoveLibrary
 			services.RegisterRightMoveLibrary();
 			RegisterView(services);
-		}
+            RegisterServices(services);
+        }
 
 		private void RegisterView(IServiceCollection services)
         {
@@ -74,6 +75,11 @@ namespace RightMove.Desktop
 			// Register all the windows of the application
 			services.AddSingleton<MainWindow>();
 		}
+
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.AddTransient<RightMoveService>();
+        }
 
 		protected override async void OnStartup(StartupEventArgs e)
         {
