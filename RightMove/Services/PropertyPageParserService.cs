@@ -105,13 +105,23 @@ namespace RightMove.Services
 			}
 
 			string start = "window.PAGE_MODEL = ";
-			var indx = script?.Text().IndexOf(start);
-			if (indx <= 0)
+            string end = "window.adInfo";
+
+			var text = script?.Text();
+
+            var startIndex = text.IndexOf(start);
+			if (startIndex <= 0)
 			{
 				return null;
 			}
 
-			var jsonText = script.Text().Trim().Substring(start.Length);
+			var endIndex = text.IndexOf(end);
+			if (endIndex <= startIndex)
+			{
+				return null;
+			}
+
+			var jsonText = text.Substring(startIndex + start.Length, endIndex - startIndex - start.Length).Trim();
 
 			var settings = new JsonSerializerSettings
 			{

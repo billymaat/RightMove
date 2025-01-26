@@ -66,7 +66,10 @@ namespace RightMove.Desktop.View.Main
 			_rightMoveModel.PropertyChanged += RightMoveModel_PropertyChanged;
 			IsSearching = false;
 
-			_searchParamsViewModel = new SearchParamsViewModel();
+            _searchParamsViewModel = new SearchParamsViewModel()
+            {
+                RegionLocation = "ashton-under-lyne"
+            };
 
 			TopViewModel = _searchParamsViewModel;
 			_searchParamsViewModel.SearchParamsUpdated += OnSearchParamsChanged;
