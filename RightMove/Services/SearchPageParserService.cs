@@ -34,11 +34,11 @@ namespace RightMove.Services
 
 		private readonly RightMovePropertyFactory _propertyFactory;
 		private readonly IHttpService _httpService;
-		private readonly ILogger _logger;
+		private readonly ILogger<SearchPageParserService> _logger;
 
 		public SearchPageParserService(
 			IHttpService httpService,
-			ILogger logger,
+			ILogger<SearchPageParserService> logger,
 			RightMovePropertyFactory propertyFactory)
 		{
 			_httpService = httpService;

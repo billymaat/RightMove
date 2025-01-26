@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using RightMove.DataTypes;
 using RightMove.Services;
 
@@ -21,7 +22,7 @@ namespace RightMove.Factory
 		}
 
 		public RightMoveParser CreateInstance(SearchParams searchParams)
-		{
+        {
 			return (RightMoveParser)_activator.CreateInstance(_services,
 				typeof(RightMoveParser),
 				new object[] { searchParams });

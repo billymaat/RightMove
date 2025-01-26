@@ -16,7 +16,7 @@ namespace RightMove.Extensions
 				.AddScoped<RightMoveParserFactory>()
 				.AddScoped<RightMovePropertyFactory>()
 				.AddTransient<PropertyPageParser>()
-				//.AddTransient<RightMoveParser>()
+				.AddTransient<RightMoveParser>()
 				.AddTransient<SearchPageParserServiceFactory>()
 				.AddTransient<IActivator, ActivatorInjector>()
 				.AddFactory<IPropertyPageParser, PropertyPageParser>();

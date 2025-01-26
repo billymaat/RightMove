@@ -12,7 +12,7 @@ namespace RightMove.Services
 		public const int PriceNotSet = -1;
 
 		private readonly SearchPageParserServiceFactory _searchPageParseFactory;
-		private readonly ILogger _logger;
+		private readonly ILogger<RightMoveParser> _logger;
 		private readonly string _searchUrl;
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace RightMove.Services
 		/// <param name="searchPageParseFactory">the <see cref="SearchPageParserServiceFactory"> service</param>
 		/// <param name="searchParams">the <see cref="SearchParams"/></param>
 		public RightMoveParser(SearchPageParserServiceFactory searchPageParseFactory,
-			ILogger logger,
+			ILogger<RightMoveParser> logger,
 			SearchParams searchParams)
 		{
 			_searchPageParseFactory = searchPageParseFactory;

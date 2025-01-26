@@ -1,10 +1,10 @@
 ﻿using System;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 using RightMove.DataTypes;
 
 namespace RightMove.Desktop.UserControls
 {
-	public class SearchParamsViewModel : ViewModelBase
+	public class SearchParamsViewModel : ObservableRecipient
 	{
 		public SearchParamsViewModel()
 		{

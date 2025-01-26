@@ -14,13 +14,13 @@ namespace RightMoveConsole.Services
 		private int? _exitCode;
 
 		private readonly IHostApplicationLifetime _appLifetime;
-		private readonly ILogger _logger;
+		private readonly ILogger<MainService> _logger;
 		private readonly ISearchService _searchService;
 		private readonly ISearchLocationsReader _searchLocationsReader;
 		private readonly IServiceProvider _services;
 
 		public MainService(IHostApplicationLifetime appLifetime,
-			ILogger logger,
+			ILogger<MainService> logger,
 			ISearchService searchService,
 			ISearchLocationsReader searchLocationsReader,
 			IServiceProvider services)

@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
@@ -20,7 +20,7 @@ using RightMove.Services;
 
 namespace RightMove.Desktop.View.Main
 {
-	public class MainViewModel : ViewModelBase
+	public class MainViewModel : ObservableRecipient
 	{
 		// Services
 		private readonly NavigationService _navigationService;
@@ -42,8 +42,6 @@ namespace RightMove.Desktop.View.Main
 		// The right move model
 		private readonly RightMoveModel _rightMoveModel;
 		private readonly AppSettings _settings;
-		private readonly RightMoveParserFactory _parserFactory;
-		private readonly Func<IPropertyPageParser> _propertyParserFactory;
 		private SearchParamsViewModel _searchParamsViewModel;
 
 
@@ -61,9 +59,7 @@ namespace RightMove.Desktop.View.Main
 			_logger.LogInformation("MainViewModel loaded");
 
 			_settings = settings.Value;
-			_parserFactory = parserFactory;
 			_navigationService = navigationService;
-			_propertyParserFactory = propertyParserFactory;
 
 			InitializeCommands();
 			InitializeTimers();
@@ -87,17 +83,17 @@ namespace RightMove.Desktop.View.Main
 		{
 			if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyItems))
 			{
-				RaisePropertyChanged(nameof(RightMoveList));
+				OnPropertyChanged(nameof(RightMoveList));
 			}
 			else if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyFullSelectedItem))
 			{
-				RaisePropertyChanged(nameof(RightMovePropertyFullSelectedItem));
+                OnPropertyChanged(nameof(RightMovePropertyFullSelectedItem));
 			}
 		}
 
-		private ViewModelBase _topViewModel;
+		private ObservableRecipient _topViewModel;
 
-		public ViewModelBase TopViewModel
+		public ObservableRecipient TopViewModel
 		{
 			get
 			{
@@ -105,7 +101,7 @@ namespace RightMove.Desktop.View.Main
 			}
 			set
 			{
-				Set(ref _topViewModel, value);
+				SetProperty(ref _topViewModel, value);
 			}
 		}
 
@@ -121,7 +117,7 @@ namespace RightMove.Desktop.View.Main
 		public string Info
 		{
 			get => _info;
-			set => Set(ref _info, value);
+			set => SetProperty(ref _info, value);
 		}
 
 		/// <summary>
@@ -139,7 +135,7 @@ namespace RightMove.Desktop.View.Main
 		public RightMoveProperty RightMoveSelectedItem
 		{
 			get => _rightMoveSelectedItem;
-			set => Set(ref _rightMoveSelectedItem, value);
+			set => SetProperty(ref _rightMoveSelectedItem, value);
 		}
 
 		public RightMoveProperty RightMovePropertyFullSelectedItem
@@ -207,7 +203,7 @@ namespace RightMove.Desktop.View.Main
 		public bool LoadingImage
 		{
 			get => _loadingImage;
-			set => Set(ref _loadingImage, value);
+			set => SetProperty(ref _loadingImage, value);
 		}
 
 		/// <summary>
@@ -216,7 +212,7 @@ namespace RightMove.Desktop.View.Main
 		public BitmapImage DisplayedImage
 		{
 			get => _displayedImage;
-			set => Set(ref _displayedImage, value);
+			set => SetProperty(ref _displayedImage, value);
 		}
 
 		private bool _isSearching;
@@ -228,7 +224,7 @@ namespace RightMove.Desktop.View.Main
 			get => _isSearching;
 			set
 			{
-				Set(ref _isSearching, value);
+				SetProperty(ref _isSearching, value);
 				SearchAsyncCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -241,7 +237,7 @@ namespace RightMove.Desktop.View.Main
 		public string ImageIndexView
 		{
 			get => _imageIndexView;
-			set => Set(ref _imageIndexView, value);
+			set => SetProperty(ref _imageIndexView, value);
 		}
 
 		private bool _hasSearchExecuted;
@@ -249,7 +245,7 @@ namespace RightMove.Desktop.View.Main
 		public bool HasSearchedExecuted
 		{
 			get => _hasSearchExecuted;
-			set => Set(ref _hasSearchExecuted, value);
+			set => SetProperty(ref _hasSearchExecuted, value);
 		}
 
 		#region Commands
