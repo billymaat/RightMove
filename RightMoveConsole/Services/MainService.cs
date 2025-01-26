@@ -92,6 +92,7 @@ namespace RightMoveConsole.Services
 						using (var scope = _services.CreateScope())
 						{
 							IServiceProvider serviceProvider = scope.ServiceProvider;
+
 							var db = serviceProvider.GetRequiredService<IDatabaseWritingService>();
 							var databaseUpdate = db.AddProperty(results, table);
 							_logger.LogInformation($"Results count: {results.Count}");

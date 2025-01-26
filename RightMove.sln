@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web", "RightMove.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web.Dto", "RightMove.Web.Dto\RightMove.Web.Dto.csproj", "{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMoveApp", "RightMoveApp\RightMoveApp.csproj", "{C428932F-D777-4B6E-9C97-EA585B1F8915}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C428932F-D777-4B6E-9C97-EA585B1F8915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C428932F-D777-4B6E-9C97-EA585B1F8915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C428932F-D777-4B6E-9C97-EA585B1F8915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C428932F-D777-4B6E-9C97-EA585B1F8915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
