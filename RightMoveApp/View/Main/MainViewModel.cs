@@ -327,15 +327,19 @@ namespace RightMove.Desktop.View.Main
 		#endregion
 
 		private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
-		{
-			await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
 			await UpdateImage(cancellationToken);
 			LoadingImage = false;
 		}
 
 		private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
 		{
-			_selectedImageIndex = 0;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            _selectedImageIndex = 0;
 
 			// update the right move full selected item
 			await _rightMoveModel.GetFullRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
@@ -348,7 +352,9 @@ namespace RightMove.Desktop.View.Main
 		/// <returns></returns>
 		private async Task<BitmapImage> UpdateImage(CancellationToken cancellationToken)
 		{
-			LoadingImage = true;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            LoadingImage = true;
 
 			try
 			{
