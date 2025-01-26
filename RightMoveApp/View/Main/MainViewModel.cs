@@ -49,9 +49,7 @@ namespace RightMove.Desktop.View.Main
 
 		public MainViewModel(IOptions<AppSettings> settings,
 			RightMoveModel rightMoveModel,
-			RightMoveParserFactory parserFactory,
 			NavigationService navigationService,
-			Func<IPropertyPageParser> propertyParserFactory,
 			ILogger<MainViewModel> logger)
 		{
 			_logger = logger;

@@ -10,10 +10,11 @@
         xmlns:controls="clr-namespace:RightMove.Desktop.UserControls"
         xmlns:view="clr-namespace:RightMove.Desktop.View"
         xmlns:valueConverters="clr-namespace:RightMove.Desktop.UserControls.ValueConverters"
+        xmlns:main="clr-namespace:RightMove.Desktop.View.Main"
         mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="800" Language="en-GB"
         HorizontalAlignment="Stretch"
-        DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
+        d:DataContext="{d:DesignInstance main:MainViewModel}"
         Name="mainWindow">
     <Window.Resources>
         <DataTemplate DataType="{x:Type controls:SearchParamsViewModel}">

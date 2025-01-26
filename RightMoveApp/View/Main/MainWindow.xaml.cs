@@ -7,9 +7,10 @@ namespace RightMove.Desktop.View.Main
 	/// </summary>
 	public partial class MainWindow : MetroWindow
 	{
-		public MainWindow()
+		public MainWindow(MainViewModel mainViewModel)
 		{
 			InitializeComponent();
-		}
+			DataContext = mainViewModel;
+        }
 	}
 }
