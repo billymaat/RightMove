@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
-using EventArgs = System.EventArgs;
 
-namespace RightMoveApp.ViewModel.Commands
+namespace RightMove.Desktop.ViewModel.Commands
 {
 	public class RelayCommand : ICommand
 	{

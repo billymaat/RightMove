@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RightMoveApp
+﻿namespace RightMove.Desktop
 {
 	public class AppSettings
 	{

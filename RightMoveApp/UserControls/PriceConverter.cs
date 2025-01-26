@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Windows.Data;
 
-namespace RightMoveApp.UserControls
+namespace RightMove.Desktop.UserControls
 {
 	public class PriceConverter : IValueConverter
 	{

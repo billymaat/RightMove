@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
+using RightMove.Desktop.Helpers;
 using RightMove.Factory;
 using RightMove.Services;
-using RightMoveApp.Helpers;
 
-namespace RightMoveApp.Model
+namespace RightMove.Desktop.Model
 {
 	public class RightMoveModel : INotifyPropertyChanged
 	{

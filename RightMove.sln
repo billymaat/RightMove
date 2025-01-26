@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web", "RightMove.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Web.Dto", "RightMove.Web.Dto\RightMove.Web.Dto.csproj", "{AD90D82F-10E9-4ED5-984A-C8AE9DF91AC6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Wpf", "RightMoveApp\RightMove.Wpf.csproj", "{C428932F-D777-4B6E-9C97-EA585B1F8915}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RightMove.Desktop", "RightMoveApp\RightMove.Desktop.csproj", "{C428932F-D777-4B6E-9C97-EA585B1F8915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

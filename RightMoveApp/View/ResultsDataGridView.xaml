@@ -1,14 +1,14 @@
-﻿<UserControl x:Class="RightMoveApp.View.ResultsDataGridView"
+﻿<UserControl x:Class="RightMove.Desktop.View.ResultsDataGridView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RightMoveApp.View" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:valueconverters="clr-namespace:RightMoveApp.ValueConverters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:valueConverters="clr-namespace:RightMove.Desktop.ValueConverters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <valueconverters:RightMovePropertyToDateConverter x:Key="RightMovePropertyToDateConverter"/>
+        <valueConverters:RightMovePropertyToDateConverter x:Key="RightMovePropertyToDateConverter"/>
     </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="listView" 

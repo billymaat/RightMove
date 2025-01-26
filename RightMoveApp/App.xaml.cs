@@ -3,13 +3,14 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RightMove.Desktop.Model;
+using RightMove.Desktop.Services;
+using RightMove.Desktop.View;
+using RightMove.Desktop.View.Main;
 using RightMove.Extensions;
-using RightMoveApp.Model;
-using RightMoveApp.Services;
-using RightMoveApp.View.Main;
 using Serilog;
 
-namespace RightMoveApp
+namespace RightMove.Desktop
 {
 	/// <summary>
 	/// Interaction logic for App.xaml

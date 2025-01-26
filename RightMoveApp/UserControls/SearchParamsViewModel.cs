@@ -1,10 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using RightMove.DataTypes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RightMoveApp.UserControls
+namespace RightMove.Desktop.UserControls
 {
 	public class SearchParamsViewModel : ViewModelBase
 	{

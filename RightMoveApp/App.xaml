@@ -1,9 +1,9 @@
-﻿<Application x:Class="RightMoveApp.App"
+﻿<Application x:Class="RightMove.Desktop.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RightMoveApp" 
-             xmlns:converters="clr-namespace:RightMoveApp.ValueConverters"
-    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+             xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+             xmlns:valueConverters="clr-namespace:RightMove.Desktop.ValueConverters"
+             xmlns:viewModel="clr-namespace:RightMove.Desktop.ViewModel">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -15,16 +15,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                 <ResourceDictionary Source="Resources/ComboStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <converters:BooleanToReverseConverter x:Key="BooleanToReverseConverter"/>
-            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-            <converters:BooleanToCollapsedVisibilityConverter x:Key="BooleanToCollapsedVisiblilityConverter"/>
-            <converters:ValueConverterGroup x:Key="InverseBooleanToVisiblityConverter">
-                <converters:BooleanToReverseConverter/>
-                <converters:BooleanToVisibilityConverter/>
-            </converters:ValueConverterGroup>
-            <vm:ViewModelLocator
-                xmlns:vm="clr-namespace:RightMoveApp.ViewModel"
+            <valueConverters:BooleanToReverseConverter x:Key="BooleanToReverseConverter"/>
+            <valueConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <valueConverters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <valueConverters:BooleanToCollapsedVisibilityConverter x:Key="BooleanToCollapsedVisiblilityConverter"/>
+            <valueConverters:ValueConverterGroup x:Key="InverseBooleanToVisiblityConverter">
+                <valueConverters:BooleanToReverseConverter/>
+                <valueConverters:BooleanToVisibilityConverter/>
+            </valueConverters:ValueConverterGroup>
+            <viewModel:ViewModelLocator
                 x:Key="Locator"/>
 
             <!-- Application styles definition -->

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RightMoveApp.ViewModel.Commands
+namespace RightMove.Desktop.ViewModel.Commands
 {
 	public class CommandAsync<T> : ICommand
 

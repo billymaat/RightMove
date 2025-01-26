@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
 
-namespace RightMoveApp.ValueConverters
+namespace RightMove.Desktop.ValueConverters
 {
     public class ValueConverterGroup : List<IValueConverter>, IValueConverter
     {

@@ -1,10 +1,7 @@
-﻿using RightMove;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using RightMove.DataTypes;
 
-namespace RightMoveApp.Model
+namespace RightMove.Desktop.Model
 {
 	public class RightMoveViewItem
 	{

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using RightMove;
 using RightMove.DataTypes;
 using static RightMove.DataTypes.SearchParams;
 
-namespace RightMoveApp.View
+namespace RightMove.Desktop.View
 {
 	/// <summary>
 	/// Interaction logic for SearchParamsControl.xaml

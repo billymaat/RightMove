@@ -1,28 +1,24 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using RightMove.DataTypes;
-using RightMove.Factory;
-using RightMove.Services;
-using RightMoveApp.Helpers;
-using RightMoveApp.Model;
-using RightMoveApp.Services;
-using RightMoveApp.UserControls;
-using RightMoveApp.ViewModel.Commands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using GalaSoft.MvvmLight;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RightMove.DataTypes;
+using RightMove.Desktop.Helpers;
+using RightMove.Desktop.Model;
+using RightMove.Desktop.Services;
+using RightMove.Desktop.UserControls;
+using RightMove.Desktop.ViewModel.Commands;
+using RightMove.Factory;
+using RightMove.Services;
 
-namespace RightMoveApp.View.Main
+namespace RightMove.Desktop.View.Main
 {
 	public class MainViewModel : ViewModelBase
 	{

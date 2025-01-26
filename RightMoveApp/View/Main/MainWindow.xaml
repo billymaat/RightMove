@@ -4,13 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:local="clr-namespace:RightMoveApp"
 
-        x:Class="RightMoveApp.MainWindow"
-        xmlns:controls="clr-namespace:RightMoveApp.UserControls"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-        xmlns:valueconverters="clr-namespace:RightMoveApp.UserControls.ValueConverters" 
-        xmlns:view="clr-namespace:RightMoveApp.View"
+        x:Class="RightMove.Desktop.View.Main.MainWindow"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:controls="clr-namespace:RightMove.Desktop.UserControls"
+        xmlns:view="clr-namespace:RightMove.Desktop.View"
+        xmlns:valueConverters="clr-namespace:RightMove.Desktop.UserControls.ValueConverters"
         mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="800" Language="en-GB"
         HorizontalAlignment="Stretch"
@@ -20,7 +19,7 @@
         <DataTemplate DataType="{x:Type controls:SearchParamsViewModel}">
             <view:SearchParamsView/>
         </DataTemplate>
-        <valueconverters:MinWidthConverter x:Key="MinWidthConverter"/>
+        <valueConverters:MinWidthConverter x:Key="MinWidthConverter"/>
     </Window.Resources>
     <Grid>
         <!--resources for data grid-->

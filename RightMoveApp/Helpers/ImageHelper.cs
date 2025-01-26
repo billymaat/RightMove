@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
 
-namespace RightMoveApp.Helpers
+namespace RightMove.Desktop.Helpers
 {
 	public static class ImageHelper
 	{

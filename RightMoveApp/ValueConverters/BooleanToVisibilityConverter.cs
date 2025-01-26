@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
-namespace RightMoveApp.ValueConverters
+namespace RightMove.Desktop.ValueConverters
 {
 	public class BooleanToVisibilityConverter : IValueConverter
 	{

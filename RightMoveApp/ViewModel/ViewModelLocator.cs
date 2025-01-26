@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
-using RightMoveApp.View.Main;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RightMove.Desktop.View.Main;
 
-namespace RightMoveApp.ViewModel
+namespace RightMove.Desktop.ViewModel
 {
 	public class ViewModelLocator
 	{

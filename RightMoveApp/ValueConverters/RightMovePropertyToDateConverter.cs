@@ -1,11 +1,9 @@
-﻿using RightMove.DataTypes;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Text;
 using System.Windows.Data;
+using RightMove.DataTypes;
 
-namespace RightMoveApp.ValueConverters
+namespace RightMove.Desktop.ValueConverters
 {
 	public class RightMovePropertyToDateConverter : IValueConverter
 	{

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace RightMoveApp.ViewModel.Commands
+namespace RightMove.Desktop.ViewModel.Commands
 {
 	public sealed class NotifyTaskCompletion<TResult> : INotifyPropertyChanged
 	{

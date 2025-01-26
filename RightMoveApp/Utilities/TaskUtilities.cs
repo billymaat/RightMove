@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace RightMoveApp.Utilities
+namespace RightMove.Desktop.Utilities
 {
 	public interface IErrorHandler
 	{

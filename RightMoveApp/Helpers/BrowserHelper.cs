@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RightMoveApp.Helpers
+﻿namespace RightMove.Desktop.Helpers
 {
 	public static class BrowserHelper
 	{

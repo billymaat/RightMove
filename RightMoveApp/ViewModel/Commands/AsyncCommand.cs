@@ -1,14 +1,9 @@
-﻿using RightMoveApp.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
-namespace RightMoveApp.ViewModel.Commands
+namespace RightMove.Desktop.ViewModel.Commands
 {
 	public class AsyncCommand<TResult> : AsyncCommandBase, INotifyPropertyChanged
 	{
