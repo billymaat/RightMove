@@ -1,13 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RightMove.Db;
-using RightMove.Db.Repositories;
-using RightMove.Db.Services;
 using RightMove.Extensions;
 using RightMoveApp.Model;
 using RightMoveApp.Services;
@@ -38,8 +33,8 @@ namespace RightMoveApp
 				{
 					ConfigureServices(context.Configuration, services);
 					// register db writer
-					services.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
-						.AddTransient<IDbConfiguration, DbConfiguration>(o => new DbConfiguration("RightMoveDB.db"));
+					//services.AddTransient<IRightMovePropertyRepository, RightMovePropertyRepository>()
+					//	.AddTransient<IDbConfiguration, DbConfiguration>(o => new DbConfiguration("RightMoveDB.db"));
 
 				})
 				.Build();
@@ -52,7 +47,7 @@ namespace RightMoveApp
 		{			
 			services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
 			services.AddScoped<ISampleService, SampleService>();
-			services.AddScoped<IDatabaseService, DatabaseService>();
+			//services.AddScoped<IDatabaseService, DatabaseService>();
 
 			services.AddScoped<NavigationService>(serviceProvider =>
 			{

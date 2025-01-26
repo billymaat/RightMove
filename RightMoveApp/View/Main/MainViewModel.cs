@@ -3,9 +3,6 @@ using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
-using RightMove.Db.Models;
-using RightMove.Db.Repositories;
-using RightMove.Db.Services;
 using RightMove.Factory;
 using RightMove.Services;
 using RightMoveApp.Helpers;
@@ -32,9 +29,6 @@ namespace RightMoveApp.View.Main
 		// Services
 		private readonly NavigationService _navigationService;
 
-		// The database service
-		private readonly IDatabaseService _dbService;
-
 		private int _selectedImageIndex;
 
 		// Backing fields
@@ -52,7 +46,7 @@ namespace RightMoveApp.View.Main
 		// The right move model
 		private readonly RightMoveModel _rightMoveModel;
 		private readonly AppSettings _settings;
-		private readonly RightMoveParserServiceFactory _parserFactory;
+		private readonly RightMoveParserFactory _parserFactory;
 		private readonly Func<IPropertyPageParser> _propertyParserFactory;
 		private SearchParamsViewModel _searchParamsViewModel;
 
@@ -61,9 +55,8 @@ namespace RightMoveApp.View.Main
 
 		public MainViewModel(IOptions<AppSettings> settings,
 			RightMoveModel rightMoveModel,
-			RightMoveParserServiceFactory parserFactory,
+			RightMoveParserFactory parserFactory,
 			NavigationService navigationService,
-			IDatabaseService dbService,
 			Func<IPropertyPageParser> propertyParserFactory,
 			ILogger<MainViewModel> logger)
 		{
@@ -74,7 +67,6 @@ namespace RightMoveApp.View.Main
 			_settings = settings.Value;
 			_parserFactory = parserFactory;
 			_navigationService = navigationService;
-			_dbService = dbService;
 			_propertyParserFactory = propertyParserFactory;
 
 			InitializeCommands();
