@@ -72,7 +72,7 @@
                 </Grid>
                 <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
                               Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
-                <view:RightMoveImageView Grid.Column="2"/>
+                <view:PropertyInfoView MaxWidth="600" Grid.Column="2"/>
             </Grid>
         <ProgressBar Grid.Column="0" Grid.Row="3"
                         Minimum="0" Maximum="100"
