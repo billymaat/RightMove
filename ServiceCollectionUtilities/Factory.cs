@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RightMove.Factory
+namespace ServiceCollectionUtilities
 {
 	public class Factory<T> : IFactory<T>
 	{
