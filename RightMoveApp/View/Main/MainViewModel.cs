@@ -75,7 +75,12 @@ namespace RightMove.Desktop.View.Main
 			_searchParamsViewModel.SearchParamsUpdated += OnSearchParamsChanged;
 		}
 
-		private void OnSearchParamsChanged(object sender, EventArgs e)
+		/// <summary>
+		/// Gets the Loading text in the busy spinner
+		/// </summary>
+        public string Text => "Loading...";
+
+        private void OnSearchParamsChanged(object sender, EventArgs e)
 		{
 			SearchAsyncCommand.RaiseCanExecuteChanged();
 		}
