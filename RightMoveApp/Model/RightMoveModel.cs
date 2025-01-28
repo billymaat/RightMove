@@ -4,33 +4,28 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
 using RightMove.Desktop.Helpers;
 using RightMove.Desktop.Services;
-using RightMove.Factory;
 using RightMove.Services;
 
 namespace RightMove.Desktop.Model
 {
 	public class RightMoveModel : INotifyPropertyChanged
 	{
-		private readonly RightMoveParserFactory _parserFactory;
         private readonly RightMoveService _rightMoveService;
         private readonly Func<IPropertyPageParser> _propertyParserFactory;
-		private RightMoveSearchItemCollection _rightMovePropertyItems;
-		private readonly AppSettings _appSettings;
 
-		public RightMoveModel(IOptions<AppSettings> appSettings,
-			RightMoveService rightMoveService,
+		public RightMoveModel(RightMoveService rightMoveService,
 			Func<IPropertyPageParser> propertyParserFactory)
 		{
-			_appSettings = appSettings.Value;
             _rightMoveService = rightMoveService;
             _propertyParserFactory = propertyParserFactory;
 		}
 
-		public RightMoveSearchItemCollection RightMovePropertyItems
+        private RightMoveSearchItemCollection _rightMovePropertyItems;
+
+        public RightMoveSearchItemCollection RightMovePropertyItems
 		{
 			get => _rightMovePropertyItems;
 			set
@@ -59,7 +54,6 @@ namespace RightMove.Desktop.Model
             var rightMoveItems = await _rightMoveService.GetRightMoveItems(searchParams);
             RightMovePropertyItems = rightMoveItems;
         }
-
 
         public async Task GetFullRightMoveItem(int rightMoveId, CancellationToken cancellationToken)
 		{
