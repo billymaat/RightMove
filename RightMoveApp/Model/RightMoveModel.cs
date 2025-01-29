@@ -1,38 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.Messaging;
 using RightMove.DataTypes;
 using RightMove.Desktop.Helpers;
+using RightMove.Desktop.Messages;
 using RightMove.Desktop.Services;
 using RightMove.Services;
 
 namespace RightMove.Desktop.Model
 {
-	public class RightMoveModel : INotifyPropertyChanged
+	public class RightMoveModel
 	{
         private readonly RightMoveService _rightMoveService;
         private readonly Func<IPropertyPageParser> _propertyParserFactory;
+        private readonly IMessenger _messenger;
 
-		public RightMoveModel(RightMoveService rightMoveService,
-			Func<IPropertyPageParser> propertyParserFactory)
+        public RightMoveModel(RightMoveService rightMoveService,
+			Func<IPropertyPageParser> propertyParserFactory,
+            IMessenger messenger)
 		{
             _rightMoveService = rightMoveService;
             _propertyParserFactory = propertyParserFactory;
-		}
+            _messenger = messenger;
+        }
 
-        private RightMoveSearchItemCollection _rightMovePropertyItems;
+        private List<RightMoveProperty> _rightMovePropertyItems;
 
-        public RightMoveSearchItemCollection RightMovePropertyItems
+        public List<RightMoveProperty> RightMovePropertyItems
 		{
 			get => _rightMovePropertyItems;
 			set
 			{
 				_rightMovePropertyItems = value;
-				OnPropertyChanged();
-			}
+                _messenger.Send(new RightMovePropertyItemsUpdatedMessage()
+                {
+                    NewValue = value
+                });
+            }
 		}
 
 		private RightMoveProperty _rightMovePropertyFullSelectedItem;
@@ -43,19 +53,21 @@ namespace RightMove.Desktop.Model
 			set
 			{
 				_rightMovePropertyFullSelectedItem = value;
-				OnPropertyChanged();
-			}
+                _messenger.Send<RightMoveSelectedItemUpdatedMessage>(new RightMoveSelectedItemUpdatedMessage()
+                {
+                    NewValue = value
+                });
+            }
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
-        public async Task GetRightMoveItems(SearchParams searchParams)
+        public async Task UpdateRightMoveItems(SearchParams searchParams)
         {
             var rightMoveItems = await _rightMoveService.GetRightMoveItems(searchParams);
-            RightMovePropertyItems = rightMoveItems;
+            var items = rightMoveItems.ToList();
+            RightMovePropertyItems = items;
         }
 
-        public async Task GetFullRightMoveItem(int rightMoveId, CancellationToken cancellationToken)
+        public async Task UpdateSelectedRightmoveItem(int rightMoveId, CancellationToken cancellationToken)
 		{
 			IPropertyPageParser parser = _propertyParserFactory();
 
@@ -86,11 +98,6 @@ namespace RightMove.Desktop.Model
 			// freeze as accessed from non UI thread
 			bitmapImage.Freeze();
 			return bitmapImage;
-		}
-
-		private void OnPropertyChanged([CallerMemberName] string name = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 	}
 }

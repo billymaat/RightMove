@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Threading;
@@ -7,16 +8,20 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RightMove.DataTypes;
 using RightMove.Desktop.Helpers;
+using RightMove.Desktop.Messages;
 using RightMove.Desktop.Model;
 using RightMove.Desktop.Services;
 using RightMove.Desktop.UserControls;
 using RightMove.Desktop.ViewModel.Commands;
-using RightMove.Factory;
-using RightMove.Services;
+using RightMove.Extensions;
+
+using RelayCommand = RightMove.Desktop.ViewModel.Commands.RelayCommand;
 
 namespace RightMove.Desktop.View.Main
 {
@@ -25,7 +30,7 @@ namespace RightMove.Desktop.View.Main
 		// Services
 		private readonly NavigationService _navigationService;
 
-		private int _selectedImageIndex;
+        private int _selectedImageIndex;
 
 		// Backing fields
 		private string _info;
@@ -47,9 +52,10 @@ namespace RightMove.Desktop.View.Main
 
 		private ILogger<MainViewModel> _logger;
 
-		public MainViewModel(IOptions<AppSettings> settings,
+        public MainViewModel(IOptions<AppSettings> settings,
 			RightMoveModel rightMoveModel,
 			NavigationService navigationService,
+			IMessenger messenger,
 			ILogger<MainViewModel> logger)
 		{
 			_logger = logger;
@@ -59,11 +65,10 @@ namespace RightMove.Desktop.View.Main
 			_settings = settings.Value;
 			_navigationService = navigationService;
 
-			InitializeCommands();
+            InitializeCommands();
 			InitializeTimers();
 
 			_rightMoveModel = rightMoveModel;
-			_rightMoveModel.PropertyChanged += RightMoveModel_PropertyChanged;
 			IsSearching = false;
 
             _searchParamsViewModel = new SearchParamsViewModel()
@@ -73,7 +78,10 @@ namespace RightMove.Desktop.View.Main
 
 			TopViewModel = _searchParamsViewModel;
 			_searchParamsViewModel.SearchParamsUpdated += OnSearchParamsChanged;
-		}
+
+            messenger.Register<RightMoveSelectedItemUpdatedMessage>(this, (recipient, message) => RightMoveSelectedItem = message.NewValue);
+            messenger.Register<RightMovePropertyItemsUpdatedMessage>(this, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
+        }
 
 		/// <summary>
 		/// Gets the Loading text in the busy spinner
@@ -82,34 +90,28 @@ namespace RightMove.Desktop.View.Main
 
         private void OnSearchParamsChanged(object sender, EventArgs e)
 		{
-			SearchAsyncCommand.RaiseCanExecuteChanged();
+			SearchAsyncCommand.NotifyCanExecuteChanged();
 		}
 
         private void RightMoveModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyItems))
-			{
-				OnPropertyChanged(nameof(RightMoveList));
-			}
-			else if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyFullSelectedItem))
-			{
-                OnPropertyChanged(nameof(RightMovePropertyFullSelectedItem));
-			}
+			//if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyItems))
+			//{
+			//	OnPropertyChanged(nameof(RightMovePropertyItems));
+			//}
+			//else if (e.PropertyName == nameof(_rightMoveModel.RightMovePropertyFullSelectedItem))
+			//{
+			//	OnPropertyChanged(nameof(RightMovePropertyFullSelectedItem));
+			//}
 		}
 
 		private ObservableRecipient _topViewModel;
 
 		public ObservableRecipient TopViewModel
 		{
-			get
-			{
-				return _topViewModel;
-			}
-			set
-			{
-				SetProperty(ref _topViewModel, value);
-			}
-		}
+			get => _topViewModel;
+            set => SetProperty(ref _topViewModel, value);
+        }
 
 		public bool IsImagesVisible
 		{
@@ -126,15 +128,16 @@ namespace RightMove.Desktop.View.Main
 			set => SetProperty(ref _info, value);
 		}
 
-		/// <summary>
-		/// Gets or sets the right move items
-		/// </summary>
-		public RightMoveSearchItemCollection RightMoveList
-		{
-			get => _rightMoveModel.RightMovePropertyItems;
-		}
+        /// <summary>
+        /// Gets or sets the right move items
+        /// </summary>
+        public ObservableCollection<RightMoveProperty> RightMovePropertyItems
+        {
+            get => _rightMovePropertyItems;
+            set => SetProperty(ref _rightMovePropertyItems, value);
+        }
 
-		private RightMoveProperty _rightMoveSelectedItem;
+        private RightMoveProperty _rightMoveSelectedItem;
 		/// <summary>
 		/// Gets or sets the selected <see cref="RightMoveViewItem"/>
 		/// </summary>
@@ -144,12 +147,13 @@ namespace RightMove.Desktop.View.Main
 			set => SetProperty(ref _rightMoveSelectedItem, value);
 		}
 
-		public RightMoveProperty RightMovePropertyFullSelectedItem
-		{
-			get => _rightMoveModel.RightMovePropertyFullSelectedItem;
-		}
+        public RightMoveProperty RightMovePropertyFullSelectedItem
+        {
+            get => _rightMovePropertyFullSelectedItem;
+            set => SetProperty(ref _rightMovePropertyFullSelectedItem, value);
+        }
 
-		public List<int> Prices
+        public List<int> Prices
 		{
 			get
 			{
@@ -231,7 +235,7 @@ namespace RightMove.Desktop.View.Main
 			set
 			{
 				SetProperty(ref _isSearching, value);
-				SearchAsyncCommand.RaiseCanExecuteChanged();
+				//SearchAsyncCommand.RaiseCanExecuteChanged();
 			}
 		}
 
@@ -247,8 +251,10 @@ namespace RightMove.Desktop.View.Main
 		}
 
 		private bool _hasSearchExecuted;
+        private RightMoveProperty _rightMovePropertyFullSelectedItem;
+        private ObservableCollection<RightMoveProperty> _rightMovePropertyItems;
 
-		public bool HasSearchedExecuted
+        public bool HasSearchedExecuted
 		{
 			get => _hasSearchExecuted;
 			set => SetProperty(ref _hasSearchExecuted, value);
@@ -259,7 +265,7 @@ namespace RightMove.Desktop.View.Main
 		/// <summary>
 		/// Gets or sets the search command
 		/// </summary>
-		public IAsyncCommand SearchAsyncCommand
+		public IAsyncRelayCommand SearchAsyncCommand
 		{
 			get;
 			set;
@@ -347,7 +353,7 @@ namespace RightMove.Desktop.View.Main
             _selectedImageIndex = 0;
 
 			// update the right move full selected item
-			await _rightMoveModel.GetFullRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
+			await _rightMoveModel.UpdateSelectedRightmoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
 		}
 
 		/// <summary>
@@ -394,7 +400,7 @@ namespace RightMove.Desktop.View.Main
 		/// </summary>
 		private void InitializeCommands()
 		{
-			SearchAsyncCommand = AsyncCommand.Create(() => ExecuteSearchAsync(), () => CanExecuteSearch(null));
+			SearchAsyncCommand = new AsyncRelayCommand(ExecuteSearchAsync, CanExecuteSearch);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
 			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
 			PrevImageCommand = AsyncCommand.Create(() => ExecuteUpdatePrevImageAsync(null), () => CanExecuteUpdatePrevImage(null));
@@ -495,19 +501,18 @@ namespace RightMove.Desktop.View.Main
 		/// </summary>
 		/// <param name="parameter"></param>
 		// private async Task ExecuteSearchAsync(object parameter)
-		private async Task<RightMoveSearchItemCollection> ExecuteSearchAsync()
+		private async Task ExecuteSearchAsync()
 		{
 			IsSearching = true;
 
 			// create a copy if search params in case its changed during search
 			SearchParams searchParams = new SearchParams(_searchParamsViewModel.SearchParams);
-			await _rightMoveModel.GetRightMoveItems(searchParams);
+			await _rightMoveModel.UpdateRightMoveItems(searchParams);
 
 			UpdateAveragePrice();
 
 			// add properties to DB
 			IsSearching = false;
-			return _rightMoveModel.RightMovePropertyItems;
 		}
 
 		/// <summary>
@@ -515,7 +520,7 @@ namespace RightMove.Desktop.View.Main
 		/// </summary>
 		/// <param name="parameter">the parameter</param>
 		/// <returns>true if can execute, false otherwise</returns>
-		private bool CanExecuteSearch(object parameter)
+		private bool CanExecuteSearch()
 		{
 			return !IsSearching && _searchParamsViewModel.SearchParams.IsValid();
 		}
@@ -524,15 +529,16 @@ namespace RightMove.Desktop.View.Main
 
 		private void UpdateAveragePrice()
 		{
-			if (RightMoveList != null)
+			if (RightMovePropertyItems != null)
 			{
 				StringBuilder sb = new StringBuilder();
 
-				if (RightMoveList.AveragePrice != double.MinValue)
+                var averagePrice = RightMovePropertyItems.AveragePrice();
+				if (averagePrice != double.MinValue)
 				{
-					sb.AppendLine($"Average price: {RightMoveList.AveragePrice.ToString("C2")}");
+					sb.AppendLine($"Average price: {averagePrice.ToString("C2")}");
 				}
-				sb.Append($"Property count: {RightMoveList.Count}");
+				sb.Append($"Property count: {RightMovePropertyItems.Count}");
 				Info = sb.ToString();
 			}
 			else

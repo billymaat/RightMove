@@ -13,7 +13,7 @@
     <Grid>
         <DataGrid x:Name="listView" 
                               Grid.Row="0"
-                    ItemsSource="{Binding Path=RightMoveList}" 
+                    ItemsSource="{Binding Path=RightMovePropertyItems}" 
                     SelectedItem="{Binding Path=RightMoveSelectedItem}"
                     AutoGenerateColumns="False"
                     HorizontalGridLinesBrush="#6297C8"

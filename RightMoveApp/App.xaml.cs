@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -62,6 +63,7 @@ namespace RightMove.Desktop
 			services.RegisterRightMoveLibrary();
 			RegisterView(services);
             RegisterServices(services);
+            services.AddSingleton<IMessenger, WeakReferenceMessenger>();
         }
 
 		private void RegisterView(IServiceCollection services)
