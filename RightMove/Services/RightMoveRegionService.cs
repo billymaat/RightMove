@@ -15,8 +15,11 @@ namespace RightMove
     {
         private readonly string _apiEndpoint = $@"https://los.rightmove.co.uk/typeahead?query={{0}}&limit=10&exclude=STREET";
 
-        public async Task<IEnumerable<RightMoveRegion>> Search(string region)
+        public async Task<IEnumerable<RightMoveRegion>> Search(string search)
         {
+            // strip out any non alphanumeric characters
+            var region = new string(search.Where(c => char.IsLetterOrDigit(c)).ToArray());
+
             // Encode region for the url
             var endcodedRegion = UrlEncoder.Default.Encode(region);
 
@@ -33,11 +36,9 @@ namespace RightMove
                 });
                 return ret;
             }
-            else
-            {
-                // Handle error response
-                throw new HttpRequestException($"Request failed with status code {result.StatusCode}");
-            }
+            
+            // Handle error response
+            throw new HttpRequestException($"Request failed with status code {result.StatusCode}");
         }
     }
 }
