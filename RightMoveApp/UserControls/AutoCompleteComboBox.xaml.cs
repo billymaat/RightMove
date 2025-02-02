@@ -126,7 +126,7 @@ namespace RightMove.Desktop.UserControls
 				return;
 			}
 
-            if (string.IsNullOrEmpty(txtAuto.Text) || txtAuto.Text.Length < MinimumCharactersForSearch)
+            if (string.IsNullOrEmpty(txtAuto.Text) || TextBoxIsAboveMinimumCharacters())
             {
                 return;
             }
@@ -146,7 +146,12 @@ namespace RightMove.Desktop.UserControls
             }
 		}
 
-		/// 
+        private bool TextBoxIsAboveMinimumCharacters()
+        {
+            return txtAuto.Text.Length < MinimumCharactersForSearch;
+        }
+
+        /// 
 		/// Handles the PreviewKeyDown event of the autoTextBox control.
 		/// 
 		/// <param name="sender">The source of the event.
@@ -190,13 +195,11 @@ namespace RightMove.Desktop.UserControls
 		/// <param name="e">The instance containing the event data.
 		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-
             if (lstSuggestion.ItemsSource != null)
             {
                 txtAuto.TextChanged -= TxtAuto_TextChanged;
                 if (lstSuggestion.SelectedIndex != -1)
                 {
-                    // Text = lstSuggestion.SelectedItem.ToString();
                     if (lstSuggestion.SelectedItem is RightMoveRegion region)
                     {
                         UpdateTextBox(region);
