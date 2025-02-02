@@ -135,32 +135,25 @@ namespace RightMove.Desktop.UserControls
 
             await DoSearch(token);
         }
+        
+        public delegate Task<List<RightMoveRegion>> AutocompleteSearchCallback(string text, CancellationToken token);
 
-        public Func<string, CancellationToken, Task<List<RightMoveRegion>>> Func
+        public AutocompleteSearchCallback AutocompleteSearchFunc
         {
-            get;
-            set;
-        } = async (text, token) =>
-        {
-            var regionService = new RightMoveRegionService();
+            get { return (AutocompleteSearchCallback)GetValue(AutocompleteSearchFuncProperty); }
+            set { SetValue(AutocompleteSearchFuncProperty, value); }
+        }
 
-            try
-            {
-                var items = (await regionService.SearchAsync(text, token)).ToList();
-                return items;
-            }
-            catch (TaskCanceledException)
-            {
-                return new List<RightMoveRegion>();
-            }
-        };
+        // Using a DependencyProperty as the backing store for Func.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AutocompleteSearchFuncProperty =
+            DependencyProperty.Register("AutocompleteSearchFunc", typeof(AutocompleteSearchCallback), typeof(AutoCompleteComboBox), new PropertyMetadata(null));
 
 
         private async Task DoSearch(CancellationToken token)
         {
             try
             {
-                var items = await Func?.Invoke(txtAuto.Text, token);
+                var items = await AutocompleteSearchFunc?.Invoke(txtAuto.Text, token);
 				if (items != null)
                 {
                     lstSuggestion.ItemsSource = items;
