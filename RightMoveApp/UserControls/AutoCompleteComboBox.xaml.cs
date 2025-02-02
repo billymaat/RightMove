@@ -131,20 +131,28 @@ namespace RightMove.Desktop.UserControls
                 return;
             }
 
+            await DoSearch(token);
+        }
+
+        private async Task DoSearch(CancellationToken token)
+        {
             var regionService = new RightMoveRegionService();
 
             try
             {
                 var items = (await regionService.SearchAsync(txtAuto.Text, token)).ToList();
                 lstSuggestion.ItemsSource = items;
-                lstSuggestion.Visibility = (items.Count == 0)
+
+                // if there are no results then hide the list
+                lstSuggestion.Visibility = items.Count == 0
                     ? Visibility.Collapsed
                     : Visibility.Visible;
             }
             catch (TaskCanceledException)
             {
             }
-		}
+        }
+
 
         private bool TextBoxIsAboveMinimumCharacters()
         {
