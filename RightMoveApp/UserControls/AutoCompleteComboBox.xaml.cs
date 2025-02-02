@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -71,8 +73,6 @@ namespace RightMove.Desktop.UserControls
 			set { SetValue(SelectedValueProperty, value); }
 		}
 
-
-
 		public RightMoveRegion SelectedRightMoveRegion
 		{
 			get { return (RightMoveRegion)GetValue(SelectedRightMoveRegionProperty); }
@@ -83,18 +83,30 @@ namespace RightMove.Desktop.UserControls
 		public static readonly DependencyProperty SelectedRightMoveRegionProperty =
 			DependencyProperty.Register("SelectedRightMoveRegion", typeof(RightMoveRegion), typeof(AutoCompleteComboBox), new FrameworkPropertyMetadata(default(RightMoveRegion), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
+
+        private const int DefaultMinimumCharactersForSearch = 3;
 
 
-        // Using a DependencyProperty as the backing store for SelectedValue.  
+        public int MinimumCharactersForSearch
+		{
+			get { return (int)GetValue(MinimumCharactersForSearchProperty); }
+			set { SetValue(MinimumCharactersForSearchProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for MinimumCharactersForSearch.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty MinimumCharactersForSearchProperty =
+			DependencyProperty.Register("MinimumCharactersForSearch", typeof(int), typeof(AutoCompleteComboBox), new PropertyMetadata(DefaultMinimumCharactersForSearch));
+
+
+		// Using a DependencyProperty as the backing store for SelectedValue.  
 		// This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty SelectedValueProperty =
 			DependencyProperty.Register("SelectedValue"
 							, typeof(RightMoveRegion)
 							, typeof(AutoCompleteComboBox)
 							, new UIPropertyMetadata(default(RightMoveRegion)));
+
+        private CancellationTokenSource _tokenSource = new();
 
 		/// 
 		/// Handles the TextChanged event of the autoTextBox control.
@@ -103,26 +115,35 @@ namespace RightMove.Desktop.UserControls
 		/// <param name="e">The instance containing the event data.
 		private async void TxtAuto_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			// Only autocomplete when there is text
-			if (txtAuto.Text.Length == 0)
+			await _tokenSource.CancelAsync();
+            _tokenSource = new CancellationTokenSource();
+			var token = _tokenSource.Token;
+
+            // Only autocomplete when there is text
+            if (txtAuto.Text.Length == 0)
 			{
 				lstSuggestion.Visibility = Visibility.Collapsed;
 				return;
 			}
 
-            if (string.IsNullOrEmpty(txtAuto.Text) || txtAuto.Text.Length < 3)
+            if (string.IsNullOrEmpty(txtAuto.Text) || txtAuto.Text.Length < MinimumCharactersForSearch)
             {
                 return;
             }
 
             var regionService = new RightMoveRegionService();
 
-            var items = (await regionService.Search(txtAuto.Text)).ToList();
-
-            lstSuggestion.ItemsSource = items;
-            lstSuggestion.Visibility = (items.Count == 0)
-				? Visibility.Collapsed
-                : Visibility.Visible;
+            try
+            {
+                var items = (await regionService.SearchAsync(txtAuto.Text, token)).ToList();
+                lstSuggestion.ItemsSource = items;
+                lstSuggestion.Visibility = (items.Count == 0)
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+            catch (TaskCanceledException)
+            {
+            }
 		}
 
 		/// 

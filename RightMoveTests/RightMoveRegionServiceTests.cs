@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -13,8 +14,8 @@ namespace RightMove.Tests
         [Test]
         public void TestMethod()
         {
-            var rightMoveRegioNService = new RightMoveRegionService();
-            var val = rightMoveRegioNService.Search("London").GetAwaiter().GetResult();
+            var moveRegionService = new RightMoveRegionService();
+            var val = moveRegionService.SearchAsync("London", new CancellationToken()).GetAwaiter().GetResult();
         }
     }
 }

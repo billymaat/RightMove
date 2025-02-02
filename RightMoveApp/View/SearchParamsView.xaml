@@ -34,7 +34,8 @@
 
         <userControls:AutoCompleteComboBox Grid.Row="0" Grid.Column="1"
                                            ItemsSource="{Binding ElementName=uc, Path=SearchString}" 
-                                        SelectedRightMoveRegion="{Binding Path=SelectedRightMoveRegion, Mode=TwoWay}"/>
+                                           SelectedRightMoveRegion="{Binding Path=SelectedRightMoveRegion, Mode=TwoWay}"
+                                           MinimumCharactersForSearch="2"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Search radius"/>
         <ComboBox Template="{DynamicResource ComboBoxTemplate1}" Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
