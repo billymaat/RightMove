@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Newtonsoft.Json.Linq;
 using RightMove.DataTypes;
 
 namespace RightMove.Desktop.UserControls
@@ -134,19 +136,40 @@ namespace RightMove.Desktop.UserControls
             await DoSearch(token);
         }
 
-        private async Task DoSearch(CancellationToken token)
+        public Func<string, CancellationToken, Task<List<RightMoveRegion>>> Func
+        {
+            get;
+            set;
+        } = async (text, token) =>
         {
             var regionService = new RightMoveRegionService();
 
             try
             {
-                var items = (await regionService.SearchAsync(txtAuto.Text, token)).ToList();
-                lstSuggestion.ItemsSource = items;
+                var items = (await regionService.SearchAsync(text, token)).ToList();
+                return items;
+            }
+            catch (TaskCanceledException)
+            {
+                return new List<RightMoveRegion>();
+            }
+        };
 
-                // if there are no results then hide the list
-                lstSuggestion.Visibility = items.Count == 0
-                    ? Visibility.Collapsed
-                    : Visibility.Visible;
+
+        private async Task DoSearch(CancellationToken token)
+        {
+            try
+            {
+                var items = await Func?.Invoke(txtAuto.Text, token);
+				if (items != null)
+                {
+                    lstSuggestion.ItemsSource = items;
+
+                    // if there are no results then hide the list
+                    lstSuggestion.Visibility = items.Count == 0
+                        ? Visibility.Collapsed
+                        : Visibility.Visible;
+                }
             }
             catch (TaskCanceledException)
             {
