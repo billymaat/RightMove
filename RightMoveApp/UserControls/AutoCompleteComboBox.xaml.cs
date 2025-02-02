@@ -169,32 +169,29 @@ namespace RightMove.Desktop.UserControls
 		/// <param name="e">The instance containing the event data.
 		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			
-			UpdateTextBox();
-		}
 
-		private void UpdateTextBox()
-		{
-			if (lstSuggestion.ItemsSource != null)
-			{
-				txtAuto.TextChanged
-					-= new TextChangedEventHandler(TxtAuto_TextChanged);
-				if (lstSuggestion.SelectedIndex != -1)
-				{
-					// Text = lstSuggestion.SelectedItem.ToString();
+            if (lstSuggestion.ItemsSource != null)
+            {
+                txtAuto.TextChanged -= TxtAuto_TextChanged;
+                if (lstSuggestion.SelectedIndex != -1)
+                {
+                    // Text = lstSuggestion.SelectedItem.ToString();
                     if (lstSuggestion.SelectedItem is RightMoveRegion region)
                     {
-                        // SelectedRightMoveRegion = region;
-						Text = region.DisplayName;
-                        // txtAuto.Text = region.DisplayName;
+                        UpdateTextBox(region);
                     }
-				}
-				txtAuto.TextChanged
-					+= new TextChangedEventHandler(TxtAuto_TextChanged);
-			}
-		}
+                }
+                txtAuto.TextChanged += TxtAuto_TextChanged;
+            }
+        }
 
-		private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void UpdateTextBox(RightMoveRegion region)
+        {
+            Text = region.DisplayName;
+        }
+
+
+        private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			// Cancel the selection
 			//lstSuggestion.ItemsSource = null;
