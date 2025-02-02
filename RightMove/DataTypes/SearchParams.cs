@@ -336,10 +336,6 @@ namespace RightMove.DataTypes
 			else if (!string.IsNullOrEmpty(RegionLocation))
 			{
 				string regionString = GenerateRegionOption(RegionLocation);
-				if (string.IsNullOrEmpty(regionString))
-				{
-					throw new ArgumentException("invalid region code");
-				}
 				options.Add(Option.LocationIdentifier, regionString);
 			}
 
@@ -414,12 +410,7 @@ namespace RightMove.DataTypes
 		/// <returns>the region option</returns>
 		private string GenerateRegionOption(string regionCode)
 		{
-			if (!RightMoveCodes.RegionDictionary.TryGetValue(regionCode, out int region))
-			{
-				return null;
-			}
-
-			return $"REGION^{region}";
+			return $"REGION^{regionCode}";
 		}
 	}
 }

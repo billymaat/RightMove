@@ -4,14 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RightMove.Desktop.UserControls"
+             xmlns:valueConverters="clr-namespace:RightMove.Desktop.ValueConverters"
              mc:Ignorable="d" 
-             Panel.ZIndex="10">
+             Panel.ZIndex="10"
+             x:Name="ucc">
+    <UserControl.Resources>
+        <valueConverters:DebugConverter x:Key="DebugConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Canvas HorizontalAlignment="Stretch">
             <TextBox x:Name="txtAuto" 
                      Height="25" MinWidth="150" 
                      Margin="0,0,10,0" TextWrapping="NoWrap"
-                     Text="{Binding Path=SelectedValue, RelativeSource={RelativeSource AncestorType={x:Type local:AutoCompleteComboBox}}, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type local:AutoCompleteComboBox}}, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.Width>
                     <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
                 </TextBox.Width>
@@ -24,7 +29,9 @@
                      Visibility="Collapsed" 
                      MinWidth="150" 
                      MaxHeight="100"
-                     Margin="0,25,0,-25">
+                     Margin="0,25,0,-25"
+                     SelectedItem="{Binding ElementName=ucc, Path=SelectedRightMoveRegion, Converter={StaticResource DebugConverter}}"
+                     DisplayMemberPath="DisplayName">
                 <ListBox.Width>
                     <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
                 </ListBox.Width>

@@ -79,6 +79,6 @@
                         MinHeight="10"
                         Name="pbStatus"
                         Visibility="{Binding IsSearching, Converter={StaticResource BooleanToCollapsedVisiblilityConverter}}"
-                        IsIndeterminate="{Binding SearchAsyncCommand.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToReverseConverter}}"/>
+                        IsIndeterminate="{Binding SearchAsyncCommand.ExecutionTask.IsCompletedSuccessfully, Converter={StaticResource BooleanToReverseConverter}}"/>
     </Grid>
 </mah:MetroWindow>

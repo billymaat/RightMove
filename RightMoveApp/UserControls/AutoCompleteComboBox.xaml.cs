@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using RightMove.DataTypes;
 
 namespace RightMove.Desktop.UserControls
 {
@@ -24,16 +25,22 @@ namespace RightMove.Desktop.UserControls
 			InitializeComponent();
 
 			// Attach events to the controls
-			txtAuto.TextChanged +=
-				new TextChangedEventHandler(TxtAuto_TextChanged);
-			txtAuto.PreviewKeyDown +=
-				new KeyEventHandler(TxtAuto_PreviewKeyDown);
-
-			lstSuggestion.SelectionChanged +=
-				new SelectionChangedEventHandler(ListBox_SelectionChanged);
-		}
+			txtAuto.TextChanged += TxtAuto_TextChanged;
+			txtAuto.PreviewKeyDown += TxtAuto_PreviewKeyDown;
+            lstSuggestion.SelectionChanged += ListBox_SelectionChanged;
+        }
 
 		#region Properties
+
+		public string Text
+		{
+			get { return (string)GetValue(TextProperty); }
+			set { SetValue(TextProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty TextProperty =
+			DependencyProperty.Register("Text", typeof(string), typeof(AutoCompleteComboBox), new PropertyMetadata(default(string)));
 
 		public List<string> ItemsSource
 		{
@@ -58,19 +65,36 @@ namespace RightMove.Desktop.UserControls
 		/// Gets or sets the selected value.
 		/// 
 		/// The selected value.
-		public string SelectedValue
+		public RightMoveRegion SelectedValue
 		{
-			get { return (string)GetValue(SelectedValueProperty); }
+			get { return (RightMoveRegion)GetValue(SelectedValueProperty); }
 			set { SetValue(SelectedValueProperty, value); }
 		}
 
-		// Using a DependencyProperty as the backing store for SelectedValue.  
+
+
+		public RightMoveRegion SelectedRightMoveRegion
+		{
+			get { return (RightMoveRegion)GetValue(SelectedRightMoveRegionProperty); }
+			set { SetValue(SelectedRightMoveRegionProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for SelectedRightMoveRegion.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty SelectedRightMoveRegionProperty =
+			DependencyProperty.Register("SelectedRightMoveRegion", typeof(RightMoveRegion), typeof(AutoCompleteComboBox), new FrameworkPropertyMetadata(default(RightMoveRegion), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+
+        // Using a DependencyProperty as the backing store for SelectedValue.  
 		// This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty SelectedValueProperty =
 			DependencyProperty.Register("SelectedValue"
-							, typeof(string)
+							, typeof(RightMoveRegion)
 							, typeof(AutoCompleteComboBox)
-							, new UIPropertyMetadata(string.Empty));
+							, new UIPropertyMetadata(default(RightMoveRegion)));
 
 		/// 
 		/// Handles the TextChanged event of the autoTextBox control.
@@ -86,23 +110,19 @@ namespace RightMove.Desktop.UserControls
 				return;
 			}
 
-			lstSuggestion.ItemsSource = ItemsSource;
+            if (string.IsNullOrEmpty(txtAuto.Text) || txtAuto.Text.Length < 3)
+            {
+                return;
+            }
 
-			// Use Linq to Query ItemsSource for resultdata
-			string condition = string.Format("{0}%", txtAuto.Text);
+            var regionService = new RightMoveRegionService();
 
-			var text = txtAuto.Text;
-			ICollectionView view = CollectionViewSource.GetDefaultView(ItemsSource);
-			view.Filter = (o) => { return ((string)o).ToLower().StartsWith(text); };
+            var items = (await regionService.Search(txtAuto.Text)).ToList();
 
-			if (!view.Cast<string>().Any())
-			{
-				lstSuggestion.Visibility = Visibility.Collapsed;
-				return;
-			}
-
-			// this is where the filtering needs to happen
-			lstSuggestion.Visibility = Visibility.Visible;
+            lstSuggestion.ItemsSource = items;
+            lstSuggestion.Visibility = (items.Count == 0)
+				? Visibility.Collapsed
+                : Visibility.Visible;
 		}
 
 		/// 
@@ -149,6 +169,7 @@ namespace RightMove.Desktop.UserControls
 		/// <param name="e">The instance containing the event data.
 		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
+			
 			UpdateTextBox();
 		}
 
@@ -160,7 +181,13 @@ namespace RightMove.Desktop.UserControls
 					-= new TextChangedEventHandler(TxtAuto_TextChanged);
 				if (lstSuggestion.SelectedIndex != -1)
 				{
-					txtAuto.Text = lstSuggestion.SelectedItem.ToString();
+					// Text = lstSuggestion.SelectedItem.ToString();
+                    if (lstSuggestion.SelectedItem is RightMoveRegion region)
+                    {
+                        // SelectedRightMoveRegion = region;
+						Text = region.DisplayName;
+                        // txtAuto.Text = region.DisplayName;
+                    }
 				}
 				txtAuto.TextChanged
 					+= new TextChangedEventHandler(TxtAuto_TextChanged);
@@ -170,7 +197,7 @@ namespace RightMove.Desktop.UserControls
 		private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			// Cancel the selection
-			lstSuggestion.ItemsSource = null;
+			//lstSuggestion.ItemsSource = null;
 			lstSuggestion.Visibility = Visibility.Collapsed;
 		}
 

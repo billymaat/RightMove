@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RightMove.DataTypes;
 
@@ -19,7 +20,20 @@ namespace RightMove.Desktop.UserControls
 			set;
 		}
 
-		public string RegionLocation
+        public RightMoveRegion SelectedRightMoveRegion
+        {
+            get => _selectedRightMoveRegion;
+            set
+            {
+                if (SetProperty(ref _selectedRightMoveRegion, value))
+                {
+                    SearchParams.RegionLocation = _selectedRightMoveRegion?.Id;
+					OnSearchParamsChanged();
+                }
+            }
+        }
+
+        public string RegionLocation
 		{
 			get => SearchParams.RegionLocation;
 			set
@@ -98,8 +112,10 @@ namespace RightMove.Desktop.UserControls
 		}
 
 		private PropertyTypeEnum _propertyType;
+        private ObservableCollection<string> _regionStrings;
+        private RightMoveRegion _selectedRightMoveRegion;
 
-		public PropertyTypeEnum PropertyType
+        public PropertyTypeEnum PropertyType
 		{
 			get { return SearchParams.PropertyType; }
 			set
@@ -126,7 +142,14 @@ namespace RightMove.Desktop.UserControls
 			}
 		}
 
-		public void OnSearchParamsChanged()
+        public ObservableCollection<string> RegionStrings
+        {
+            get => _regionStrings;
+            set => SetProperty(ref _regionStrings, value);
+        }
+
+
+        public void OnSearchParamsChanged()
 		{
 			SearchParamsUpdated?.Invoke(this, new EventArgs());
 		}

@@ -3,14 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:System="clr-namespace:System;assembly=System.Runtime"
-             xmlns:StyleAlias="clr-namespace:RightMove;assembly=RightMove"
-             xmlns:dataTypes="clr-namespace:RightMove.DataTypes;assembly=RightMove"
              xmlns:valueConverters="clr-namespace:RightMove.Desktop.UserControls.ValueConverters"
              xmlns:userControls="clr-namespace:RightMove.Desktop.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              x:Name="uc"
+             d:DataContext="{d:DesignInstance userControls:SearchParamsViewModel}"
              >
     <UserControl.Resources>
         <valueConverters:PropertyTypeConverter x:Key="PropertyTypeConverter" x:Shared="False"/>
@@ -30,12 +28,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0" Content="Search area"/>
 
         <userControls:AutoCompleteComboBox Grid.Row="0" Grid.Column="1"
-                                       ItemsSource="{Binding ElementName=uc, Path=SearchString}" 
-                                       SelectedValue="{Binding Path=RegionLocation, Mode=TwoWay}"/>
+                                           ItemsSource="{Binding ElementName=uc, Path=SearchString}" 
+                                        SelectedRightMoveRegion="{Binding Path=SelectedRightMoveRegion, Mode=TwoWay}"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Search radius"/>
         <ComboBox Template="{DynamicResource ComboBoxTemplate1}" Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
@@ -150,6 +149,8 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Content="{Binding SelectedRightMoveRegion.DisplayName}"></Label>
+        <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Content="Testing"></Label>-->
     </Grid>
 
 </UserControl>
