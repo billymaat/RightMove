@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using RightMove.DataTypes;
 
 namespace RightMove.Desktop.View
 {
@@ -16,8 +19,45 @@ namespace RightMove.Desktop.View
 		public ResultsDataGridView()
 		{
 			InitializeComponent();
-		}
 
+            Delay = 3000;
+        }
+
+        public static readonly DependencyProperty RightMoveSelectedItemProperty = DependencyProperty.Register(
+            nameof(RightMoveSelectedItem), typeof(RightMoveProperty), typeof(ResultsDataGridView), new PropertyMetadata(default(RightMoveProperty)));
+
+        public RightMoveProperty RightMoveSelectedItem
+        {
+            get { return (RightMoveProperty)GetValue(RightMoveSelectedItemProperty); }
+            set { SetValue(RightMoveSelectedItemProperty, value); }
+        }
+
+        public static readonly DependencyProperty RightMovePropertyItemsProperty = DependencyProperty.Register(
+            nameof(RightMovePropertyItems), typeof(IEnumerable<RightMoveProperty>), typeof(ResultsDataGridView), new PropertyMetadata(default(IEnumerable<RightMoveProperty>)));
+
+        public IEnumerable<RightMoveProperty> RightMovePropertyItems
+        {
+            get { return (IEnumerable<RightMoveProperty>)GetValue(RightMovePropertyItemsProperty); }
+            set { SetValue(RightMovePropertyItemsProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectionChangedProperty = DependencyProperty.Register(
+            nameof(SelectionChanged), typeof(ICommand), typeof(ResultsDataGridView), new PropertyMetadata(default(ICommand)));
+
+        public ICommand SelectionChanged
+        {
+            get { return (ICommand)GetValue(SelectionChangedProperty); }
+            set { SetValue(SelectionChangedProperty, value); }
+        }
+
+        public static readonly DependencyProperty DelayProperty = DependencyProperty.Register(
+            nameof(Delay), typeof(int), typeof(ResultsDataGridView), new PropertyMetadata(default(int)));
+
+        public int Delay
+        {
+            get { return (int)GetValue(DelayProperty); }
+            set { SetValue(DelayProperty, value); }
+        }
 
 		/// <summary>
 		/// Grid view column event handler clicked

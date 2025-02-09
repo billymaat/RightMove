@@ -18,15 +18,12 @@ namespace RightMove.Desktop.Model
 	public class RightMoveModel
 	{
         private readonly RightMoveService _rightMoveService;
-        private readonly Func<IPropertyPageParser> _propertyParserFactory;
         private readonly IMessenger _messenger;
 
         public RightMoveModel(RightMoveService rightMoveService,
-			Func<IPropertyPageParser> propertyParserFactory,
             IMessenger messenger)
 		{
             _rightMoveService = rightMoveService;
-            _propertyParserFactory = propertyParserFactory;
             _messenger = messenger;
         }
 
@@ -67,17 +64,10 @@ namespace RightMove.Desktop.Model
             RightMovePropertyItems = items;
         }
 
-        public async Task UpdateSelectedRightmoveItem(int rightMoveId, CancellationToken cancellationToken)
-		{
-			IPropertyPageParser parser = _propertyParserFactory();
-
-			await parser.ParseRightMovePropertyPageAsync(rightMoveId, cancellationToken);
-			if (cancellationToken.IsCancellationRequested)
-			{
-				cancellationToken.ThrowIfCancellationRequested();
-			}
-
-			RightMovePropertyFullSelectedItem = parser.RightMoveProperty;
+        public async Task UpdateSelectedRightMoveItem(int rightMoveId, CancellationToken cancellationToken)
+        {
+            var fullProperty = await _rightMoveService.GetFullRightMoveItem(rightMoveId, cancellationToken);
+            RightMovePropertyFullSelectedItem = fullProperty;
 		}
 
 		public async Task<BitmapImage> GetImage(int index, CancellationToken cancellationToken = default(CancellationToken))

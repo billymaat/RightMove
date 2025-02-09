@@ -8,6 +8,7 @@ using RightMove.Desktop.Model;
 using RightMove.Desktop.Services;
 using RightMove.Desktop.View;
 using RightMove.Desktop.View.Main;
+using RightMove.Desktop.ViewModel;
 using RightMove.Extensions;
 using Serilog;
 
@@ -72,7 +73,8 @@ namespace RightMove.Desktop
 
 			// ...
 			// Register all ViewModels
-			services.AddSingleton<MainViewModel>();
+			services.AddSingleton<MainViewModel>()
+                .AddSingleton<PropertyInfoViewModel>();
 
 			// Register all the windows of the application
 			services.AddSingleton<MainWindow>();

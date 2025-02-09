@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using RightMove.DataTypes;
 
 namespace RightMove.Desktop.View
 {
@@ -24,5 +25,25 @@ namespace RightMove.Desktop.View
         {
             InitializeComponent();
         }
+
+        public static readonly DependencyProperty RightMovePropertyProperty = DependencyProperty.Register(
+            nameof(RightMoveProperty), typeof(RightMoveProperty), typeof(PropertyInfoView), new PropertyMetadata(default(RightMoveProperty)));
+
+        public RightMoveProperty RightMoveProperty
+        {
+            get { return (RightMoveProperty)GetValue(RightMovePropertyProperty); }
+            set { SetValue(RightMovePropertyProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
+            nameof(Description), typeof(string), typeof(PropertyInfoView), new PropertyMetadata(default(string)));
+
+        public string Description
+        {
+            get { return (string)GetValue(DescriptionProperty); }
+            set { SetValue(DescriptionProperty, value); }
+        }
+
     }
 }

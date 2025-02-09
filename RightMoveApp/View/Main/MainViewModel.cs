@@ -18,6 +18,7 @@ using RightMove.Desktop.Messages;
 using RightMove.Desktop.Model;
 using RightMove.Desktop.Services;
 using RightMove.Desktop.UserControls;
+using RightMove.Desktop.ViewModel;
 using RightMove.Desktop.ViewModel.Commands;
 using RightMove.Extensions;
 
@@ -30,13 +31,8 @@ namespace RightMove.Desktop.View.Main
 		// Services
 		private readonly NavigationService _navigationService;
 
-        private int _selectedImageIndex;
-
 		// Backing fields
 		private string _info;
-		private BitmapImage _displayedImage;
-		private bool _loadingImage;
-		private string _imageIndexView;
 
 		// cancellation token
 		private CancellationTokenSource _tokenSource = new CancellationTokenSource();
@@ -50,15 +46,18 @@ namespace RightMove.Desktop.View.Main
 		private SearchParamsViewModel _searchParamsViewModel;
 
 
-		private ILogger<MainViewModel> _logger;
+        private readonly PropertyInfoViewModel _propertyInfoViewModel;
+        private ILogger<MainViewModel> _logger;
 
         public MainViewModel(IOptions<AppSettings> settings,
+			PropertyInfoViewModel propertyInfoViewModel,
 			RightMoveModel rightMoveModel,
 			NavigationService navigationService,
 			IMessenger messenger,
 			ILogger<MainViewModel> logger)
 		{
-			_logger = logger;
+            _propertyInfoViewModel = propertyInfoViewModel;
+            _logger = logger;
 
 			_logger.LogInformation("MainViewModel loaded");
 
@@ -210,20 +209,8 @@ namespace RightMove.Desktop.View.Main
 			}
 		}
 
-		public bool LoadingImage
-		{
-			get => _loadingImage;
-			set => SetProperty(ref _loadingImage, value);
-		}
 
-		/// <summary>
-		/// Gets or sets the displayed image
-		/// </summary>
-		public BitmapImage DisplayedImage
-		{
-			get => _displayedImage;
-			set => SetProperty(ref _displayedImage, value);
-		}
+
 
 		private bool _isSearching;
 		/// <summary>
@@ -237,17 +224,6 @@ namespace RightMove.Desktop.View.Main
 				SetProperty(ref _isSearching, value);
 				//SearchAsyncCommand.RaiseCanExecuteChanged();
 			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether selected item has images available
-		/// </summary>
-		public bool HasImages => RightMovePropertyFullSelectedItem != null && RightMovePropertyFullSelectedItem.ImageUrl.Length > 0;
-
-		public string ImageIndexView
-		{
-			get => _imageIndexView;
-			set => SetProperty(ref _imageIndexView, value);
 		}
 
 		private bool _hasSearchExecuted;
@@ -286,30 +262,11 @@ namespace RightMove.Desktop.View.Main
 			set;
 		}
 
-		// Tried to get this AsyncCommand to work but it wouldn't
-		public ICommand UpdateImages
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the NextImageCommand
-		/// </summary>
-		public IAsyncCommand NextImageCommand
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the PrevImageCommand
-		/// </summary>
-		public IAsyncCommand PrevImageCommand
-		{
-			get;
-			set;
-		}
+        public ICommand SelectionChangedCommand
+        {
+            get;
+            set;
+        }
 
 		#endregion
 
@@ -337,56 +294,8 @@ namespace RightMove.Desktop.View.Main
 
 		#endregion
 
-		private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
 
-            await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
-			await UpdateImage(cancellationToken);
-			LoadingImage = false;
-		}
 
-		private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
-		{
-            cancellationToken.ThrowIfCancellationRequested();
-
-            _selectedImageIndex = 0;
-
-			// update the right move full selected item
-			await _rightMoveModel.UpdateSelectedRightmoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
-		}
-
-		/// <summary>
-		/// Update the displayed image
-		/// </summary>
-		/// <param name="cancellationToken">the cancellation token</param>
-		/// <returns></returns>
-		private async Task<BitmapImage> UpdateImage(CancellationToken cancellationToken)
-		{
-            cancellationToken.ThrowIfCancellationRequested();
-
-            LoadingImage = true;
-
-			try
-			{
-				DisplayedImage = await _rightMoveModel.GetImage(_selectedImageIndex);
-				// update the image view
-				UpdateImageIndexView();
-
-				PrevImageCommand.RaiseCanExecuteChanged();
-				NextImageCommand.RaiseCanExecuteChanged();
-				return DisplayedImage;
-			}
-			catch (OperationCanceledException e)
-			{
-				Console.WriteLine($"{nameof(OperationCanceledException)} thrown with message: {e.Message}");
-				return null;
-			}
-			finally
-			{
-				LoadingImage = false;
-			}
-		}
 
 		private void InitializeTimers()
 		{
@@ -402,75 +311,16 @@ namespace RightMove.Desktop.View.Main
 		{
 			SearchAsyncCommand = new AsyncRelayCommand(ExecuteSearchAsync, CanExecuteSearch);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
-			UpdateImages = new RelayCommand(ExecuteUpdateImages, CanExecuteUpdateImages);
-			PrevImageCommand = AsyncCommand.Create(() => ExecuteUpdatePrevImageAsync(null), () => CanExecuteUpdatePrevImage(null));
-			NextImageCommand = AsyncCommand.Create(() => ExecuteUpdateNextImageAsync(null), () => CanExecuteUpdateNextImage(null));
-		}
+            SelectionChangedCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<RightMoveProperty>(ExecuteSelectionChanged, (obj) => true);
+        }
 
-		#region Command functions
+        private void ExecuteSelectionChanged(RightMoveProperty rightMoveProperty)
+        {
+			RightMovePropertyFullSelectedItem = rightMoveProperty;
+        }
 
-		/// <summary>
-		/// Can execute update next image
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
-		private bool CanExecuteUpdateNextImage(object obj)
-		{
-			return RightMovePropertyFullSelectedItem != null && _selectedImageIndex != RightMovePropertyFullSelectedItem.ImageUrl.Length - 1;
-		}
 
-		private async Task<BitmapImage> ExecuteUpdateNextImageAsync(object arg1)
-		{
-			_selectedImageIndex++;
-			_tokenSource.Cancel();
-
-			_tokenSource = new CancellationTokenSource();
-			var token = _tokenSource.Token;
-			var bitmap = await UpdateImage(token);
-			return bitmap;
-		}
-
-		private bool CanExecuteUpdatePrevImage(object obj)
-		{
-			if (RightMovePropertyFullSelectedItem is null)
-			{
-				return false;
-			}
-
-			return _selectedImageIndex > 0;
-		}
-
-		private async Task<BitmapImage> ExecuteUpdatePrevImageAsync(object arg1)
-		{
-			_selectedImageIndex--;
-			_tokenSource.Cancel();
-			_tokenSource = new CancellationTokenSource();
-
-			var token = _tokenSource.Token;
-			var bitmap = await UpdateImage(token);
-			return bitmap;
-		}
-
-		private void ExecuteUpdateImages(object arg)
-		{
-			if (_selectedItemChangedTimer.IsEnabled)
-			{
-				_selectedItemChangedTimer.Stop();
-			}
-
-			_selectedItemChangedTimer.Start();
-			LoadingImage = true;
-		}
-
-		/// <summary>
-		/// Can execute update images
-		/// </summary>
-		/// <param name="arg">the argument</param>
-		/// <returns>true if can execute, false otherwise</returns>
-		private bool CanExecuteUpdateImages(object arg)
-		{
-			return RightMoveSelectedItem != null;
-		}
+        #region Command functions
 
 		/// <summary>
 		/// Execute open link command
@@ -547,12 +397,7 @@ namespace RightMove.Desktop.View.Main
 			}
 		}
 
-		private void UpdateImageIndexView()
-		{
-			ImageIndexView = _selectedImageIndex < 0 || !HasImages
-				? null
-				: $"Image {_selectedImageIndex + 1} / {RightMovePropertyFullSelectedItem.ImageUrl.Length}";
-		}
+
 
 		private async void SelectedItemChanged_Elapsed(object sender, EventArgs e)
 		{
@@ -565,7 +410,7 @@ namespace RightMove.Desktop.View.Main
 				_tokenSource = new CancellationTokenSource();
 				CancellationToken cancellationToken = _tokenSource.Token;
 
-				await UpdateFullSelectedItemAndImage(cancellationToken);
+				//await UpdateFullSelectedItemAndImage(cancellationToken);
 			}
 			catch (Exception)
 			{
