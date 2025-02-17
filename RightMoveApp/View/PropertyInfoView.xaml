@@ -11,15 +11,10 @@
              Name="pv">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:RightMoveImageView
-            NextImage="{Binding NextImageCommand}"
-            PrevImage="{Binding PrevImageCommand}"
-            Image="{Binding DisplayedImage}"
-            ImageIndexView="{Binding ImageIndexView}"
-            />
+        <local:RightMoveImageView RightMoveProperty="{Binding ElementName=pv, Path=RightMoveProperty}"/>
         <TextBox Grid.Row="1" Text="{Binding ElementName=pv, Path=Description}" TextWrapping="Wrap"></TextBox>
     </Grid>
 </UserControl>

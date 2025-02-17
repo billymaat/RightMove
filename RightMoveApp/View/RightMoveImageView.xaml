@@ -7,17 +7,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Name="uc">
-    <Grid HorizontalAlignment="Stretch"
-          Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+    <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Image Grid.Row="0" 
-                    Source="{Binding ElementName=uc, Path=Image}"/>
+                    Source="{Binding ElementName=uc, Path=Image, Mode=TwoWay}"/>
         <userControls:BusySpinner Grid.Row="0"
-                                      Visibility="{Binding LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                      Visibility="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBlock Grid.Row="1" Visibility="{Binding ImageIndexView, Converter={StaticResource NullToVisibilityConverter}}">
             <TextBlock.Text>
                 <Binding ElementName="uc"  Path="ImageIndexView"/>
@@ -37,9 +36,11 @@
             <Button 
                 Grid.Column="0"
                 Content="&lt;" 
+                Click="OnPrevButtonClicked"
                 Command="{Binding ElementName=uc, Path=PrevImage}"/>
             <Button 
                 Grid.Column="1"
+                Click="OnNextButtonClicked"
                 Content=">" 
                 Command="{Binding  ElementName=uc, Path=NextImage }"/>
         </Grid>

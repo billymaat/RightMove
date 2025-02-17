@@ -78,7 +78,8 @@ namespace RightMove.Desktop.View.Main
 			TopViewModel = _searchParamsViewModel;
 			_searchParamsViewModel.SearchParamsUpdated += OnSearchParamsChanged;
 
-            messenger.Register<RightMoveSelectedItemUpdatedMessage>(this, (recipient, message) => RightMoveSelectedItem = message.NewValue);
+			messenger.Register<RightMoveSelectedItemUpdatedMessage>(this, (recipient, message) => RightMoveSelectedItem = message.NewValue);
+            messenger.Register<RightMoveFullSelectedItemUpdatedMessage>(this, (recipient, message) => RightMovePropertyFullSelectedItem = message.NewValue);
             messenger.Register<RightMovePropertyItemsUpdatedMessage>(this, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
         }
 
@@ -311,12 +312,14 @@ namespace RightMove.Desktop.View.Main
 		{
 			SearchAsyncCommand = new AsyncRelayCommand(ExecuteSearchAsync, CanExecuteSearch);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
-            SelectionChangedCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<RightMoveProperty>(ExecuteSelectionChanged, (obj) => true);
+            SelectionChangedCommand = new CommunityToolkit.Mvvm.Input.AsyncRelayCommand<RightMoveProperty>(ExecuteSelectionChanged, (obj) => true);
         }
 
-        private void ExecuteSelectionChanged(RightMoveProperty rightMoveProperty)
+        private async Task ExecuteSelectionChanged(RightMoveProperty rightMoveProperty)
         {
-			RightMovePropertyFullSelectedItem = rightMoveProperty;
+			// need to parse the full image
+            await _rightMoveModel.UpdateSelectedRightMoveItem(rightMoveProperty.RightMoveId, _tokenSource.Token);
+			//RightMovePropertyFullSelectedItem = _rightMoveModel.RightMovePropertyFullSelectedItem;
         }
 
 

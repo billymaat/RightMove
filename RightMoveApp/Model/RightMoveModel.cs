@@ -50,7 +50,7 @@ namespace RightMove.Desktop.Model
 			set
 			{
 				_rightMovePropertyFullSelectedItem = value;
-                _messenger.Send<RightMoveSelectedItemUpdatedMessage>(new RightMoveSelectedItemUpdatedMessage()
+                _messenger.Send<RightMoveFullSelectedItemUpdatedMessage>(new RightMoveFullSelectedItemUpdatedMessage()
                 {
                     NewValue = value
                 });
@@ -68,26 +68,6 @@ namespace RightMove.Desktop.Model
         {
             var fullProperty = await _rightMoveService.GetFullRightMoveItem(rightMoveId, cancellationToken);
             RightMovePropertyFullSelectedItem = fullProperty;
-		}
-
-		public async Task<BitmapImage> GetImage(int index, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			byte[] imageArr = await RightMovePropertyFullSelectedItem.GetImage(index);
-			if (imageArr is null)
-			{
-				return null;
-			}
-
-			if (cancellationToken.IsCancellationRequested)
-			{
-				cancellationToken.ThrowIfCancellationRequested();
-			}
-
-			var bitmapImage = ImageHelper.ToImage(imageArr);
-
-			// freeze as accessed from non UI thread
-			bitmapImage.Freeze();
-			return bitmapImage;
 		}
 	}
 }
