@@ -89,6 +89,7 @@ namespace RightMove.Desktop.View
             get { return (bool)GetValue(LoadingImageProperty); }
             set { SetValue(LoadingImageProperty, value); }
         }
+
         private async void OnPrevButtonClicked(object sender, RoutedEventArgs e)
         {
             if (_imgIndex > 0)
