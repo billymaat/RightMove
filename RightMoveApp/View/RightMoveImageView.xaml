@@ -14,10 +14,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Image Grid.Row="0" 
-                    Source="{Binding ElementName=uc, Path=Image}"/>
+                    Source="{Binding ElementName=uc, Path=Image}"
+                    Stretch="Uniform"
+                    MinHeight="200"/>
         <userControls:BusySpinner Grid.Row="0"
                                       Visibility="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <TextBlock Grid.Row="1">
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center">
             <TextBlock.Text>
                 <Binding ElementName="uc"  Path="ImageIndexView"/>
             </TextBlock.Text>
