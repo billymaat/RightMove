@@ -37,12 +37,12 @@
                 Grid.Column="0"
                 Content="&lt;" 
                 Click="OnPrevButtonClicked"
-                IsEnabled="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToReverseConverter}}"
+                IsEnabled="{Binding ElementName=uc, Path=PrevButtonEnabled}"
                 Command="{Binding ElementName=uc, Path=PrevImage}"/>
             <Button 
                 Grid.Column="1"
                 Click="OnNextButtonClicked"
-                IsEnabled="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToReverseConverter}}"
+                IsEnabled="{Binding ElementName=uc, Path=NextButtonEnabled}"
                 Content=">" 
                 Command="{Binding  ElementName=uc, Path=NextImage }"/>
         </Grid>

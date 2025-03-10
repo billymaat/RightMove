@@ -317,9 +317,13 @@ namespace RightMove.Desktop.View.Main
 
         private async Task ExecuteSelectionChanged(RightMoveProperty rightMoveProperty)
         {
+            if (rightMoveProperty == null)
+            {
+                return;
+            }
+
 			// need to parse the full image
             await _rightMoveModel.UpdateSelectedRightMoveItem(rightMoveProperty.RightMoveId, _tokenSource.Token);
-			//RightMovePropertyFullSelectedItem = _rightMoveModel.RightMovePropertyFullSelectedItem;
         }
 
 

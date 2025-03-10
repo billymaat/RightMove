@@ -14,6 +14,8 @@ namespace RightMove.Desktop.View
     /// </summary>
     public partial class RightMoveImageView : UserControl
 	{
+        private int _imgIndex = 0;
+
         public event EventHandler NextImageClicked;
         public event EventHandler PrevImageClicked;
 
@@ -82,12 +84,36 @@ namespace RightMove.Desktop.View
         }
 
         public static readonly DependencyProperty LoadingImageProperty = DependencyProperty.Register(
-            nameof(LoadingImage), typeof(bool), typeof(RightMoveImageView), new PropertyMetadata(default(bool)));
+            nameof(LoadingImage), typeof(bool), typeof(RightMoveImageView), new PropertyMetadata(default(bool), OnLoadingImageUpdated));
+
+        private static void OnLoadingImageUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = (RightMoveImageView)d;
+            ctrl.UpdateButtonsEnabled();
+        }
 
         public bool LoadingImage
         {
             get { return (bool)GetValue(LoadingImageProperty); }
             set { SetValue(LoadingImageProperty, value); }
+        }
+
+        public static readonly DependencyProperty NextButtonEnabledProperty = DependencyProperty.Register(
+            nameof(NextButtonEnabled), typeof(bool), typeof(RightMoveImageView), new PropertyMetadata(true));
+
+        public bool NextButtonEnabled
+        {
+            get { return (bool)GetValue(NextButtonEnabledProperty); }
+            set { SetValue(NextButtonEnabledProperty, value); }
+        }
+
+        public static readonly DependencyProperty PrevButtonEnabledProperty = DependencyProperty.Register(
+            nameof(PrevButtonEnabled), typeof(bool), typeof(RightMoveImageView), new PropertyMetadata(default(bool)));
+
+        public bool PrevButtonEnabled
+        {
+            get { return (bool)GetValue(PrevButtonEnabledProperty); }
+            set { SetValue(PrevButtonEnabledProperty, value); }
         }
 
         private async void OnPrevButtonClicked(object sender, RoutedEventArgs e)
@@ -103,7 +129,7 @@ namespace RightMove.Desktop.View
 
         private async void OnNextButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (_imgIndex < RightMoveProperty.ImageUrl.Length - 2)
+            if (_imgIndex < RightMoveProperty.ImageUrl.Length - 1)
             {
                 _imgIndex++;
                 await LoadImage(RightMoveProperty, _imgIndex);
@@ -111,8 +137,6 @@ namespace RightMove.Desktop.View
 
             NextImageClicked?.Invoke(this, EventArgs.Empty);
         }
-
-        private int _imgIndex = 0;
 
         private async Task ResetImage(RightMoveProperty rightMoveProperty)
         {
@@ -126,6 +150,25 @@ namespace RightMove.Desktop.View
             var img = await _rightMoveImageService.GetImage(rightMoveProperty, imgIndex);
             Image = img;
             LoadingImage = false;
+        }
+
+        // Callback when IsLoading, Index, or MaxIndex changes
+        private void UpdateButtonsEnabled()
+        {
+            UpdatePrevEnabled();
+            UpdateNextEnabled();
+        }
+
+        private void UpdatePrevEnabled()
+        {
+            // Automatically updates IsNextDisabled
+            SetValue(PrevButtonEnabledProperty, !LoadingImage && _imgIndex > 0);
+        }
+
+        private void UpdateNextEnabled()
+        {
+            // Automatically updates IsNextDisabled
+            SetValue(NextButtonEnabledProperty, !LoadingImage && _imgIndex < RightMoveProperty.ImageUrl.Length - 1);
         }
     }
 }
