@@ -5,22 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:userControls="clr-namespace:RightMove.Desktop.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid HorizontalAlignment="Stretch"
-          Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Name="uc">
+    <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Image Grid.Row="0" 
-                    Source="{Binding DisplayedImage}" 
-                    />
+                    Source="{Binding ElementName=uc, Path=Image}"/>
         <userControls:BusySpinner Grid.Row="0"
-                                      Visibility="{Binding LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <TextBlock Grid.Row="1" Visibility="{Binding ImageIndexView, Converter={StaticResource NullToVisibilityConverter}}">
+                                      Visibility="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBlock Grid.Row="1">
             <TextBlock.Text>
-                <Binding Path="ImageIndexView"/>
+                <Binding ElementName="uc"  Path="ImageIndexView"/>
             </TextBlock.Text>
         </TextBlock>
         <Grid Grid.Row="2" HorizontalAlignment="Stretch">
@@ -34,14 +33,18 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnLeft"
-                            Grid.Column="0"
-                            Content="&lt;" 
-                            Command="{Binding PrevImageCommand}"/>
-            <Button x:Name="btnRight"
-                            Grid.Column="1"
-                        Content=">" 
-                        Command="{Binding NextImageCommand}"/>
+            <Button 
+                Grid.Column="0"
+                Content="&lt;" 
+                Click="OnPrevButtonClicked"
+                IsEnabled="{Binding ElementName=uc, Path=PrevButtonEnabled}"
+                Command="{Binding ElementName=uc, Path=PrevImage}"/>
+            <Button 
+                Grid.Column="1"
+                Click="OnNextButtonClicked"
+                IsEnabled="{Binding ElementName=uc, Path=NextButtonEnabled}"
+                Content=">" 
+                Command="{Binding  ElementName=uc, Path=NextImage }"/>
         </Grid>
     </Grid>
 </UserControl>

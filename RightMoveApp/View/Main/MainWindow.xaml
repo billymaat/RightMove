@@ -66,19 +66,23 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                <view:ResultsDataGridView/>
+                <view:ResultsDataGridView RightMovePropertyItems="{Binding RightMovePropertyItems}"
+                                          SelectionChanged="{Binding SelectionChangedCommand}"/>
                 <Label Grid.Column="0" Grid.Row="1" 
                         Content="{Binding Path=Info}"/>
                 </Grid>
                 <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
-                              Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
-                <view:PropertyInfoView MaxWidth="600" Grid.Column="2"/>
+                              Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
+            <view:PropertyInfoView Grid.Column="2"
+                                   Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
+                                   Description="{Binding RightMovePropertyFullSelectedItem.Desc}"
+                                   RightMoveProperty="{Binding RightMovePropertyFullSelectedItem}" MaxWidth="600" />
             </Grid>
         <ProgressBar Grid.Column="0" Grid.Row="3"
                         Minimum="0" Maximum="100"
                         MinHeight="10"
                         Name="pbStatus"
                         Visibility="{Binding IsSearching, Converter={StaticResource BooleanToCollapsedVisiblilityConverter}}"
-                        IsIndeterminate="{Binding SearchAsyncCommand.Execution.IsSuccessfullyCompleted, Converter={StaticResource BooleanToReverseConverter}}"/>
+                        IsIndeterminate="{Binding SearchAsyncCommand.ExecutionTask.IsCompletedSuccessfully, Converter={StaticResource BooleanToReverseConverter}}"/>
     </Grid>
 </mah:MetroWindow>

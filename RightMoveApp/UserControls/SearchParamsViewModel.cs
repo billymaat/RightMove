@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RightMove.DataTypes;
+using static RightMove.Desktop.UserControls.AutoCompleteComboBox;
 
 namespace RightMove.Desktop.UserControls
 {
@@ -19,7 +25,20 @@ namespace RightMove.Desktop.UserControls
 			set;
 		}
 
-		public string RegionLocation
+        public RightMoveRegion SelectedRightMoveRegion
+        {
+            get => _selectedRightMoveRegion;
+            set
+            {
+                if (SetProperty(ref _selectedRightMoveRegion, value))
+                {
+                    SearchParams.RegionLocation = _selectedRightMoveRegion?.Id;
+					OnSearchParamsChanged();
+                }
+            }
+        }
+
+        public string RegionLocation
 		{
 			get => SearchParams.RegionLocation;
 			set
@@ -98,8 +117,11 @@ namespace RightMove.Desktop.UserControls
 		}
 
 		private PropertyTypeEnum _propertyType;
+        private ObservableCollection<string> _regionStrings;
+        private RightMoveRegion _selectedRightMoveRegion;
+        private AutocompleteSearchCallback _rightMoveFunc = DefaultFunc;
 
-		public PropertyTypeEnum PropertyType
+        public PropertyTypeEnum PropertyType
 		{
 			get { return SearchParams.PropertyType; }
 			set
@@ -126,7 +148,35 @@ namespace RightMove.Desktop.UserControls
 			}
 		}
 
-		public void OnSearchParamsChanged()
+        public ObservableCollection<string> RegionStrings
+        {
+            get => _regionStrings;
+            set => SetProperty(ref _regionStrings, value);
+        }
+
+        public static AutocompleteSearchCallback DefaultFunc = async (text, token) =>
+        {
+            var regionService = new RightMoveRegionService();
+
+            try
+            {
+                var items = (await regionService.SearchAsync(text, token)).ToList();
+                return items;
+            }
+            catch (TaskCanceledException)
+            {
+                return new List<RightMoveRegion>();
+            }
+        };
+
+        public AutocompleteSearchCallback RightMoveFunc
+        {
+            get => _rightMoveFunc;
+            set => SetProperty(ref _rightMoveFunc, value);
+        }
+
+
+        public void OnSearchParamsChanged()
 		{
 			SearchParamsUpdated?.Invoke(this, new EventArgs());
 		}

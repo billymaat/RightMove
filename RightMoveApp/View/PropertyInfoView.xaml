@@ -4,17 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RightMove.Desktop.View"
-             xmlns:main="clr-namespace:RightMove.Desktop.View.Main"
+             xmlns:viewModel="clr-namespace:RightMove.Desktop.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance main:MainViewModel}"
-             >
+             d:DataContext="{d:DesignInstance viewModel:PropertyInfoViewModel}"
+             Name="pv">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:RightMoveImageView></local:RightMoveImageView>
-        <TextBox Grid.Row="1" Text="{Binding RightMovePropertyFullSelectedItem.Desc}" TextWrapping="Wrap"></TextBox>
+        <local:RightMoveImageView RightMoveProperty="{Binding ElementName=pv, Path=RightMoveProperty}"/>
+        <TextBox Grid.Row="1" Text="{Binding ElementName=pv, Path=Description}" TextWrapping="Wrap"></TextBox>
     </Grid>
 </UserControl>

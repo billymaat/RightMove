@@ -6,15 +6,16 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:valueConverters="clr-namespace:RightMove.Desktop.ValueConverters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Name="rdgv">
     <UserControl.Resources>
         <valueConverters:RightMovePropertyToDateConverter x:Key="RightMovePropertyToDateConverter"/>
     </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="listView" 
-                              Grid.Row="0"
-                    ItemsSource="{Binding Path=RightMovePropertyItems}" 
-                    SelectedItem="{Binding Path=RightMoveSelectedItem}"
+                    Grid.Row="0"
+                    ItemsSource="{Binding ElementName=rdgv, Path=RightMovePropertyItems}" 
+                    SelectedItem="{Binding ElementName=rdgv, Path=RightMoveSelectedItem}"
                     AutoGenerateColumns="False"
                     HorizontalGridLinesBrush="#6297C8"
                     VerticalGridLinesBrush="#6297C8"
@@ -33,12 +34,6 @@
                     <Setter Property="ToolTip" Value="{Binding}"/>
                 </Style>
             </DataGrid.CellStyle>
-            <DataGrid.InputBindings>
-                <KeyBinding Key="Right"
-                    Command="{Binding NextImageCommand}"/>
-                <KeyBinding Key="Left"
-                    Command="{Binding PrevImageCommand}"/>
-            </DataGrid.InputBindings>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding OpenLink}" 
@@ -46,8 +41,9 @@
                                     PassEventArgsToCommand="True" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding UpdateImages, Delay=3000}"
-                                    CommandParameter="{Binding Path=RightMoveSelectedItem}"/>
+                    <i:InvokeCommandAction 
+                        Command="{Binding ElementName=rdgv, Path=SelectionChanged}"
+                        CommandParameter="{Binding ElementName=rdgv, Path= RightMoveSelectedItem }"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <DataGrid.ContextMenu>
