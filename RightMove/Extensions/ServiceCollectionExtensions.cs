@@ -14,7 +14,6 @@ namespace RightMove.Extensions
         public static void RegisterRightMoveLibrary(this IServiceCollection services)
         {
             services.AddTransient<IHttpService, HttpService>()
-            .AddScoped<RightMoveOutcodeService>()
             .AddScoped<RightMoveRegionService>()
             .AddScoped<RightMoveParserFactory>()
             .AddScoped<RightMovePropertyFactory>()
