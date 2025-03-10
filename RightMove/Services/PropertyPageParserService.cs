@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using RightMove.DataTypes;
 using RightMove.Factory;
@@ -82,7 +83,14 @@ namespace RightMove.Services
 			RightMoveProperty property = _propertyFactory.Create();
 
 			property.Address = $"{Json.propertyData.address.displayAddress}, {Json.propertyData.address.ukCountry}";
-			property.Desc = Json.propertyData.text.description;
+			var desc = Json.propertyData.text.description;
+            if (!string.IsNullOrEmpty(desc))
+            {
+                var htmklDoc = new HtmlDocument();
+                htmklDoc.LoadHtml(desc);
+                property.Desc = htmklDoc.DocumentNode.InnerText;
+            }
+
 			property.Agent = Json.propertyData.customer.branchDisplayName;
 
 
