@@ -58,7 +58,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto" 
+                    <ColumnDefinition Width="400" 
                                   MinWidth="{Binding RightMoveSelectedItem, Converter={StaticResource MinWidthConverter}}"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
