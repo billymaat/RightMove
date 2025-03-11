@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
 using RightMove.DataTypes;
 using RightMove.Desktop.Helpers;
+using RightMove.Desktop.Mappers;
 using RightMove.Desktop.Messages;
 using RightMove.Desktop.Services;
 using RightMove.Services;
@@ -18,12 +19,15 @@ namespace RightMove.Desktop.Model
 	public class RightMoveModel
 	{
         private readonly RightMoveService _rightMoveService;
+        private readonly RightMoveSearchHistoryWriter _searchHistoryWriter;
         private readonly IMessenger _messenger;
 
         public RightMoveModel(RightMoveService rightMoveService,
+            RightMoveSearchHistoryWriter searchHistoryWriter,
             IMessenger messenger)
 		{
             _rightMoveService = rightMoveService;
+            _searchHistoryWriter = searchHistoryWriter;
             _messenger = messenger;
         }
 
@@ -59,6 +63,10 @@ namespace RightMove.Desktop.Model
 
         public async Task UpdateRightMoveItems(SearchParams searchParams)
         {
+            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, "Some text", searchParams);
+            var dto = historySearchItem.ToDto();
+            _searchHistoryWriter.WriteSearchHistory(dto);
+
             var rightMoveItems = await _rightMoveService.GetRightMoveItems(searchParams);
             var items = rightMoveItems.ToList();
             RightMovePropertyItems = items;
