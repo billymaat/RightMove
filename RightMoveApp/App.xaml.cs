@@ -82,7 +82,9 @@ namespace RightMove.Desktop
 
         private void RegisterServices(IServiceCollection services)
         {
-            services.AddTransient<RightMoveService>();
+            services.AddTransient<RightMoveService>()
+                .AddTransient<RightMoveSearchHistoryWriter>()
+                .AddTransient<RightMoveSearchHistoryReader>();
         }
 
 		protected override async void OnStartup(StartupEventArgs e)
