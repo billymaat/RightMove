@@ -46,7 +46,25 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.Row="0" Header="Search Params" Panel.ZIndex="10">
-            <ContentControl Content="{Binding TopViewModel}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ContentControl 
+                    Grid.Column="0"
+                    Content="{Binding TopViewModel}"/>
+                <ListView 
+                    Grid.Column="1"
+                    ItemsSource="{Binding SearchParamsHistory}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayText}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+            </Grid>
         </GroupBox>
         <Button x:Name="btnSearch" Grid.Column="0" Grid.Row="1" 
                 Content="Search" 

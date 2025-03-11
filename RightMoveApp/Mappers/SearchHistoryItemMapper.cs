@@ -14,13 +14,13 @@ namespace RightMove.Desktop.Mappers
             };
         }
 
-        //public static SearchHistoryItem ToDomain(SearchHistoryItemDto dto)
-        //{
-        //    return new SearchHistoryItem(
-        //        dto.CreatedAt,
-        //        dto.DisplayText,
-        //        dto.SearchParams.ToDomain()
-        //    );
-        //}
+        public static SearchHistoryItem ToDomain(this SearchHistoryItemDto dto)
+        {
+            return new SearchHistoryItem(
+                dto.CreatedAt,
+                dto.DisplayText,
+                dto.SearchParams.ToDomain()
+            );
+        }
     }
 }

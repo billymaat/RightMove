@@ -61,9 +61,9 @@ namespace RightMove.Desktop.Model
             }
 		}
 
-        public async Task UpdateRightMoveItems(SearchParams searchParams)
+        public async Task UpdateRightMoveItems(SearchParams searchParams, string text)
         {
-            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, "Some text", searchParams);
+            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, text, searchParams);
             var dto = historySearchItem.ToDto();
             _searchHistoryWriter.WriteSearchHistory(dto);
 
