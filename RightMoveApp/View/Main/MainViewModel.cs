@@ -87,7 +87,8 @@ namespace RightMove.Desktop.View.Main
 			messenger.Register<RightMoveSelectedItemUpdatedMessage>(this, (recipient, message) => RightMoveSelectedItem = message.NewValue);
             messenger.Register<RightMoveFullSelectedItemUpdatedMessage>(this, (recipient, message) => RightMovePropertyFullSelectedItem = message.NewValue);
             messenger.Register<RightMovePropertyItemsUpdatedMessage>(this, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
-        }
+            messenger.Register<SearchHistoryItemsUpdatedMessage>(this, (recipient, message) => SearchParamsHistory = new ObservableCollection<SearchHistoryItem>(message.NewValue));
+		}
 
 		/// <summary>
 		/// Gets the Loading text in the busy spinner
@@ -395,7 +396,7 @@ namespace RightMove.Desktop.View.Main
 
 			// create a copy if search params in case its changed during search
 			SearchParams searchParams = new SearchParams(_searchParamsViewModel.SearchParams);
-			await _rightMoveModel.UpdateRightMoveItems(searchParams, _searchParamsViewModel.SearchText);
+			await _rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
 
 			UpdateAveragePrice();
 

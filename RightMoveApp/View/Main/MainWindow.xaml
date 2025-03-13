@@ -69,6 +69,10 @@
                     </i:Interaction.Triggers>
                     <ListView.ItemTemplate>
                         <DataTemplate>
+                            <Border CornerRadius="6"
+                                    BorderBrush="Gray"
+                                    BorderThickness="1"
+                                    Padding="8">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="{Binding DisplayText}"/>
                                 <TextBlock>
@@ -102,6 +106,7 @@
                                     </TextBlock.Text>
                                 </TextBlock>
                             </StackPanel>
+                            </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
 
