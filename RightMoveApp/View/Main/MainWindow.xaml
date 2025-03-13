@@ -52,14 +52,56 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <ContentControl 
+                    Name="content"
                     Grid.Column="0"
                     Content="{Binding TopViewModel}"/>
+                
                 <ListView 
+                    Height="{Binding ActualHeight, ElementName=content}"
                     Grid.Column="1"
-                    ItemsSource="{Binding SearchParamsHistory}">
+                    ItemsSource="{Binding SearchParamsHistory}"
+                    Name="SearchHistoryList"
+                    >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding SearchItemDoubleClickCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding DisplayText}"/>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding DisplayText}"/>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}Beds : {0} - {1}">
+                                            <Binding Path="SearchParams.MinBedrooms"/>
+                                            <Binding Path="SearchParams.MaxBedrooms"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}Property type: {0}">
+                                            <Binding Path="SearchParams.PropertyType"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}Price range: £{0} - £{1}">
+                                            <Binding Path="SearchParams.MinPrice"/>
+                                            <Binding Path="SearchParams.MaxPrice"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}Radius: {0}">
+                                            <Binding Path="SearchParams.Radius"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
 
