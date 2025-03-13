@@ -20,14 +20,17 @@ namespace RightMove.Desktop.Model
 	{
         private readonly RightMoveService _rightMoveService;
         private readonly RightMoveSearchHistoryWriter _searchHistoryWriter;
+        private readonly RightMoveSearchHistoryReader _searchHistoryReader;
         private readonly IMessenger _messenger;
 
         public RightMoveModel(RightMoveService rightMoveService,
             RightMoveSearchHistoryWriter searchHistoryWriter,
-            IMessenger messenger)
+			RightMoveSearchHistoryReader searchHistoryReader,
+			IMessenger messenger)
 		{
             _rightMoveService = rightMoveService;
             _searchHistoryWriter = searchHistoryWriter;
+            _searchHistoryReader = searchHistoryReader;
             _messenger = messenger;
         }
 
@@ -46,7 +49,21 @@ namespace RightMove.Desktop.Model
             }
 		}
 
-		private RightMoveProperty _rightMovePropertyFullSelectedItem;
+        public List<SearchHistoryItem> SearchHistoryItems
+        {
+	        get => _searchHistoryItems;
+	        set
+	        {
+		        _searchHistoryItems = value;
+		        _messenger.Send(new SearchHistoryItemsUpdatedMessage()
+		        {
+			        NewValue = value
+		        });
+	        } 
+        }
+
+        private RightMoveProperty _rightMovePropertyFullSelectedItem;
+		private List<SearchHistoryItem> _searchHistoryItems;
 
 		public RightMoveProperty RightMovePropertyFullSelectedItem
 		{
@@ -61,16 +78,20 @@ namespace RightMove.Desktop.Model
             }
 		}
 
-        public async Task UpdateRightMoveItems(SearchParams searchParams)
+        public async Task Search(SearchParams searchParams, string text)
         {
-            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, "Some text", searchParams);
+            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, text, searchParams);
             var dto = historySearchItem.ToDto();
             _searchHistoryWriter.WriteSearchHistory(dto);
 
             var rightMoveItems = await _rightMoveService.GetRightMoveItems(searchParams);
             var items = rightMoveItems.ToList();
             RightMovePropertyItems = items;
-        }
+
+            var searchHistory = _searchHistoryReader.ReadExistingHistory()
+	            .Select(o => o.ToDomain());
+            SearchHistoryItems = searchHistory.ToList();
+		}
 
         public async Task UpdateSelectedRightMoveItem(int rightMoveId, CancellationToken cancellationToken)
         {

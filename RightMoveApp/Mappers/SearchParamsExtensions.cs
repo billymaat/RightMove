@@ -24,5 +24,21 @@ namespace RightMove.Desktop.Mappers
                 Radius = searchParams.Radius
             };
         }
-    }
+
+        public static SearchParams ToDomain(this SearchParamsDto dto)
+        {
+	        return new SearchParams
+			{
+		        OutcodeLocation = dto.OutcodeLocation,
+		        RegionLocation = dto.RegionLocation,
+		        MinBedrooms = dto.MinBedrooms,
+		        MaxBedrooms = dto.MaxBedrooms,
+		        MinPrice = dto.MinPrice,
+		        MaxPrice = dto.MaxPrice,
+		        PropertyType = dto.PropertyType,
+		        Sort = dto.Sort,
+		        Radius = dto.Radius
+	        };
+        }
+	}
 }

@@ -19,13 +19,33 @@ namespace RightMove.Desktop.UserControls
 
 		public event EventHandler SearchParamsUpdated;
 
+
 		public SearchParams SearchParams
 		{
-			get;
-			set;
+			get => _searchParams;
+			set
+			{
+				if (SetProperty(ref _searchParams, value))
+				{
+					OnPropertyChanged(nameof(RegionLocation));
+					OnPropertyChanged(nameof(Radius));
+					OnPropertyChanged(nameof(MinBedrooms));
+					OnPropertyChanged(nameof(MaxBedrooms));
+					OnPropertyChanged(nameof(MinPrice));
+					OnPropertyChanged(nameof(MaxPrice));
+					OnPropertyChanged(nameof(PropertyType));
+					OnPropertyChanged(nameof(SortType));
+				}
+			}
 		}
 
-        public RightMoveRegion SelectedRightMoveRegion
+		public string SearchText
+		{
+			get => _searchText;
+			set => SetProperty(ref _searchText, value);
+		}
+
+		public RightMoveRegion SelectedRightMoveRegion
         {
             get => _selectedRightMoveRegion;
             set
@@ -120,6 +140,8 @@ namespace RightMove.Desktop.UserControls
         private ObservableCollection<string> _regionStrings;
         private RightMoveRegion _selectedRightMoveRegion;
         private AutocompleteSearchCallback _rightMoveFunc = DefaultFunc;
+        private string _searchText;
+        private SearchParams _searchParams;
 
         public PropertyTypeEnum PropertyType
 		{

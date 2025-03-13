@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,6 +43,7 @@ namespace RightMove.Desktop.View.Main
 
 		// The right move model
 		private readonly RightMoveModel _rightMoveModel;
+		private readonly SearchHistoryService _searchHistoryService;
 		private readonly AppSettings _settings;
 		private SearchParamsViewModel _searchParamsViewModel;
 
@@ -52,6 +54,7 @@ namespace RightMove.Desktop.View.Main
         public MainViewModel(IOptions<AppSettings> settings,
 			PropertyInfoViewModel propertyInfoViewModel,
 			RightMoveModel rightMoveModel,
+			SearchHistoryService searchHistoryService,
 			NavigationService navigationService,
 			IMessenger messenger,
 			ILogger<MainViewModel> logger)
@@ -68,6 +71,7 @@ namespace RightMove.Desktop.View.Main
 			InitializeTimers();
 
 			_rightMoveModel = rightMoveModel;
+			_searchHistoryService = searchHistoryService;
 			IsSearching = false;
 
             _searchParamsViewModel = new SearchParamsViewModel();
@@ -78,10 +82,13 @@ namespace RightMove.Desktop.View.Main
 			TopViewModel = _searchParamsViewModel;
 			_searchParamsViewModel.SearchParamsUpdated += OnSearchParamsChanged;
 
+			SearchParamsHistory = new ObservableCollection<SearchHistoryItem>(_searchHistoryService.GetItems());
+
 			messenger.Register<RightMoveSelectedItemUpdatedMessage>(this, (recipient, message) => RightMoveSelectedItem = message.NewValue);
             messenger.Register<RightMoveFullSelectedItemUpdatedMessage>(this, (recipient, message) => RightMovePropertyFullSelectedItem = message.NewValue);
             messenger.Register<RightMovePropertyItemsUpdatedMessage>(this, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
-        }
+            messenger.Register<SearchHistoryItemsUpdatedMessage>(this, (recipient, message) => SearchParamsHistory = new ObservableCollection<SearchHistoryItem>(message.NewValue));
+		}
 
 		/// <summary>
 		/// Gets the Loading text in the busy spinner
@@ -151,6 +158,12 @@ namespace RightMove.Desktop.View.Main
         {
             get => _rightMovePropertyFullSelectedItem;
             set => SetProperty(ref _rightMovePropertyFullSelectedItem, value);
+        }
+
+        public ObservableCollection<SearchHistoryItem> SearchParamsHistory
+        {
+	        get => _searchParamsHistory;
+	        set => SetProperty(ref _searchParamsHistory, value);
         }
 
         public List<int> Prices
@@ -230,6 +243,7 @@ namespace RightMove.Desktop.View.Main
 		private bool _hasSearchExecuted;
         private RightMoveProperty _rightMovePropertyFullSelectedItem;
         private ObservableCollection<RightMoveProperty> _rightMovePropertyItems;
+        private ObservableCollection<SearchHistoryItem> _searchParamsHistory;
 
         public bool HasSearchedExecuted
 		{
@@ -239,6 +253,11 @@ namespace RightMove.Desktop.View.Main
 
 		#region Commands
 
+		public ICommand SearchItemDoubleClickCommand
+		{
+			get;
+			set;
+		}
 		/// <summary>
 		/// Gets or sets the search command
 		/// </summary>
@@ -310,12 +329,25 @@ namespace RightMove.Desktop.View.Main
 		/// </summary>
 		private void InitializeCommands()
 		{
+			SearchItemDoubleClickCommand = new RelayCommand<SearchHistoryItem>(ExecuteSearchItemDoubleClick, CanExecuteSearchItemDoubleClick);
 			SearchAsyncCommand = new AsyncRelayCommand(ExecuteSearchAsync, CanExecuteSearch);
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
             SelectionChangedCommand = new CommunityToolkit.Mvvm.Input.AsyncRelayCommand<RightMoveProperty>(ExecuteSelectionChanged, (obj) => true);
         }
 
-        private async Task ExecuteSelectionChanged(RightMoveProperty rightMoveProperty)
+		private bool CanExecuteSearchItemDoubleClick(SearchHistoryItem arg)
+		{
+			return true;
+		}
+
+		private void ExecuteSearchItemDoubleClick(SearchHistoryItem obj)
+		{
+			_searchParamsViewModel.SearchParams = obj.SearchParams;
+			_searchParamsViewModel.SearchText = obj.DisplayText;
+			SearchAsyncCommand.NotifyCanExecuteChanged();
+		}
+
+		private async Task ExecuteSelectionChanged(RightMoveProperty rightMoveProperty)
         {
             if (rightMoveProperty == null)
             {
@@ -364,7 +396,7 @@ namespace RightMove.Desktop.View.Main
 
 			// create a copy if search params in case its changed during search
 			SearchParams searchParams = new SearchParams(_searchParamsViewModel.SearchParams);
-			await _rightMoveModel.UpdateRightMoveItems(searchParams);
+			await _rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
 
 			UpdateAveragePrice();
 

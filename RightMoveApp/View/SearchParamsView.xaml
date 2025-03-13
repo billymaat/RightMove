@@ -36,7 +36,8 @@
                                            ItemsSource="{Binding ElementName=uc, Path=SearchString}" 
                                            SelectedRightMoveRegion="{Binding Path=SelectedRightMoveRegion, Mode=TwoWay}"
                                            MinimumCharactersForSearch="2"
-                                           AutocompleteSearchFunc="{Binding RightMoveFunc}"/>
+                                           AutocompleteSearchFunc="{Binding RightMoveFunc}"
+                                           Text="{Binding SearchText, Mode=TwoWay}"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Search radius"/>
         <ComboBox Template="{DynamicResource ComboBoxTemplate1}" Grid.Column="1" Grid.Row="1" Name="comboSearchRadius" 
