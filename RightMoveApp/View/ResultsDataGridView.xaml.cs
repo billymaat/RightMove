@@ -59,6 +59,15 @@ namespace RightMove.Desktop.View
             set { SetValue(DelayProperty, value); }
         }
 
+        public static readonly DependencyProperty OpenLinkProperty = DependencyProperty.Register(
+	        nameof(OpenLink), typeof(ICommand), typeof(ResultsDataGridView), new PropertyMetadata(default(ICommand)));
+
+        public ICommand OpenLink
+        {
+	        get { return (ICommand)GetValue(OpenLinkProperty); }
+	        set { SetValue(OpenLinkProperty, value); }
+        }
+
 		/// <summary>
 		/// Grid view column event handler clicked
 		/// </summary>

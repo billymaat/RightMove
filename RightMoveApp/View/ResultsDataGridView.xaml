@@ -15,7 +15,7 @@
         <DataGrid x:Name="listView" 
                     Grid.Row="0"
                     ItemsSource="{Binding ElementName=rdgv, Path=RightMovePropertyItems}" 
-                    SelectedItem="{Binding ElementName=rdgv, Path=RightMoveSelectedItem}"
+                    SelectedItem="{Binding ElementName=rdgv, Path=RightMoveSelectedItem, Mode=OneWayToSource}"
                     AutoGenerateColumns="False"
                     HorizontalGridLinesBrush="#6297C8"
                     VerticalGridLinesBrush="#6297C8"
@@ -47,10 +47,9 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <DataGrid.ContextMenu>
-                <ContextMenu>
+                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                     <MenuItem Header="Open Link" 
-                        Command="{Binding OpenLink}" 
-                        CommandParameter="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                        Command="{Binding OpenLink}" />
                     <MenuItem Header="View Images" 
                         Command="{Binding LoadImageWindow}"
                         CommandParameter="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
