@@ -13,15 +13,16 @@
     </UserControl.Resources>
     <Grid>
         <DataGrid x:Name="listView" 
-                    Grid.Row="0"
-                    ItemsSource="{Binding ElementName=rdgv, Path=RightMovePropertyItems}" 
-                    SelectedItem="{Binding ElementName=rdgv, Path=RightMoveSelectedItem, Mode=OneWayToSource}"
-                    AutoGenerateColumns="False"
-                    HorizontalGridLinesBrush="#6297C8"
-                    VerticalGridLinesBrush="#6297C8"
-                    HorizontalAlignment="Stretch"
-                    IsReadOnly="True"
-                    AlternationCount="2">
+                  Grid.Row="0"
+                  ItemsSource="{Binding ElementName=rdgv, Path=RightMovePropertyItems}" 
+                  SelectedItem="{Binding ElementName=rdgv, Path=RightMoveSelectedItem, Mode=OneWayToSource}"
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="#6297C8"
+                  VerticalGridLinesBrush="#6297C8"
+                  HorizontalAlignment="Stretch"
+                  HorizontalScrollBarVisibility="Visible"
+                  IsReadOnly="True"
+                  AlternationCount="2">
             <!--<DataGrid.RowDetailsTemplate>
                         <DataTemplate>
                             <TextBlock Background="Orange" Text="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.PriceHistory}"
@@ -56,14 +57,14 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="20"/>
-                <DataGridTextColumn Header="RM Id" Binding="{Binding RightMoveId}" Width="50"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
+                <!--<DataGridTextColumn Header="RM Id" Binding="{Binding RightMoveId}" Width="Auto"/>-->
                 <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:C0}.00}" Width="100"/>
-                <DataGridTextColumn Header="House Type" Binding="{Binding HouseInfo}" Width="100"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="100"/>
-                <DataGridTextColumn Header="Desc" Binding="{Binding Desc}" Width="100"/>
+                <DataGridTextColumn Header="House Type" Binding="{Binding HouseInfo}" Width="Auto"/>
+                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="Auto"/>
+                <DataGridTextColumn Header="Desc" Binding="{Binding Desc}" Width="Auto"/>
                 <DataGridTextColumn Header="Date" Binding="{Binding Path=., Converter={StaticResource RightMovePropertyToDateConverter}}" Width="100"/>
-                <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="100"/>
+                <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
