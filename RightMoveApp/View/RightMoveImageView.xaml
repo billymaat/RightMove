@@ -16,7 +16,7 @@
         <Image Grid.Row="0" 
                     Source="{Binding ElementName=uc, Path=Image}"
                     Stretch="Uniform"
-                    MinHeight="200"/>
+                    MinHeight="100"/>
         <userControls:BusySpinner Grid.Row="0"
                                       Visibility="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBlock Grid.Row="1" HorizontalAlignment="Center">
