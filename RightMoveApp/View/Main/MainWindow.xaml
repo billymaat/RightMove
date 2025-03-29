@@ -11,6 +11,7 @@
         xmlns:view="clr-namespace:RightMove.Desktop.View"
         xmlns:valueConverters="clr-namespace:RightMove.Desktop.UserControls.ValueConverters"
         xmlns:main="clr-namespace:RightMove.Desktop.View.Main"
+        xmlns:viewModel="clr-namespace:RightMove.Desktop.ViewModel"
         mc:Ignorable="d"
         Title="RightMove Scraper" Height="450" Width="800" Language="en-GB"
         HorizontalAlignment="Stretch"
@@ -21,6 +22,46 @@
             <view:SearchParamsView/>
         </DataTemplate>
         <valueConverters:MinWidthConverter x:Key="MinWidthConverter"/>
+        <DataTemplate DataType="{x:Type viewModel:SearchResultsViewModel}">
+            <Grid x:Name="mainGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition 
+            MinWidth="{Binding RightMoveSelectedItem, Converter={StaticResource MinWidthConverter}}">
+                        <ColumnDefinition.Style>
+                            <Style TargetType="ColumnDefinition">
+                                <Setter Property="Width" Value="300" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RightMovePropertyFullSelectedItem}"
+                                     Value="{x:Null}">
+                                        <Setter Property="Width" Value="0" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ColumnDefinition.Style>
+                    </ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <view:ResultsDataGridView RightMovePropertyItems="{Binding RightMovePropertyItems}"
+                                  SelectionChanged="{Binding SelectionChangedCommand}"
+                                  RightMoveSelectedItem="{Binding RightMoveSelectedItem, Mode=OneWayToSource}"
+                                  OpenLink="{Binding OpenLink}"/>
+                    <Label Grid.Column="0" Grid.Row="1" 
+                Content="{Binding Path=Info}"/>
+                </Grid>
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
+                      Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
+                <view:PropertyInfoView Grid.Column="2"
+                               Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
+                               Description="{Binding RightMovePropertyFullSelectedItem.Desc}"
+                               RightMoveProperty="{Binding RightMovePropertyFullSelectedItem}" />
+            </Grid>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <!--resources for data grid-->
@@ -118,45 +159,8 @@
                 IsDefault="True"
                 Command="{Binding SearchAsyncCommand}"
                 Style="{StaticResource MahApps.Styles.Button.Square}"/>
-        <Grid x:Name="mainGrid" 
-                  Grid.Column="0" Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition 
-                                  MinWidth="{Binding RightMoveSelectedItem, Converter={StaticResource MinWidthConverter}}">
-                    <ColumnDefinition.Style>
-                        <Style TargetType="ColumnDefinition">
-                            <Setter Property="Width" Value="300" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding RightMovePropertyFullSelectedItem}"
-                                             Value="{x:Null}">
-                                    <Setter Property="Width" Value="0" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ColumnDefinition.Style>
-                </ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                <view:ResultsDataGridView RightMovePropertyItems="{Binding RightMovePropertyItems}"
-                                          SelectionChanged="{Binding SelectionChangedCommand}"
-                                          RightMoveSelectedItem="{Binding RightMoveSelectedItem, Mode=OneWayToSource}"
-                                          OpenLink="{Binding OpenLink}"/>
-                <Label Grid.Column="0" Grid.Row="1" 
-                        Content="{Binding Path=Info}"/>
-                </Grid>
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
-                              Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
-                <view:PropertyInfoView Grid.Column="2"
-                                       Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
-                                       Description="{Binding RightMovePropertyFullSelectedItem.Desc}"
-                                       RightMoveProperty="{Binding RightMovePropertyFullSelectedItem}" />
-            </Grid>
+        <!--here-->
+        <ContentControl Grid.Column="0" Grid.Row="2" Content="{Binding SearchResultsViewModel}" />
         <ProgressBar Grid.Column="0" Grid.Row="3"
                         Minimum="0" Maximum="100"
                         MinHeight="10"
