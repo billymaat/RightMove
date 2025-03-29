@@ -160,7 +160,21 @@
                 Command="{Binding SearchAsyncCommand}"
                 Style="{StaticResource MahApps.Styles.Button.Square}"/>
         <!--here-->
-        <ContentControl Grid.Column="0" Grid.Row="2" Content="{Binding SearchResultsViewModel}" />
+        <TabControl
+            Grid.Column="0" Grid.Row="2"
+            ItemsSource="{Binding SearchResults}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Location}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <!-- this is the body of the TabItem template-->
+                <DataTemplate>
+                    <ContentControl  Content="{Binding}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
         <ProgressBar Grid.Column="0" Grid.Row="3"
                         Minimum="0" Maximum="100"
                         MinHeight="10"

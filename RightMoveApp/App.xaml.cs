@@ -11,6 +11,7 @@ using RightMove.Desktop.View.Main;
 using RightMove.Desktop.ViewModel;
 using RightMove.Extensions;
 using Serilog;
+using ServiceCollectionUtilities;
 
 namespace RightMove.Desktop
 {
@@ -86,6 +87,8 @@ namespace RightMove.Desktop
 		        .AddTransient<RightMoveSearchHistoryWriter>()
 		        .AddTransient<RightMoveSearchHistoryReader>()
 		        .AddTransient<SearchHistoryService>();
+
+			services.AddFactory<RightMoveModel>();
         }
 
 		protected override async void OnStartup(StartupEventArgs e)

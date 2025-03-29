@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Newtonsoft.Json.Linq;
 using RightMove.DataTypes;
 using RightMove.Desktop.Helpers;
 using RightMove.Desktop.Messages;
@@ -27,16 +27,26 @@ namespace RightMove.Desktop.ViewModel
 		{
 			_rightMoveModel = rightMoveModel;
 			_messenger = messenger;
-			messenger.Register<RightMoveSelectedItemUpdatedMessage>(this, (recipient, message) => RightMoveSelectedItem = message.NewValue);
-			messenger.Register<RightMoveFullSelectedItemUpdatedMessage>(this, (recipient, message) => RightMovePropertyFullSelectedItem = message.NewValue);
-			messenger.Register<RightMovePropertyItemsUpdatedMessage>(this, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
 
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
 
 			SelectionChangedCommand = new CommunityToolkit.Mvvm.Input.AsyncRelayCommand<RightMoveProperty>(ExecuteSelectionChanged, (obj) => true);
 			InitializeTimers();
-
 		}
+
+		public void SetToken(string token)
+		{
+			Token = token;
+			_messenger.Register<RightMoveSelectedItemUpdatedMessage, string>(this, Token, (recipient, message) => RightMoveSelectedItem = message.NewValue);
+			_messenger.Register<RightMoveFullSelectedItemUpdatedMessage, string>(this, Token, (recipient, message) => RightMovePropertyFullSelectedItem = message.NewValue);
+			_messenger.Register<RightMovePropertyItemsUpdatedMessage, string>(this, Token, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
+		}
+
+		public void SetLocation(string text)
+		{
+			Location = text;
+		}
+		public string Token { get; set; }
 
 		private RightMoveProperty _rightMoveSelectedItem;
 		/// <summary>
@@ -48,6 +58,11 @@ namespace RightMove.Desktop.ViewModel
 			set => SetProperty(ref _rightMoveSelectedItem, value);
 		}
 
+		public string Location
+		{
+			get => _location;
+			set => SetProperty(ref _location, value);
+		}
 
 		/// <summary>
 		/// Gets or sets the open link command
@@ -182,6 +197,6 @@ namespace RightMove.Desktop.ViewModel
 		private System.Windows.Threading.DispatcherTimer _selectedItemChangedTimer;
 
 		private ICommand _selectionChangedCommand;
-
+		private string _location;
 	}
 }

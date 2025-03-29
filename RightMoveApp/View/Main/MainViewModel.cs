@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,7 +23,7 @@ using RightMove.Desktop.UserControls;
 using RightMove.Desktop.ViewModel;
 using RightMove.Desktop.ViewModel.Commands;
 using RightMove.Extensions;
-
+using ServiceCollectionUtilities;
 using RelayCommand = RightMove.Desktop.ViewModel.Commands.RelayCommand;
 
 namespace RightMove.Desktop.View.Main
@@ -31,9 +32,10 @@ namespace RightMove.Desktop.View.Main
 	{
 		// Services
 		private readonly NavigationService _navigationService;
+		private readonly IMessenger _messenger;
+		private readonly IFactory<RightMoveModel> _rightMoveModelFactory;
 
 		// The right move model
-		private readonly RightMoveModel _rightMoveModel;
 		private readonly SearchHistoryService _searchHistoryService;
 		private readonly AppSettings _settings;
 		private SearchParamsViewModel _searchParamsViewModel;
@@ -44,10 +46,10 @@ namespace RightMove.Desktop.View.Main
 
         public MainViewModel(IOptions<AppSettings> settings,
 			PropertyInfoViewModel propertyInfoViewModel,
-			RightMoveModel rightMoveModel,
 			SearchHistoryService searchHistoryService,
 			NavigationService navigationService,
 			IMessenger messenger,
+			IFactory<RightMoveModel> rightMoveModelFactory,
 			ILogger<MainViewModel> logger)
 		{
             _propertyInfoViewModel = propertyInfoViewModel;
@@ -57,10 +59,11 @@ namespace RightMove.Desktop.View.Main
 
 			_settings = settings.Value;
 			_navigationService = navigationService;
+			_messenger = messenger;
+			_rightMoveModelFactory = rightMoveModelFactory;
 
-            InitializeCommands();
+			InitializeCommands();
 
-			_rightMoveModel = rightMoveModel;
 			_searchHistoryService = searchHistoryService;
 			IsSearching = false;
 
@@ -77,7 +80,8 @@ namespace RightMove.Desktop.View.Main
 			
             messenger.Register<SearchHistoryItemsUpdatedMessage>(this, (recipient, message) => SearchParamsHistory = new ObservableCollection<SearchHistoryItem>(message.NewValue));
 
-			SearchResultsViewModel = new SearchResultsViewModel(_rightMoveModel, messenger);
+			SearchResults = new ObservableCollection<SearchResultsViewModel>();
+
 			SearchItemDoubleClickCommand = new RelayCommand<SearchHistoryItem>(ExecuteSearchItemDoubleClick, CanExecuteSearchItemDoubleClick);
 
 		}
@@ -90,10 +94,10 @@ namespace RightMove.Desktop.View.Main
 	        set => SetProperty(ref _searchItemDoubleClickCommand, value);
         }
 
-		public SearchResultsViewModel SearchResultsViewModel
+        public ObservableCollection<SearchResultsViewModel> SearchResults
         {
-	        get => _searchResultsViewModel;
-	        set => SetProperty(ref _searchResultsViewModel, value);
+	        get => _searchResults;
+	        set => SetProperty(ref _searchResults, value);
         }
 
         /// <summary>
@@ -230,6 +234,7 @@ namespace RightMove.Desktop.View.Main
         private bool _isImagesVisible;
         private IAsyncRelayCommand _searchAsyncCommand;
         private ICommand _loadImageWindow;
+        private ObservableCollection<SearchResultsViewModel> _searchResults;
 
         public bool HasSearchedExecuted
 		{
@@ -277,7 +282,14 @@ namespace RightMove.Desktop.View.Main
 
 			// create a copy if search params in case its changed during search
 			SearchParams searchParams = new SearchParams(_searchParamsViewModel.SearchParams);
-			await _rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
+			var rightMoveModel = _rightMoveModelFactory.Create();
+			var guid = Guid.NewGuid();
+			rightMoveModel.SetToken(guid.ToString());
+			var searchResultsViewModel = new SearchResultsViewModel(rightMoveModel, _messenger);
+			searchResultsViewModel.SetToken(guid.ToString());
+			searchResultsViewModel.SetLocation(_searchParamsViewModel.SearchText);
+			SearchResults.Add(searchResultsViewModel);
+			await rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
 
 			//UpdateAveragePrice();
 

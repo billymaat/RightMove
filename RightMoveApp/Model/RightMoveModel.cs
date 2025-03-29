@@ -34,6 +34,13 @@ namespace RightMove.Desktop.Model
             _messenger = messenger;
         }
 
+        public void SetToken(string token)
+        {
+	        Token = token;
+        }
+
+        public string Token { get; set; }
+
         private List<RightMoveProperty> _rightMovePropertyItems;
 
         public List<RightMoveProperty> RightMovePropertyItems
@@ -43,9 +50,10 @@ namespace RightMove.Desktop.Model
 			{
 				_rightMovePropertyItems = value;
                 _messenger.Send(new RightMovePropertyItemsUpdatedMessage()
-                {
-                    NewValue = value
-                });
+	                {
+	                    NewValue = value
+	                }, 
+		            Token);
             }
 		}
 
@@ -56,9 +64,10 @@ namespace RightMove.Desktop.Model
 	        {
 		        _searchHistoryItems = value;
 		        _messenger.Send(new SearchHistoryItemsUpdatedMessage()
-		        {
-			        NewValue = value
-		        });
+			        {
+				        NewValue = value
+			        },
+			        Token);
 	        } 
         }
 
@@ -71,14 +80,15 @@ namespace RightMove.Desktop.Model
 			set
 			{
 				_rightMovePropertyFullSelectedItem = value;
-                _messenger.Send<RightMoveFullSelectedItemUpdatedMessage>(new RightMoveFullSelectedItemUpdatedMessage()
-                {
-                    NewValue = value
-                });
+	                _messenger.Send(new RightMoveFullSelectedItemUpdatedMessage()
+		                {
+		                    NewValue = value
+		                }, 
+		                Token);
             }
 		}
 
-        public async Task Search(SearchParams searchParams, string text)
+		public async Task Search(SearchParams searchParams, string text)
         {
             var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, text, searchParams);
             var dto = historySearchItem.ToDto();
