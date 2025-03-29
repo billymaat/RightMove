@@ -6,7 +6,8 @@
              xmlns:userControls="clr-namespace:RightMove.Desktop.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Name="uc">
+             Name="uc"
+             Loaded="RightMoveImageView_OnLoaded">
     <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

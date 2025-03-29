@@ -133,25 +133,35 @@ namespace RightMove.Desktop.View
 
         private async void OnPrevButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (ImgIndex > 0)
-            {
-                ImgIndex--;
-                await LoadImage(RightMoveProperty, ImgIndex);
-            }
+			await LoadPrevImage();
 
-            PrevImageClicked?.Invoke(this, EventArgs.Empty);
+			PrevImageClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private async void OnNextButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (ImgIndex < RightMoveProperty.ImageUrl.Length - 1)
-            {
-                ImgIndex++;
-                await LoadImage(RightMoveProperty, ImgIndex);
-            }
+	        await LoadNextImage();
 
             NextImageClicked?.Invoke(this, EventArgs.Empty);
         }
+
+        private async Task LoadPrevImage()
+        {
+	        if (ImgIndex > 0)
+	        {
+		        ImgIndex--;
+		        await LoadImage(RightMoveProperty, ImgIndex);
+	        }
+		}
+
+        private async Task LoadNextImage()
+        {
+	        if (ImgIndex < RightMoveProperty.ImageUrl.Length - 1)
+	        {
+		        ImgIndex++;
+		        await LoadImage(RightMoveProperty, ImgIndex);
+	        }
+		}
 
         private async Task ResetImage(RightMoveProperty rightMoveProperty)
         {
@@ -185,5 +195,24 @@ namespace RightMove.Desktop.View
             // Automatically updates IsNextDisabled
             SetValue(NextButtonEnabledProperty, !LoadingImage && ImgIndex < RightMoveProperty.ImageUrl.Length - 1);
         }
-    }
+
+        private void RightMoveImageView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.KeyDown += OnKeyDown;
+		}
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+	        switch (e.Key)
+	        {
+				case Key.A:
+					OnPrevButtonClicked(this, null);
+					break;
+				case Key.S:
+					OnNextButtonClicked(this, null);
+					break;
+			}
+		}
+	}
 }
