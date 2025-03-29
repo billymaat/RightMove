@@ -64,6 +64,14 @@ namespace RightMove.Desktop.ViewModel
 			set => SetProperty(ref _location, value);
 		}
 
+		public string SubLocation
+		{
+			get
+			{
+				return Location?.Split(',').First();
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the open link command
 		/// </summary>

@@ -162,10 +162,11 @@
         <!--here-->
         <TabControl
             Grid.Column="0" Grid.Row="2"
-            ItemsSource="{Binding SearchResults}">
+            ItemsSource="{Binding SearchResults}"
+            SelectedItem="{Binding SelectedSearchResults}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Location}"/>
+                    <TextBlock Text="{Binding SubLocation}"/>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

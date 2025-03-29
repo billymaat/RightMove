@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -98,6 +99,12 @@ namespace RightMove.Desktop.View.Main
         {
 	        get => _searchResults;
 	        set => SetProperty(ref _searchResults, value);
+        }
+
+        public SearchResultsViewModel SelectedSearchResults
+        {
+	        get => _selectedSearchResults;
+	        set => SetProperty(ref _selectedSearchResults, value);
         }
 
         /// <summary>
@@ -235,6 +242,7 @@ namespace RightMove.Desktop.View.Main
         private IAsyncRelayCommand _searchAsyncCommand;
         private ICommand _loadImageWindow;
         private ObservableCollection<SearchResultsViewModel> _searchResults;
+        private SearchResultsViewModel _selectedSearchResults;
 
         public bool HasSearchedExecuted
 		{
@@ -274,7 +282,6 @@ namespace RightMove.Desktop.View.Main
 		/// <summary>
 		/// The execute search command
 		/// </summary>
-		/// <param name="parameter"></param>
 		// private async Task ExecuteSearchAsync(object parameter)
 		private async Task ExecuteSearchAsync()
 		{
@@ -291,6 +298,7 @@ namespace RightMove.Desktop.View.Main
 			SearchResults.Add(searchResultsViewModel);
 			await rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
 
+			SelectedSearchResults = searchResultsViewModel;
 			//UpdateAveragePrice();
 
 			// add properties to DB
