@@ -86,9 +86,13 @@ namespace RightMove.Desktop
 	        services.AddTransient<RightMoveService>()
 		        .AddTransient<RightMoveSearchHistoryWriter>()
 		        .AddTransient<RightMoveSearchHistoryReader>()
-		        .AddTransient<SearchHistoryService>();
+		        .AddTransient<SearchHistoryService>()
+		        .AddTransient<RightMoveImageService>();
 
 			services.AddFactory<RightMoveModel>();
+			services.AddFactory<RightMoveImageViewModel>();
+			services.AddFactory<PropertyInfoViewModel>();
+			services.AddFactory<SearchResultsViewModel>();
         }
 
 		protected override async void OnStartup(StartupEventArgs e)

@@ -24,6 +24,11 @@
         <valueConverters:MinWidthConverter x:Key="MinWidthConverter"/>
         <DataTemplate DataType="{x:Type viewModel:SearchResultsViewModel}">
             <Grid x:Name="mainGrid">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyDown">
+                        <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -50,16 +55,16 @@
                     <view:ResultsDataGridView RightMovePropertyItems="{Binding RightMovePropertyItems}"
                                   SelectionChanged="{Binding SelectionChangedCommand}"
                                   RightMoveSelectedItem="{Binding RightMoveSelectedItem, Mode=OneWayToSource}"
-                                  OpenLink="{Binding OpenLink}"/>
+                                  OpenLink="{Binding OpenLink}">
+                    </view:ResultsDataGridView>
                     <Label Grid.Column="0" Grid.Row="1" 
                 Content="{Binding Path=Info}"/>
                 </Grid>
                 <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
                       Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
                 <view:PropertyInfoView Grid.Column="2"
-                               Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
-                               Description="{Binding RightMovePropertyFullSelectedItem.Desc}"
-                               RightMoveProperty="{Binding RightMovePropertyFullSelectedItem}" />
+                                       DataContext="{Binding PropertyInfoViewModel}"
+                               Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>

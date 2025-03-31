@@ -12,5 +12,10 @@ namespace RightMove.Desktop.View.Main
 			InitializeComponent();
 			DataContext = mainViewModel;
         }
+
+		private void ResultsDataGrid_OnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+
+		}
 	}
 }

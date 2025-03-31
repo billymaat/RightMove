@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Newtonsoft.Json.Linq;
 using RightMove.DataTypes;
@@ -14,24 +15,34 @@ using RightMove.Desktop.Helpers;
 using RightMove.Desktop.Messages;
 using RightMove.Desktop.Model;
 using RightMove.Extensions;
+using ServiceCollectionUtilities;
 using RelayCommand = RightMove.Desktop.ViewModel.Commands.RelayCommand;
 
 namespace RightMove.Desktop.ViewModel
 {
 	public class SearchResultsViewModel : ObservableObject
 	{
-		private readonly RightMoveModel _rightMoveModel;
+		private RightMoveModel _rightMoveModel;
+		private readonly IFactory<PropertyInfoViewModel> _propertyInfoViewModelFactory;
 		private readonly IMessenger _messenger;
 
-		public SearchResultsViewModel(RightMoveModel rightMoveModel, IMessenger messenger)
+		public SearchResultsViewModel(IFactory<PropertyInfoViewModel> propertyInfoViewModelFactory,
+			IMessenger messenger)
 		{
-			_rightMoveModel = rightMoveModel;
+			_propertyInfoViewModelFactory = propertyInfoViewModelFactory;
 			_messenger = messenger;
 
 			OpenLink = new RelayCommand(ExecuteOpenLink, CanExecuteOpenLink);
 
 			SelectionChangedCommand = new CommunityToolkit.Mvvm.Input.AsyncRelayCommand<RightMoveProperty>(ExecuteSelectionChanged, (obj) => true);
 			InitializeTimers();
+
+			KeyDownCommand = new RelayCommand<KeyEventArgs>(ExecuteKeyDown);
+		}
+
+		public void SetRightMoveModel(RightMoveModel rightMoveModel)
+		{
+			_rightMoveModel = rightMoveModel;
 		}
 
 		public void SetToken(string token)
@@ -40,12 +51,25 @@ namespace RightMove.Desktop.ViewModel
 			_messenger.Register<RightMoveSelectedItemUpdatedMessage, string>(this, Token, (recipient, message) => RightMoveSelectedItem = message.NewValue);
 			_messenger.Register<RightMoveFullSelectedItemUpdatedMessage, string>(this, Token, (recipient, message) => RightMovePropertyFullSelectedItem = message.NewValue);
 			_messenger.Register<RightMovePropertyItemsUpdatedMessage, string>(this, Token, (recipient, message) => RightMovePropertyItems = new ObservableCollection<RightMoveProperty>(message.NewValue));
+			//_messenger.Register<NextImageMessage, string>(this, Token, (recipient, message) => NextImage());
+			//_messenger.Register<PrevImageMessage, string>(this, Token, (recipient, message) => PrevImage());
+		}
+
+		private void PrevImage()
+		{
+			_messenger.Send(new PrevImageMessage(), Token);
+		}
+
+		private void NextImage()
+		{
+			_messenger.Send(new NextImageMessage(), Token);
 		}
 
 		public void SetLocation(string text)
 		{
 			Location = text;
 		}
+
 		public string Token { get; set; }
 
 		private RightMoveProperty _rightMoveSelectedItem;
@@ -70,6 +94,12 @@ namespace RightMove.Desktop.ViewModel
 			{
 				return Location?.Split(',').First();
 			}
+		}
+
+		public PropertyInfoViewModel PropertyInfoViewModel
+		{
+			get => _propertyInfoViewModel;
+			set => SetProperty(ref _propertyInfoViewModel, value);
 		}
 
 		/// <summary>
@@ -108,7 +138,16 @@ namespace RightMove.Desktop.ViewModel
 		public RightMoveProperty RightMovePropertyFullSelectedItem
 		{
 			get => _rightMovePropertyFullSelectedItem;
-			set => SetProperty(ref _rightMovePropertyFullSelectedItem, value);
+			set
+			{
+				if (SetProperty(ref _rightMovePropertyFullSelectedItem, value))
+				{
+					PropertyInfoViewModel = _propertyInfoViewModelFactory.Create();
+					_propertyInfoViewModel.SetRightMoveModel(_rightMoveModel);
+					_propertyInfoViewModel.SetRightMoveProperty(value);
+					_propertyInfoViewModel.SetToken(Token);
+				}
+			}
 		}
 
 		/// <summary>
@@ -201,10 +240,37 @@ namespace RightMove.Desktop.ViewModel
 			set => SetProperty(ref _selectionChangedCommand, value);
 		}
 
+		public int ImageIndexView
+		{
+			get => _imageIndexView;
+			set => SetProperty(ref _imageIndexView, value);
+		}
+
 		// Time for selected item changed in data grid
 		private System.Windows.Threading.DispatcherTimer _selectedItemChangedTimer;
 
 		private ICommand _selectionChangedCommand;
 		private string _location;
+		private int _imageIndexView;
+		private PropertyInfoViewModel _propertyInfoViewModel;
+
+		public ICommand KeyDownCommand
+		{
+			get;
+		}
+
+
+		private void ExecuteKeyDown(KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.A:
+					_messenger.Send(new PrevImageMessage(), Token);
+					break;
+				case Key.S:
+					_messenger.Send(new NextImageMessage(), Token);
+					break;
+			}
+		}
 	}
 }

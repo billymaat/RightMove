@@ -35,25 +35,23 @@ namespace RightMove.Desktop.View.Main
 		private readonly NavigationService _navigationService;
 		private readonly IMessenger _messenger;
 		private readonly IFactory<RightMoveModel> _rightMoveModelFactory;
+		private readonly IFactory<SearchResultsViewModel> _searchResultsViewModelFactory;
 
 		// The right move model
 		private readonly SearchHistoryService _searchHistoryService;
 		private readonly AppSettings _settings;
 		private SearchParamsViewModel _searchParamsViewModel;
 
-
-        private readonly PropertyInfoViewModel _propertyInfoViewModel;
-        private ILogger<MainViewModel> _logger;
+		private ILogger<MainViewModel> _logger;
 
         public MainViewModel(IOptions<AppSettings> settings,
-			PropertyInfoViewModel propertyInfoViewModel,
 			SearchHistoryService searchHistoryService,
 			NavigationService navigationService,
 			IMessenger messenger,
 			IFactory<RightMoveModel> rightMoveModelFactory,
+			IFactory<SearchResultsViewModel> searchResultsViewModelFactory,
 			ILogger<MainViewModel> logger)
 		{
-            _propertyInfoViewModel = propertyInfoViewModel;
             _logger = logger;
 
 			_logger.LogInformation("MainViewModel loaded");
@@ -62,6 +60,7 @@ namespace RightMove.Desktop.View.Main
 			_navigationService = navigationService;
 			_messenger = messenger;
 			_rightMoveModelFactory = rightMoveModelFactory;
+			_searchResultsViewModelFactory = searchResultsViewModelFactory;
 
 			InitializeCommands();
 
@@ -84,10 +83,9 @@ namespace RightMove.Desktop.View.Main
 			SearchResults = new ObservableCollection<SearchResultsViewModel>();
 
 			SearchItemDoubleClickCommand = new RelayCommand<SearchHistoryItem>(ExecuteSearchItemDoubleClick, CanExecuteSearchItemDoubleClick);
-
 		}
 
-		private ICommand _searchItemDoubleClickCommand;
+        private ICommand _searchItemDoubleClickCommand;
 
         public ICommand SearchItemDoubleClickCommand
         {
@@ -237,7 +235,6 @@ namespace RightMove.Desktop.View.Main
 
 		private bool _hasSearchExecuted;
 		private ObservableCollection<SearchHistoryItem> _searchParamsHistory;
-        private SearchResultsViewModel _searchResultsViewModel;
         private bool _isImagesVisible;
         private IAsyncRelayCommand _searchAsyncCommand;
         private ICommand _loadImageWindow;
@@ -292,9 +289,11 @@ namespace RightMove.Desktop.View.Main
 			var rightMoveModel = _rightMoveModelFactory.Create();
 			var guid = Guid.NewGuid();
 			rightMoveModel.SetToken(guid.ToString());
-			var searchResultsViewModel = new SearchResultsViewModel(rightMoveModel, _messenger);
+			var searchResultsViewModel = _searchResultsViewModelFactory.Create();
+			searchResultsViewModel.SetRightMoveModel(rightMoveModel);
 			searchResultsViewModel.SetToken(guid.ToString());
 			searchResultsViewModel.SetLocation(_searchParamsViewModel.SearchText);
+
 			SearchResults.Add(searchResultsViewModel);
 			await rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
 

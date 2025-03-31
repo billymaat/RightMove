@@ -8,25 +8,57 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using RightMove.DataTypes;
+using RightMove.Desktop.Messages;
 using RightMove.Desktop.Model;
 using RightMove.Desktop.ViewModel.Commands;
+using ServiceCollectionUtilities;
 
 namespace RightMove.Desktop.ViewModel
 {
     public class PropertyInfoViewModel : ObservableRecipient
     {
-        private readonly RightMoveModel _rightMoveModel;
+        private RightMoveModel _rightMoveModel;
+        private readonly IFactory<RightMoveImageViewModel> _rightMoveImageViewModelFactory;
+        private readonly IMessenger _messenger;
+
         private int _selectedImageIndex;
         // cancellation token
         private CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
-        public PropertyInfoViewModel(RightMoveModel rightMoveModel)
+        public PropertyInfoViewModel(IFactory<RightMoveImageViewModel> rightMoveImageViewModelFactory,
+	        IMessenger messenger)
         {
-            _rightMoveModel = rightMoveModel;
+	        _rightMoveImageViewModelFactory = rightMoveImageViewModelFactory;
+	        _messenger = messenger;
+	        RightMoveImageVm = _rightMoveImageViewModelFactory.Create();
+
+			//_messenger.Register<NextImageMessage>(this, (sender, msg) => NextImage());
+			//   _messenger.Register<PrevImageMessage>(this, (sender, msg) => PrevImage());
+		}
+
+		public void SetRightMoveModel(RightMoveModel rightMoveModel)
+        {
+	        _rightMoveModel = rightMoveModel;
         }
 
-        private BitmapImage _displayedImage;
+        public void SetRightMoveProperty(RightMoveProperty rightMoveProperty)
+        {
+	        RightMovePropertyFullSelectedItem = rightMoveProperty;
+        }
+
+        private void PrevImage()
+        {
+	        throw new NotImplementedException();
+        }
+
+        public void NextImage()
+		{
+
+		}
+
+		private BitmapImage _displayedImage;
 
         /// <summary>
         /// Gets or sets the displayed image
@@ -199,12 +231,32 @@ namespace RightMove.Desktop.ViewModel
             set => SetProperty(ref _imageIndexView, value);
         }
 
+        public string Description
+        {
+	        get => _description;
+	        set => SetProperty(ref _description, value);
+        }
+
+        public RightMoveImageViewModel RightMoveImageVm
+        {
+	        get => _rightMoveImageVm;
+	        set => SetProperty(ref _rightMoveImageVm, value);
+        }
+
         private RightMoveProperty _rightMovePropertyFullSelectedItem;
+        private string _description;
+        private RightMoveImageViewModel _rightMoveImageVm;
 
         public RightMoveProperty RightMovePropertyFullSelectedItem
         {
             get => _rightMovePropertyFullSelectedItem;
-            set => SetProperty(ref _rightMovePropertyFullSelectedItem, value);
+            set
+            {
+	            if (SetProperty(ref _rightMovePropertyFullSelectedItem, value))
+	            {
+		            RightMoveImageVm.RightMoveProperty = value;
+	            }
+            }
         }
 
         //private void ExecuteUpdateImages(object arg)
@@ -228,5 +280,12 @@ namespace RightMove.Desktop.ViewModel
         //    return true;
         //    //return RightMoveSelectedItem != null;
         //}
+        public void SetToken(string token)
+        {
+	        Token = token;
+	        RightMoveImageVm.SetToken(Token);
+        }
+
+		public string Token { get; set; }
     }
 }

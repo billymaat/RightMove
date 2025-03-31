@@ -6,8 +6,9 @@
              xmlns:userControls="clr-namespace:RightMove.Desktop.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:viewModel="clr-namespace:RightMove.Desktop.ViewModel"
              Name="uc"
-             Loaded="RightMoveImageView_OnLoaded">
+             d:DataContext="{d:DesignInstance viewModel:RightMoveImageViewModel}">
     <Grid HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -15,14 +16,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Image Grid.Row="0" 
-                    Source="{Binding ElementName=uc, Path=Image}"
+                    Source="{Binding Path=Image}"
                     Stretch="Uniform"
                     MinHeight="100"/>
         <userControls:BusySpinner Grid.Row="0"
-                                      Visibility="{Binding ElementName=uc, Path=LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                      Visibility="{Binding Path=LoadingImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBlock Grid.Row="1" HorizontalAlignment="Center">
             <TextBlock.Text>
-                <Binding ElementName="uc"  Path="ImageIndexView"/>
+                <Binding Path="ImageIndexView"/>
             </TextBlock.Text>
         </TextBlock>
         <Grid Grid.Row="2" HorizontalAlignment="Stretch">
@@ -39,15 +40,13 @@
             <Button 
                 Grid.Column="0"
                 Content="&lt;" 
-                Click="OnPrevButtonClicked"
-                IsEnabled="{Binding ElementName=uc, Path=PrevButtonEnabled}"
-                Command="{Binding ElementName=uc, Path=PrevImage}"/>
+                IsEnabled="{Binding Path=PrevButtonEnabled}"
+                Command="{Binding Path=PrevImageCommand}"/>
             <Button 
                 Grid.Column="1"
-                Click="OnNextButtonClicked"
-                IsEnabled="{Binding ElementName=uc, Path=NextButtonEnabled}"
+                IsEnabled="{Binding Path=NextButtonEnabled}"
                 Content=">" 
-                Command="{Binding  ElementName=uc, Path=NextImage }"/>
+                Command="{Binding Path=NextImageCommand }"/>
         </Grid>
     </Grid>
 </UserControl>

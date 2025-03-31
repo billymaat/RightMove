@@ -14,7 +14,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:RightMoveImageView RightMoveProperty="{Binding ElementName=pv, Path=RightMoveProperty}"/>
-        <TextBox Grid.Row="1" Text="{Binding ElementName=pv, Path=Description}" TextWrapping="Wrap"></TextBox>
+        <local:RightMoveImageView
+            DataContext="{Binding RightMoveImageVm}"/>
+        <TextBox Grid.Row="1" Text="{Binding Path=Description}" TextWrapping="Wrap"></TextBox>
     </Grid>
 </UserControl>
