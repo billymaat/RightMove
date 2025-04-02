@@ -14,6 +14,7 @@ using RightMove.DataTypes;
 using RightMove.Desktop.Helpers;
 using RightMove.Desktop.Messages;
 using RightMove.Desktop.Model;
+using RightMove.Desktop.Services;
 using RightMove.Extensions;
 using ServiceCollectionUtilities;
 using RelayCommand = RightMove.Desktop.ViewModel.Commands.RelayCommand;
@@ -22,7 +23,7 @@ namespace RightMove.Desktop.ViewModel
 {
 	public class SearchResultsViewModel : ObservableObject
 	{
-		private RightMoveModel _rightMoveModel;
+		private RightMoveService _rightMoveService;
 		private readonly IFactory<PropertyInfoViewModel> _propertyInfoViewModelFactory;
 		private readonly IMessenger _messenger;
 
@@ -40,9 +41,9 @@ namespace RightMove.Desktop.ViewModel
 			KeyDownCommand = new RelayCommand<KeyEventArgs>(ExecuteKeyDown);
 		}
 
-		public void SetRightMoveModel(RightMoveModel rightMoveModel)
+		public void SetRightMoveService(RightMoveService rightMoveService)
 		{
-			_rightMoveModel = rightMoveModel;
+			_rightMoveService = rightMoveService;
 		}
 
 		public void SetToken(string token)
@@ -143,7 +144,7 @@ namespace RightMove.Desktop.ViewModel
 				if (SetProperty(ref _rightMovePropertyFullSelectedItem, value))
 				{
 					PropertyInfoViewModel = _propertyInfoViewModelFactory.Create();
-					_propertyInfoViewModel.SetRightMoveModel(_rightMoveModel);
+					_propertyInfoViewModel.SetRightMoveModel(_rightMoveService.GetRightMoveModel());
 					_propertyInfoViewModel.SetRightMoveProperty(value);
 					_propertyInfoViewModel.SetToken(Token);
 				}
@@ -221,7 +222,7 @@ namespace RightMove.Desktop.ViewModel
 			}
 
 			// need to parse the full image
-			await _rightMoveModel.UpdateSelectedRightMoveItem(rightMoveProperty.RightMoveId, _tokenSource.Token);
+			await _rightMoveService.UpdateSelectedRightMoveItem(rightMoveProperty.RightMoveId, _tokenSource.Token);
 		}
 
 		// cancellation token

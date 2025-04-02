@@ -34,7 +34,7 @@ namespace RightMove.Desktop.View.Main
 		// Services
 		private readonly NavigationService _navigationService;
 		private readonly IMessenger _messenger;
-		private readonly IFactory<RightMoveModel> _rightMoveModelFactory;
+		private readonly IFactory<RightMoveService> _rightMoveServiceFactory;
 		private readonly IFactory<SearchResultsViewModel> _searchResultsViewModelFactory;
 
 		// The right move model
@@ -48,7 +48,7 @@ namespace RightMove.Desktop.View.Main
 			SearchHistoryService searchHistoryService,
 			NavigationService navigationService,
 			IMessenger messenger,
-			IFactory<RightMoveModel> rightMoveModelFactory,
+			IFactory<RightMoveService> rightMoveServiceFactory,
 			IFactory<SearchResultsViewModel> searchResultsViewModelFactory,
 			ILogger<MainViewModel> logger)
 		{
@@ -59,7 +59,7 @@ namespace RightMove.Desktop.View.Main
 			_settings = settings.Value;
 			_navigationService = navigationService;
 			_messenger = messenger;
-			_rightMoveModelFactory = rightMoveModelFactory;
+			_rightMoveServiceFactory = rightMoveServiceFactory;
 			_searchResultsViewModelFactory = searchResultsViewModelFactory;
 
 			InitializeCommands();
@@ -286,16 +286,16 @@ namespace RightMove.Desktop.View.Main
 
 			// create a copy if search params in case its changed during search
 			SearchParams searchParams = new SearchParams(_searchParamsViewModel.SearchParams);
-			var rightMoveModel = _rightMoveModelFactory.Create();
+			var rightMoveService = _rightMoveServiceFactory.Create();
 			var guid = Guid.NewGuid();
-			rightMoveModel.SetToken(guid.ToString());
+			rightMoveService.SetToken(guid.ToString());
 			var searchResultsViewModel = _searchResultsViewModelFactory.Create();
-			searchResultsViewModel.SetRightMoveModel(rightMoveModel);
+			searchResultsViewModel.SetRightMoveService(rightMoveService);
 			searchResultsViewModel.SetToken(guid.ToString());
 			searchResultsViewModel.SetLocation(_searchParamsViewModel.SearchText);
 
 			SearchResults.Add(searchResultsViewModel);
-			await rightMoveModel.Search(searchParams, _searchParamsViewModel.SearchText);
+			await rightMoveService.Search(searchParams, _searchParamsViewModel.SearchText);
 
 			SelectedSearchResults = searchResultsViewModel;
 			//UpdateAveragePrice();

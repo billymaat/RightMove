@@ -93,6 +93,7 @@ namespace RightMove.Desktop
 			services.AddFactory<RightMoveImageViewModel>();
 			services.AddFactory<PropertyInfoViewModel>();
 			services.AddFactory<SearchResultsViewModel>();
+			services.AddFactory<RightMoveService>();
         }
 
 		protected override async void OnStartup(StartupEventArgs e)

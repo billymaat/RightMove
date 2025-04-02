@@ -33,10 +33,7 @@ namespace RightMove.Desktop.ViewModel
 	        _rightMoveImageViewModelFactory = rightMoveImageViewModelFactory;
 	        _messenger = messenger;
 	        RightMoveImageVm = _rightMoveImageViewModelFactory.Create();
-
-			//_messenger.Register<NextImageMessage>(this, (sender, msg) => NextImage());
-			//   _messenger.Register<PrevImageMessage>(this, (sender, msg) => PrevImage());
-		}
+        }
 
 		public void SetRightMoveModel(RightMoveModel rightMoveModel)
         {
@@ -154,24 +151,24 @@ namespace RightMove.Desktop.ViewModel
         }
 
 
-        private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+        //private async Task UpdateFullSelectedItemAndImage(CancellationToken cancellationToken)
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
-            await UpdateImage(cancellationToken);
-            LoadingImage = false;
-        }
+        //    await UpdateRightMovePropertyFullSelectedItem(cancellationToken);
+        //    await UpdateImage(cancellationToken);
+        //    LoadingImage = false;
+        //}
 
-        private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+        //private async Task UpdateRightMovePropertyFullSelectedItem(CancellationToken cancellationToken)
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            _selectedImageIndex = 0;
+        //    _selectedImageIndex = 0;
 
-            // update the right move full selected item
-            await _rightMoveModel.UpdateSelectedRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
-        }
+        //    // update the right move full selected item
+        //    await _rightMoveModel.UpdateSelectedRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
+        //}
 
         private async Task<BitmapImage> ExecuteUpdateNextImageAsync(object arg1)
         {

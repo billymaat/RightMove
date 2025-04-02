@@ -18,19 +18,10 @@ namespace RightMove.Desktop.Model
 {
 	public class RightMoveModel
 	{
-        private readonly RightMoveService _rightMoveService;
-        private readonly RightMoveSearchHistoryWriter _searchHistoryWriter;
-        private readonly RightMoveSearchHistoryReader _searchHistoryReader;
-        private readonly IMessenger _messenger;
+		private readonly IMessenger _messenger;
 
-        public RightMoveModel(RightMoveService rightMoveService,
-            RightMoveSearchHistoryWriter searchHistoryWriter,
-			RightMoveSearchHistoryReader searchHistoryReader,
-			IMessenger messenger)
+        public RightMoveModel(IMessenger messenger)
 		{
-            _rightMoveService = rightMoveService;
-            _searchHistoryWriter = searchHistoryWriter;
-            _searchHistoryReader = searchHistoryReader;
             _messenger = messenger;
         }
 
@@ -86,27 +77,6 @@ namespace RightMove.Desktop.Model
 		                }, 
 		                Token);
             }
-		}
-
-		public async Task Search(SearchParams searchParams, string text)
-        {
-            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, text, searchParams);
-            var dto = historySearchItem.ToDto();
-            _searchHistoryWriter.WriteSearchHistory(dto);
-
-            var rightMoveItems = await _rightMoveService.GetRightMoveItems(searchParams);
-            var items = rightMoveItems.ToList();
-            RightMovePropertyItems = items;
-
-            var searchHistory = _searchHistoryReader.ReadExistingHistory()
-	            .Select(o => o.ToDomain());
-            SearchHistoryItems = searchHistory.ToList();
-		}
-
-        public async Task UpdateSelectedRightMoveItem(int rightMoveId, CancellationToken cancellationToken)
-        {
-            var fullProperty = await _rightMoveService.GetFullRightMoveItem(rightMoveId, cancellationToken);
-            RightMovePropertyFullSelectedItem = fullProperty;
 		}
 	}
 }
