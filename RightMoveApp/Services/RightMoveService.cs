@@ -18,26 +18,21 @@ namespace RightMove.Desktop.Services
         private readonly Func<IPropertyPageParser> _propertyParserFactory;
         private readonly RightMoveSearchHistoryWriter _searchHistoryWriter;
         private readonly RightMoveSearchHistoryReader _searchHistoryReader;
-        private readonly IFactory<RightMoveModel> _rightMoveModelFactory;
 
-        private readonly IMessenger _messenger;
         private readonly RightMoveModel _rightMoveModel;
 		public RightMoveService(RightMoveParserFactory parserFactory,
             Func<IPropertyPageParser> propertyParserFactory,
             RightMoveSearchHistoryWriter searchHistoryWriter,
             RightMoveSearchHistoryReader searchHistoryReader,
-            IFactory<RightMoveModel> rightMoveModelFactory,
-			IMessenger messenger)
+            RightMoveModel rightMoveModel)
         {
 	        _searchHistoryWriter = searchHistoryWriter;
 	        _searchHistoryReader = searchHistoryReader;
-	        _rightMoveModelFactory = rightMoveModelFactory;
-	        _messenger = messenger;
 	        _parserFactory = parserFactory ?? throw new ArgumentNullException(nameof(parserFactory));
             _propertyParserFactory = propertyParserFactory;
             _searchHistoryWriter = searchHistoryWriter;
             _searchHistoryReader = searchHistoryReader;
-            _rightMoveModel = _rightMoveModelFactory.Create();
+            _rightMoveModel = rightMoveModel;
         }
 
         public RightMoveModel GetRightMoveModel()
