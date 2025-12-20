@@ -1,0 +1,58 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:valueConverters="clr-namespace:RightMove.Desktop.ValueConverters"
+                    xmlns:view="clr-namespace:RightMove.Desktop.View"
+                    xmlns:behaviours="clr-namespace:RightMove.Desktop.Behaviours">
+    
+    <DataTemplate x:Key="ResultsDataGridDataTemplate" DataType="{x:Type view:ResultsTabViewModel}">
+        <DataTemplate.Resources>
+            <valueConverters:RightMovePropertyToDateConverter x:Key="RightMovePropertyToDateConverter"/>
+        </DataTemplate.Resources>
+        <Grid>
+            <DataGrid x:Name="listView" 
+                      Grid.Row="0"
+                      ItemsSource="{Binding RightMovePropertyItems}" 
+                      SelectedItem="{Binding RightMoveSelectedItem}"
+                      AutoGenerateColumns="False"
+                      HorizontalGridLinesBrush="#6297C8"
+                      VerticalGridLinesBrush="#6297C8"
+                      HorizontalAlignment="Stretch"
+                      HorizontalScrollBarVisibility="Visible"
+                      IsReadOnly="True"
+                      AlternationCount="2"
+                      behaviours:DataGridRowDoubleClickBehavior.Command="{Binding OpenLink}" >
+                <!--<DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <TextBlock Background="Orange" Text="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=DataContext.PriceHistory}"
+                                            TextWrapping="Wrap" HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"/>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>-->
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="ToolTip" Value="{Binding}"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction 
+                            Command="{Binding SelectionChangedCommand}"
+                            CommandParameter="{Binding RightMoveSelectedItem}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="Auto"/>
+                    <!--<DataGridTextColumn Header="RM Id" Binding="{Binding RightMoveId}" Width="Auto"/>-->
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:C0}.00}" Width="100"/>
+                    <DataGridTextColumn Header="House Type" Binding="{Binding HouseInfo}" Width="Auto"/>
+                    <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="Auto"/>
+                    <DataGridTextColumn Header="Desc" Binding="{Binding Desc}" Width="Auto"/>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Path=., Converter={StaticResource RightMovePropertyToDateConverter}}" Width="100"/>
+                    <DataGridTextColumn Header="Agent" Binding="{Binding Agent}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DataTemplate>
+    
+</ResourceDictionary>

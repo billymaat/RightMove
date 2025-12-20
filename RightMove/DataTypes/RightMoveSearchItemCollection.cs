@@ -92,11 +92,6 @@ namespace RightMove.DataTypes
 			}
 		}
 
-		public void AddRange(RightMoveSearchItemCollection items)
-		{
-			throw new NotImplementedException("we do not add non unique ranges");
-		}
-
 		public IEnumerator<RightMoveProperty> GetEnumerator()
 		{
 			return _lst.GetEnumerator();

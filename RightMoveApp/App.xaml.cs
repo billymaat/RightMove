@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RightMove.Desktop.Factory;
 using RightMove.Desktop.Model;
 using RightMove.Desktop.Services;
 using RightMove.Desktop.View;
@@ -70,11 +71,14 @@ namespace RightMove.Desktop
 		private void RegisterView(IServiceCollection services)
         {
 			services.AddSingleton<RightMoveModel>();
+			services.AddTransient<RightMoveModelService>();
 
 			// ...
 			// Register all ViewModels
 			services.AddSingleton<MainViewModel>()
-                .AddSingleton<PropertyInfoViewModel>();
+				.AddTransient<PropertyInfoViewModel>()
+				.AddTransient<RightMoveImageViewModel>()
+				.AddTransient<ResultsTabViewModelFactory>();
 
 			// Register all the windows of the application
 			services.AddSingleton<MainWindow>();
@@ -85,7 +89,10 @@ namespace RightMove.Desktop
 	        services.AddTransient<RightMoveService>()
 		        .AddTransient<RightMoveSearchHistoryWriter>()
 		        .AddTransient<RightMoveSearchHistoryReader>()
-		        .AddTransient<SearchHistoryService>();
+		        .AddTransient<RightMoveImageService>()
+		        .AddTransient<SearchHistoryService>()
+		        .AddSingleton<SearchHistoryModel>()
+		        .AddTransient<SearchRightMoveService>();
         }
 
 		protected override async void OnStartup(StartupEventArgs e)

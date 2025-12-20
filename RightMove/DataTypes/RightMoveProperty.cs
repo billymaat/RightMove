@@ -101,6 +101,12 @@ namespace RightMove.DataTypes
 			set;
 		}
 
+		public string NearbySoldPricesUrl
+		{
+			get;
+			set;
+		}
+
 		public string Url
 		{
 			get
@@ -128,7 +134,8 @@ namespace RightMove.DataTypes
 				return null;
 			}
 
-			return await _httpService.DownloadImageAsync(ImageUrl[index], cancellationToken);
+			var ret = await _httpService.DownloadImageAsync(ImageUrl[index], cancellationToken);
+			return ret;
 		}
 
 		/// <summary>

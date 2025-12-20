@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
 using RightMove.DataTypes;
-using RightMove.Factory;
+using RightMove.Services;
 
 namespace RightMoveConsole.Services
 {
 	public class SearchService : ISearchService
 	{
-		private readonly IRightMoveParserFactory _rightMoveParserFactory;
+		private readonly RightMoveParser _rightMoveParser;
 
-		public SearchService(IRightMoveParserFactory rightMoveParserFactory)
+		public SearchService(RightMoveParser rightMoveParser)
 		{
-			_rightMoveParserFactory = rightMoveParserFactory;
+			_rightMoveParser = rightMoveParser;
 		}
 
 		/// <summary>
@@ -20,16 +20,9 @@ namespace RightMoveConsole.Services
 		/// <returns></returns>
 		public async Task<RightMoveSearchItemCollection> Search(SearchParams searchParams)
 		{
-			var rightMoveService = _rightMoveParserFactory.CreateInstance(searchParams);
-			bool res = await rightMoveService.SearchAsync();
+			var res = await _rightMoveParser.SearchAsync(searchParams);
 
-			if (!res)
-			{
-				// failed
-				return null;
-			}
-
-			return rightMoveService.Results;
+			return res;
 		}
 	}
 }

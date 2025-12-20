@@ -2,40 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Io.Network;
-using HtmlAgilityPack;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using RightMove.DataTypes;
-using RightMove.Helpers;
-using RightMove.JsonObjects;
+using RightMove.JsonObjects.NearbySoldPrices;
 using RightMove.Services.Caching;
 
 namespace RightMove.Services
 {
-	public class PropertyPageParserService
+	public class NearbySoldPricesService
 	{
-		private readonly PropertyPageCache _cache;
 		private readonly HttpClient _httpClient;
+		private readonly NearbySoldPropertiesCache _cache;
 
-		public PropertyPageParserService(HttpClient httpClient, PropertyPageCache cache)
+		public NearbySoldPricesService(HttpClient httpClient, NearbySoldPropertiesCache cache)
 		{
 			_httpClient = httpClient;
 			_cache = cache;
 		}
-		
-		public async Task<RightMoveProperty> ParseRightMovePropertyPageAsync(int propertyId, CancellationToken cancellationToken = default(CancellationToken))
+
+		public async Task<List<NearbySoldProperty>> GetNearbySoldPrices(string nearbyUrl, CancellationToken cancellationToken = default)
 		{
-			if (_cache.TryGetValue(propertyId, out var rm))
+			if (_cache.TryGetValue(nearbyUrl, out var rm))
 			{
 				return rm;
 			}
-			string url = RightMoveUrls.GetPropertyUrl(propertyId);
+
+			string url = $"https://www.rightmove.co.uk{nearbyUrl}";
 			IDocument document = await GetDocumentAsync(url, cancellationToken).ConfigureAwait(false);
 
 			if (document is null)
@@ -48,9 +45,10 @@ namespace RightMove.Services
 				cancellationToken.ThrowIfCancellationRequested();
 			}
 
-			var property = ParseRightMovePropertyPage(document);
-			_cache.CreateEntry(propertyId, property);
-			return property;
+			var nearbyProperties = ParseNearbyPropertiesPage(document);
+			_cache.CreateEntry(nearbyUrl, nearbyProperties);
+
+			return nearbyProperties;
 		}
 
 		/// <summary>
@@ -81,7 +79,7 @@ namespace RightMove.Services
 			return document;
 		}
 
-		private RightMoveProperty ParseRightMovePropertyPage(IDocument document)
+		private List<NearbySoldProperty> ParseNearbyPropertiesPage(IDocument document)
 		{
 			var json = GetJson(document);
 
@@ -90,32 +88,39 @@ namespace RightMove.Services
 				return null;
 			}
 
-			RightMoveProperty property = new RightMoveProperty
+			if (json.searchResult.properties == null)
 			{
-				Address = $"{json.propertyData.address.displayAddress}, {json.propertyData.address.ukCountry}"
-			};
-
-			property.Agent = json.propertyData.customer.branchDisplayName;
-			property.Price = RightMoveParserHelper.ParsePrice(json.propertyData.prices.primaryPrice);
-			property.DateAdded = RightMoveParserHelper.ParseDateAdded(json.propertyData.listingHistory.listingUpdateReason);
-			property.DateReduced = RightMoveParserHelper.ParseDateReduced(json.propertyData.listingHistory.listingUpdateReason);
-			property.ImageUrl = json.propertyData.images.Select(o => o.url).ToArray();
-			property.NearbySoldPricesUrl = json.propertyData.propertyUrls?.nearbySoldPropertiesUrl;
-
-			var desc = json.propertyData.text.description;
-			if (!string.IsNullOrEmpty(desc))
-			{
-				var htmklDoc = new HtmlDocument();
-				htmklDoc.LoadHtml(desc);
-				property.Desc = htmklDoc.DocumentNode.InnerText;
+				return null;
 			}
 
+			var result = json.searchResult.properties.Select(o =>
+			{
+				DateTime? dateSold;
+				if (DateTime.TryParse(o.latestTransaction?.dateSold, out var d))
+				{
+					dateSold = d;
+				}
+				else
+				{
+					dateSold = null;
+				}
 
+				return new NearbySoldProperty()
+				{
+					Address = o.address,
+					Bathrooms = o.bathrooms ?? -1,
+					Bedrooms = o.bedrooms ?? 1,
+					PropertyType = o.propertyType,
+					Price = o.latestTransaction?.displayPrice,
+					DateSold = dateSold,
+					Url = o.detailUrl
+				};
+			}).ToList();
 
-			return property;
+			return result;
 		}
 
-		private static Rootobject GetJson(IDocument document)
+		private static NearbySoldPricesResponse GetJson(IDocument document)
 		{
 			var script = document.All.FirstOrDefault(o => o.LocalName.Equals("script") &&
 														  o.Text().Trim().StartsWith("window.PAGE_MODEL"));
@@ -129,20 +134,15 @@ namespace RightMove.Services
 			string end = "window.adInfo";
 
 			var text = script?.Text();
+			text = text.Trim();
 
 			var startIndex = text.IndexOf(start);
-			if (startIndex <= 0)
+			if (startIndex < 0)
 			{
 				return null;
 			}
 
-			var endIndex = text.IndexOf(end);
-			if (endIndex <= startIndex)
-			{
-				return null;
-			}
-
-			var jsonText = text.Substring(startIndex + start.Length, endIndex - startIndex - start.Length).Trim();
+			var jsonText = text.Substring(startIndex + start.Length, text.Length - 1 - startIndex - start.Length).Trim();
 
 			var settings = new JsonSerializerSettings
 			{
@@ -150,7 +150,7 @@ namespace RightMove.Services
 				MissingMemberHandling = MissingMemberHandling.Ignore
 			};
 
-			var json = JsonConvert.DeserializeObject<Rootobject>(jsonText, settings);
+			var json = JsonConvert.DeserializeObject<NearbySoldPricesResponse>(jsonText, settings);
 			return json;
 		}
 	}

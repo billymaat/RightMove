@@ -7,10 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RightMove.Db;
-using RightMove.Db.Entities;
 using RightMove.Db.Extensions;
 using RightMove.Extensions;
-using RightMove.Factory;
 using RightMoveConsole.Services;
 using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -74,7 +72,6 @@ namespace RightMoveConsole
 					services.RegisterRightMoveDb();
 					services
 						.AddSingleton<ISearchService, SearchService>()
-						.AddSingleton<IRightMoveParserFactory, RightMoveParserFactory>()
 						.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<MainService>>())
 						.AddSingleton<ISearchLocationsReader>(new SearchLocationsReader(() => "searchlocations.txt"))
 						.AddHostedService<MainService>();

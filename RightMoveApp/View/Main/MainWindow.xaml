@@ -7,7 +7,6 @@
 
         x:Class="RightMove.Desktop.View.Main.MainWindow"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:controls="clr-namespace:RightMove.Desktop.UserControls"
         xmlns:view="clr-namespace:RightMove.Desktop.View"
         xmlns:valueConverters="clr-namespace:RightMove.Desktop.UserControls.ValueConverters"
         xmlns:main="clr-namespace:RightMove.Desktop.View.Main"
@@ -17,10 +16,53 @@
         d:DataContext="{d:DesignInstance main:MainViewModel}"
         Name="mainWindow">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type controls:SearchParamsViewModel}">
-            <view:SearchParamsView/>
-        </DataTemplate>
-        <valueConverters:MinWidthConverter x:Key="MinWidthConverter"/>
+        <ResourceDictionary>
+            <valueConverters:MinWidthConverter x:Key="MinWidthConverter"/>
+            <DataTemplate DataType="{x:Type view:ResultsTabViewModel}">
+                <Grid 
+                  Grid.Column="0" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition 
+                                  MinWidth="{Binding RightMoveSelectedItem, Converter={StaticResource MinWidthConverter}}">
+                            <ColumnDefinition.Style>
+                                <Style TargetType="ColumnDefinition">
+                                    <Setter Property="Width" Value="300" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RightMoveSelectedItem}"
+                                             Value="{x:Null}">
+                                            <Setter Property="Width" Value="0" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ColumnDefinition.Style>
+                        </ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <ContentControl Content="{Binding .}"
+                                        ContentTemplate="{StaticResource ResultsDataGridDataTemplate}"/>
+                        <Label Grid.Column="0" Grid.Row="1" 
+                               Content="{Binding Path=Info}"/>
+                    </Grid>
+                    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
+                              Visibility="{Binding RightMoveSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
+                    <ContentControl Grid.Column="2"
+                                    Content="{Binding PropertyInfoViewModel}"
+                                    ContentTemplate="{StaticResource PropertyInfoDataTemplate}" />
+                </Grid>
+
+            </DataTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/View/SearchParamsDataTemplate.xaml"/>
+                <ResourceDictionary Source="/View/ResultsDataGridDataTemplate.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <!--resources for data grid-->
@@ -51,11 +93,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ContentControl 
+                <ContentPresenter
                     Name="content"
                     Grid.Column="0"
-                    Content="{Binding TopViewModel}"/>
-                
+                    Content="{Binding SearchParamsViewModel}"
+                                  ContentTemplate="{StaticResource SearchParamsDataTemplate}"/>
+
                 <ListView 
                     Height="{Binding ActualHeight, ElementName=content}"
                     Grid.Column="1"
@@ -67,46 +110,75 @@
                             <i:InvokeCommandAction Command="{Binding SearchItemDoubleClickCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Border CornerRadius="6"
+
+                            <Border x:Name="ItemBorder"
+                                    CornerRadius="6"
                                     BorderBrush="Gray"
                                     BorderThickness="1"
                                     Padding="8">
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding DisplayText}"/>
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}Beds : {0} - {1}">
-                                            <Binding Path="SearchParams.MinBedrooms"/>
-                                            <Binding Path="SearchParams.MaxBedrooms"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}Property type: {0}">
-                                            <Binding Path="SearchParams.PropertyType"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}Price range: £{0} - £{1}">
-                                            <Binding Path="SearchParams.MinPrice"/>
-                                            <Binding Path="SearchParams.MaxPrice"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                                <TextBlock>
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}Radius: {0}">
-                                            <Binding Path="SearchParams.Radius"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
-                            </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding DisplayText}"/>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}Beds : {0} - {1}">
+                                                <Binding Path="SearchParams.MinBedrooms"/>
+                                                <Binding Path="SearchParams.MaxBedrooms"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}Property type: {0}">
+                                                <Binding Path="SearchParams.PropertyType"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}Price range: £{0} - £{1}">
+                                                <Binding Path="SearchParams.MinPrice"/>
+                                                <Binding Path="SearchParams.MaxPrice"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}Radius: {0}">
+                                                <Binding Path="SearchParams.Radius"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
                             </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding 
+                RelativeSource={RelativeSource AncestorType=ListViewItem},
+                Path=IsSelected}"
+                                             Value="True">
+
+                                    <Setter TargetName="ItemBorder"
+                                            Property="Background"
+                                            Value="#CCE5F1FF"/>
+
+                                    <Setter TargetName="ItemBorder"
+                                            Property="BorderBrush"
+                                            Value="#3399FF"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ListView.ItemTemplate>
 
@@ -118,50 +190,24 @@
                 IsDefault="True"
                 Command="{Binding SearchAsyncCommand}"
                 Style="{StaticResource MahApps.Styles.Button.Square}"/>
-        <Grid x:Name="mainGrid" 
-                  Grid.Column="0" Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition 
-                                  MinWidth="{Binding RightMoveSelectedItem, Converter={StaticResource MinWidthConverter}}">
-                    <ColumnDefinition.Style>
-                        <Style TargetType="ColumnDefinition">
-                            <Setter Property="Width" Value="300" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding RightMovePropertyFullSelectedItem}"
-                                             Value="{x:Null}">
-                                    <Setter Property="Width" Value="0" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ColumnDefinition.Style>
-                </ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                <view:ResultsDataGridView RightMovePropertyItems="{Binding RightMovePropertyItems}"
-                                          SelectionChanged="{Binding SelectionChangedCommand}"
-                                          RightMoveSelectedItem="{Binding RightMoveSelectedItem, Mode=OneWayToSource}"
-                                          OpenLink="{Binding OpenLink}"/>
-                <Label Grid.Column="0" Grid.Row="1" 
-                        Content="{Binding Path=Info}"/>
-                </Grid>
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5"
-                              Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"/>
-                <view:PropertyInfoView Grid.Column="2"
-                                       Visibility="{Binding RightMovePropertyFullSelectedItem, Converter={StaticResource NullToVisibilityConverter}}"
-                                       Description="{Binding RightMovePropertyFullSelectedItem.Desc}"
-                                       RightMoveProperty="{Binding RightMovePropertyFullSelectedItem}" />
-            </Grid>
+        <TabControl Grid.Column="0" Grid.Row="2" ItemsSource="{Binding ResultsTabViewModels}"
+                    SelectedItem="{Binding SelectedResultsTabViewModel}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}" FontSize="14"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentPresenter Content="{Binding}"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
         <ProgressBar Grid.Column="0" Grid.Row="3"
-                        Minimum="0" Maximum="100"
-                        MinHeight="10"
-                        Name="pbStatus"
-                        Visibility="{Binding IsSearching, Converter={StaticResource BooleanToCollapsedVisiblilityConverter}}"
-                        IsIndeterminate="{Binding SearchAsyncCommand.ExecutionTask.IsCompletedSuccessfully, Converter={StaticResource BooleanToReverseConverter}}"/>
+                     Minimum="0" Maximum="100"
+                     MinHeight="10"
+                     Name="pbStatus"
+                     Visibility="{Binding IsSearching, Converter={StaticResource BooleanToCollapsedVisibilityConverter}}"
+                     IsIndeterminate="{Binding SearchAsyncCommand.ExecutionTask.IsCompletedSuccessfully, Converter={StaticResource BooleanToReverseConverter}}"/>
     </Grid>
 </mah:MetroWindow>

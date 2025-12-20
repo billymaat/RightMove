@@ -8,31 +8,25 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
 using RightMove.DataTypes;
-using RightMove.Desktop.Helpers;
 using RightMove.Desktop.Mappers;
-using RightMove.Desktop.Messages;
 using RightMove.Desktop.Services;
-using RightMove.Services;
 
 namespace RightMove.Desktop.Model
 {
+	public class RightMoveItemsUpdatedEventArgs : EventArgs
+	{
+		public List<RightMoveProperty> NewValue { get; set; }
+	}
+
+	public class RightMoveSelectedItemUpdatedEventArgs : EventArgs
+	{
+		public RightMoveProperty SelectedItem { get; set; }
+	}
+
 	public class RightMoveModel
 	{
-        private readonly RightMoveService _rightMoveService;
-        private readonly RightMoveSearchHistoryWriter _searchHistoryWriter;
-        private readonly RightMoveSearchHistoryReader _searchHistoryReader;
-        private readonly IMessenger _messenger;
-
-        public RightMoveModel(RightMoveService rightMoveService,
-            RightMoveSearchHistoryWriter searchHistoryWriter,
-			RightMoveSearchHistoryReader searchHistoryReader,
-			IMessenger messenger)
-		{
-            _rightMoveService = rightMoveService;
-            _searchHistoryWriter = searchHistoryWriter;
-            _searchHistoryReader = searchHistoryReader;
-            _messenger = messenger;
-        }
+		public event EventHandler<RightMoveItemsUpdatedEventArgs> RightMovePropertyItemsUpdated;
+		public event EventHandler<RightMoveSelectedItemUpdatedEventArgs> RightMoveSelectedItemUpdated;
 
         private List<RightMoveProperty> _rightMovePropertyItems;
 
@@ -42,61 +36,30 @@ namespace RightMove.Desktop.Model
 			set
 			{
 				_rightMovePropertyItems = value;
-                _messenger.Send(new RightMovePropertyItemsUpdatedMessage()
+                RightMovePropertyItemsUpdated?.Invoke(this, new RightMoveItemsUpdatedEventArgs()
                 {
                     NewValue = value
                 });
-            }
+			}
 		}
 
-        public List<SearchHistoryItem> SearchHistoryItems
+        private RightMoveProperty _selectedRightMoveProperty;
+
+
+        public RightMoveProperty SelectedRightMoveProperty
         {
-	        get => _searchHistoryItems;
+	        get => _selectedRightMoveProperty;
 	        set
 	        {
-		        _searchHistoryItems = value;
-		        _messenger.Send(new SearchHistoryItemsUpdatedMessage()
+		        if (_selectedRightMoveProperty != value)
 		        {
-			        NewValue = value
-		        });
-	        } 
+			        _selectedRightMoveProperty = value;
+			        RightMoveSelectedItemUpdated?.Invoke(this, new RightMoveSelectedItemUpdatedEventArgs()
+			        {
+				        SelectedItem = value
+			        });
+		        }
+	        }
         }
-
-        private RightMoveProperty _rightMovePropertyFullSelectedItem;
-		private List<SearchHistoryItem> _searchHistoryItems;
-
-		public RightMoveProperty RightMovePropertyFullSelectedItem
-		{
-			get => _rightMovePropertyFullSelectedItem;
-			set
-			{
-				_rightMovePropertyFullSelectedItem = value;
-                _messenger.Send<RightMoveFullSelectedItemUpdatedMessage>(new RightMoveFullSelectedItemUpdatedMessage()
-                {
-                    NewValue = value
-                });
-            }
-		}
-
-        public async Task Search(SearchParams searchParams, string text)
-        {
-            var historySearchItem = new SearchHistoryItem(DateTime.UtcNow, text, searchParams);
-            var dto = historySearchItem.ToDto();
-            _searchHistoryWriter.WriteSearchHistory(dto);
-
-            var rightMoveItems = await _rightMoveService.GetRightMoveItems(searchParams);
-            var items = rightMoveItems.ToList();
-            RightMovePropertyItems = items;
-
-            var searchHistory = _searchHistoryReader.ReadExistingHistory()
-	            .Select(o => o.ToDomain());
-            SearchHistoryItems = searchHistory.ToList();
-		}
-
-        public async Task UpdateSelectedRightMoveItem(int rightMoveId, CancellationToken cancellationToken)
-        {
-            var fullProperty = await _rightMoveService.GetFullRightMoveItem(rightMoveId, cancellationToken);
-            RightMovePropertyFullSelectedItem = fullProperty;
-		}
 	}
 }

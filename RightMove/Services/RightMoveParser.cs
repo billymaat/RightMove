@@ -1,9 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using RightMove.ApiResponse;
 using RightMove.DataTypes;
-using RightMove.Factory;
 
 namespace RightMove.Services
 {
@@ -11,153 +15,81 @@ namespace RightMove.Services
 	{
 		public const int PriceNotSet = -1;
 
-		private readonly SearchPageParserServiceFactory _searchPageParseFactory;
 		private readonly ILogger<RightMoveParser> _logger;
-		private readonly string _searchUrl;
 
 		/// <summary>
 		/// Initializes a new instance <see cref="RightMoveParser"/> class
 		/// </summary>
-		/// <param name="httpService">the http service</param>
-		/// <param name="searchPageParseFactory">the <see cref="SearchPageParserServiceFactory"> service</param>
-		/// <param name="searchParams">the <see cref="SearchParams"/></param>
-		public RightMoveParser(SearchPageParserServiceFactory searchPageParseFactory,
-			ILogger<RightMoveParser> logger,
-			SearchParams searchParams)
+		public RightMoveParser(ILogger<RightMoveParser> logger)
 		{
-			_searchPageParseFactory = searchPageParseFactory;
 			_logger = logger;
-
-			if (searchParams is null)
-			{
-				throw new ArgumentNullException($"{nameof(searchParams)} must not be null");
-			}
-
-			SearchParams = searchParams;
-
-			// construct the search url from the SearchParams
-			_searchUrl = $"{RightMoveUrls.SearchUrl}?{SearchParams.EncodeOptions()}";
 		}
 
-		/// <summary>
-		/// Gets the <see cref="SearchParams"/>
-		/// </summary>
-		public SearchParams SearchParams
+		private string CreateUrl(SearchParams searchParams, int count)
 		{
-			get;
-		}
-
-		/// <summary>
-		/// Gets the list of results
-		/// </summary>
-		public RightMoveSearchItemCollection Results
-		{
-			get;
-			private set;
+			int index = count * 24;
+			return $"https://www.rightmove.co.uk/api/property-search/listing/search?{searchParams.EncodeOptions()}&index={index}&channel=BUY&transactionType=BUY";
 		}
 
 		/// <summary>
 		/// Perform a search
 		/// </summary>
 		/// <returns>true if successful, false otherwise</returns>
-		public async Task<bool> SearchAsync()
+		public async Task<RightMoveSearchItemCollection> SearchAsync(SearchParams searchParams)
 		{
-			int pageCount = 1;
+			var httpClient = new HttpClient();
+			httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+			httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
 
-			// first get the page count (one redundant search I guess)
-			var searchPageService = _searchPageParseFactory.CreateInstance();
-
-			RightMoveSearchPage rightMoveFirstPageSearch = await searchPageService
-				.ParseRightMoveSearchPageAsync(_searchUrl).ConfigureAwait(false);
-
-			if (rightMoveFirstPageSearch is null)
+			var results = new List<RightMoveProperty>();
+			var options = new JsonSerializerOptions
 			{
-				_logger.LogInformation("First search page is null");
-				return false;
-			}
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+			};
 
-			pageCount = GetPageCount(rightMoveFirstPageSearch, pageCount);
-
-			_logger.LogInformation($"Page count: {pageCount}");
-
-			// extract the items
-			var listOfTasks = ExtractRightMoveItems(pageCount);
-
-			RightMoveSearchItemCollection rightMoveItems = new RightMoveSearchItemCollection();
-
-			// wait until we've got all the results, and then add them all to a list
-			await Task.WhenAll(listOfTasks).ConfigureAwait(false);
-			foreach (var task in listOfTasks)
+			for (int i = 0; i < 100; i++)
 			{
-				if (task.Result != null && task.Result.RightMoveSearchItems.Count > 0)
+				var url = CreateUrl(searchParams, i);
+				var result = await httpClient.GetAsync(url).ConfigureAwait(false);
+
+				if (result.IsSuccessStatusCode)
 				{
-					rightMoveItems.AddRangeUnique(task.Result.RightMoveSearchItems);
+					PropertySearchApiResponse propertyResponse = null;
+					try
+					{
+						propertyResponse = await result.Content.ReadFromJsonAsync<PropertySearchApiResponse>(options).ConfigureAwait(false);
+					}
+					catch
+					{
+						// if we fail at all, just break out
+						// TODO: logging, warning to user
+						break;
+					}
+
+					if (propertyResponse.properties.Length == 0)
+					{
+						break;
+					}
+
+					var rightMoveProperties = propertyResponse.properties.Select(o => new RightMoveProperty()
+					{
+						RightMoveId = o.id,
+						HouseInfo = o.propertyTypeFullDescription,
+						Address = o.displayAddress,
+						Desc = o.propertyTypeFullDescription,
+						Agent = o.formattedBranchName,
+						Link = $"/properties/{o.id}",
+						DateAdded = o.firstVisibleDate,
+						DateReduced = o.updateDate,
+						Price = o.price.amount,
+						ImageUrl = o.images.Select(img => $"https://media.rightmove.co.uk:443/dir/{img.url}").ToArray(),
+					});
+
+					results.AddRange(rightMoveProperties);
 				}
 			}
 
-			Results = rightMoveItems;
-
-			return true;
-		}
-
-		private int GetPageCount(RightMoveSearchPage rightMoveFirstPageSearch, int pageCount)
-		{
-			if (rightMoveFirstPageSearch.ResultsCount >= 0)
-			{
-				pageCount = (int)Math.Ceiling(rightMoveFirstPageSearch.ResultsCount / 24.0);
-			}
-
-			// check the page count
-			if (pageCount > 42)
-			{
-				_logger.LogInformation("Fixed pagecount to 42");
-				pageCount = 42;
-			}
-
-			return pageCount;
-		}
-
-		private List<Task<RightMoveSearchPage>> ExtractRightMoveItems(int pageCount)
-		{
-			List<Task<RightMoveSearchPage>> listOfTasks = new List<Task<RightMoveSearchPage>>(pageCount);
-
-			// the multiple for the page number
-			int multiple = 24;
-			for (int i = 1; i <= pageCount; i++)
-			{
-				int index = (i - 1) * multiple;
-				var searchUrlWithPageNumber = _searchUrl + "&index=" + index;
-				var task = GetSearchPages(searchUrlWithPageNumber);
-				listOfTasks.Add(task);
-			}
-
-			return listOfTasks;
-		}
-
-		private async Task<RightMoveSearchItemCollection> GetSearchResults(string searchUrlWithPageNumber)
-		{
-			RightMoveSearchPage rightMovePage = await GetSearchPages(searchUrlWithPageNumber).ConfigureAwait(false);
-
-			if (rightMovePage is null)
-			{
-				_logger.LogInformation($"{nameof(rightMovePage)} was null");
-				return null;
-			}
-
-			if (rightMovePage.RightMoveSearchItems is null)
-			{
-				_logger.LogInformation($"{nameof(rightMovePage.RightMoveSearchItems)} was null");
-				return null;
-			}
-
-			return rightMovePage.RightMoveSearchItems;
-		}
-
-		private async Task<RightMoveSearchPage> GetSearchPages(string searchUrlWithPageNumber)
-		{
-			// parse the search page
-			var searchPageService = _searchPageParseFactory.CreateInstance();
-			return await searchPageService.ParseRightMoveSearchPageAsync(searchUrlWithPageNumber).ConfigureAwait(false);
+			return new RightMoveSearchItemCollection(results.ToList());
 		}
 	}
 }
