@@ -100,9 +100,15 @@ namespace RightMove.Desktop.View
 				return;
 			}
 
-			// need to parse the full image
+			// Debounce: stop the current timer and restart it
+			// This ensures we only process the selection after the user stops scrolling
+			_selectedItemChangedTimer.Stop();
+
+			// Store the selected item temporarily
 			RightMoveSelectedItem = rightMoveProperty;
-			_rightMoveModelService.UpdateSelectedRightMoveItem(rightMoveProperty.RightMoveId, _tokenSource.Token);
+
+			// Start the timer - the actual processing happens in SelectedItemChanged_Elapsed
+			_selectedItemChangedTimer.Start();
 		}
 
 		private async void SelectedItemChanged_Elapsed(object sender, EventArgs e)
@@ -116,7 +122,8 @@ namespace RightMove.Desktop.View
 				_tokenSource = new CancellationTokenSource();
 				CancellationToken cancellationToken = _tokenSource.Token;
 
-				//await UpdateFullSelectedItemAndImage(cancellationToken);
+				// Process the model update with the debounced selected item
+				_rightMoveModelService.UpdateSelectedRightMoveItem(RightMoveSelectedItem.RightMoveId, cancellationToken);
 			}
 			catch (Exception)
 			{

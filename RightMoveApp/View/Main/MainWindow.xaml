@@ -189,7 +189,27 @@
                 Content="Search" 
                 IsDefault="True"
                 Command="{Binding SearchAsyncCommand}"
-                Style="{StaticResource MahApps.Styles.Button.Square}"/>
+                Padding="15,10"
+                FontSize="14"
+                FontWeight="Bold"
+                Foreground="White"
+                Background="#2196F3"
+                BorderThickness="0"
+                Cursor="Hand"
+                Style="{StaticResource MahApps.Styles.Button}">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#1976D2"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#1565C0"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Resources>
+        </Button>
         <TabControl Grid.Column="0" Grid.Row="2" ItemsSource="{Binding ResultsTabViewModels}"
                     SelectedItem="{Binding SelectedResultsTabViewModel}">
             <TabControl.ItemTemplate>
