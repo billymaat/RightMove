@@ -105,13 +105,25 @@ namespace RightMove.Services
 					dateSold = null;
 				}
 
+				double? price = null;
+				var priceString = o.latestTransaction?.displayPrice;
+				if (!string.IsNullOrEmpty(priceString))
+				{
+					// Remove £ symbol and commas, then parse
+					var cleanPrice = priceString.Replace("£", "").Replace(",", "").Trim();
+					if (double.TryParse(cleanPrice, out var p))
+					{
+						price = p;
+					}
+				}
+				
 				return new NearbySoldProperty()
 				{
 					Address = o.address,
 					Bathrooms = o.bathrooms ?? -1,
 					Bedrooms = o.bedrooms ?? 1,
 					PropertyType = o.propertyType,
-					Price = o.latestTransaction?.displayPrice,
+					Price = price,
 					DateSold = dateSold,
 					Url = o.detailUrl
 				};

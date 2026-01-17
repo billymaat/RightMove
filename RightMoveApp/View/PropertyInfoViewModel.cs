@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -153,7 +154,8 @@ namespace RightMove.Desktop.ViewModel
 		        return;
 	        }
 
-	        NearbySoldProperties = ret;
+			// want the properties to show most recent first
+	        NearbySoldProperties = ret.OrderByDescending(o => o.DateSold).ToList();
 		}
     }
 }

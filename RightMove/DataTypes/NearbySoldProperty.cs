@@ -12,7 +12,7 @@ namespace RightMove.DataTypes
 		public int Bedrooms { get; set; }
 		public int Bathrooms { get; set; }
 		public string PropertyType { get; set; }
-		public string Price { get; set; }
+		public double? Price { get; set; }
 		public DateTime? DateSold { get; set; }
 		public string Url { get; set; }
 	}

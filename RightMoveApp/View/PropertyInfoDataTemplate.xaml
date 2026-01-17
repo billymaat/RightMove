@@ -47,7 +47,7 @@
                         <GridViewColumn Width="100">
                             <GridViewColumnHeader Content="Price" Tag="Price"/>
                             <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="Price"/>
+                                <Binding Path="Price" StringFormat="C0"/>
                             </GridViewColumn.DisplayMemberBinding>
                         </GridViewColumn>
                         <GridViewColumn Width="100">
