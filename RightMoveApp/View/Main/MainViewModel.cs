@@ -26,7 +26,6 @@ namespace RightMove.Desktop.View.Main
 	public class MainViewModel : ObservableRecipient
 	{
 		// Services
-		private readonly NavigationService _navigationService;
 		private readonly SearchRightMoveService _searchRightMoveService;
 		private readonly ResultsTabViewModelFactory _resultsTabViewModelFactory;
 
@@ -43,10 +42,8 @@ namespace RightMove.Desktop.View.Main
         public MainViewModel(IOptions<AppSettings> settings,
 			SearchHistoryService searchHistoryService,
 			SearchHistoryModel searchHistoryModel,
-			NavigationService navigationService,
 			SearchRightMoveService searchRightMoveService,
 			ResultsTabViewModelFactory resultsTabViewModelFactory,
-			IMessenger messenger,
 			ILogger<MainViewModel> logger)
         {
 	        _logger = logger;
@@ -54,7 +51,6 @@ namespace RightMove.Desktop.View.Main
 			_logger.LogInformation("MainViewModel loaded");
 
 			_settings = settings.Value;
-			_navigationService = navigationService;
 			_searchRightMoveService = searchRightMoveService;
 			_resultsTabViewModelFactory = resultsTabViewModelFactory;
 			_searchHistoryService = searchHistoryService;

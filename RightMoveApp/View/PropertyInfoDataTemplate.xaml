@@ -26,7 +26,8 @@
             <ListView Grid.Row="2" Visibility="{Binding IsLoadingNearbySoldPrices, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
                       ItemsSource="{Binding NearbySoldProperties}"
                       SelectedItem="{Binding SelectedNearbySoldProperty}"
-                      behaviours:ListViewItemDoubleClickBehavior.Command="{Binding OpenLink}" 
+                      behaviours:ListViewItemDoubleClickBehavior.Command="{Binding OpenLink}"
+                      behaviours:GridViewSortBehavior.EnableSorting="True"
                       >
                 <!--<b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
@@ -37,16 +38,36 @@
                 </b:Interaction.Triggers>-->
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Address"
-                                        DisplayMemberBinding="{Binding Address}"/>
-                        <GridViewColumn Header="Price"
-                                        DisplayMemberBinding="{Binding Price}"/>
-                        <GridViewColumn Header="Bedrooms"
-                                        DisplayMemberBinding="{Binding Bedrooms}"/>
-                        <GridViewColumn Header="Bathrooms"
-                                        DisplayMemberBinding="{Binding Bathrooms}"/>
-                        <GridViewColumn Header="Date Sold"
-                                        DisplayMemberBinding="{Binding DateSold, StringFormat=dd-MM-yyyy}"/>
+                        <GridViewColumn Width="200">
+                            <GridViewColumnHeader Content="Address" Tag="Address"/>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Address"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="100">
+                            <GridViewColumnHeader Content="Price" Tag="Price"/>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Price"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="100">
+                            <GridViewColumnHeader Content="Bedrooms" Tag="Bedrooms"/>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Bedrooms"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="100">
+                            <GridViewColumnHeader Content="Bathrooms" Tag="Bathrooms"/>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Bathrooms"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="120">
+                            <GridViewColumnHeader Content="Date Sold" Tag="DateSold"/>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="DateSold" StringFormat="dd-MM-yyyy"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
