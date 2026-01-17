@@ -83,7 +83,7 @@ namespace RightMove.DataTypes
 		/// </summary>
 		/// <remarks>This is parsed from the page. It is equal to <see cref="DateTime.MinValue"/>
 		/// if we couldn't parse a date</remarks>
-		public DateTime DateReduced
+		public DateTime DateUpdated
 		{
 			get;
 			internal set;
@@ -204,7 +204,7 @@ namespace RightMove.DataTypes
 			sb.Append($"{Address} : {Address}\n");
 			sb.Append($"{nameof(Price)} : {Price}");
 			sb.Append($"{nameof(DateAdded)} : {DateAdded}\n");
-			sb.Append($"{nameof(DateReduced)} : {DateReduced}\n");
+			sb.Append($"{nameof(DateUpdated)} : {DateUpdated}\n");
 			sb.Append($"{nameof(Link)} : {Link}\n");
 			return sb.ToString();
 		}

@@ -77,14 +77,12 @@ namespace RightMove.Services
 						HouseInfo = o.propertyTypeFullDescription,
 						Address = o.displayAddress,
 						Desc = o.propertyTypeFullDescription,
-						Agent = o.formattedBranchName,
-						Link = $"/properties/{o.id}",
 						DateAdded = o.firstVisibleDate,
-						DateReduced = o.updateDate,
-						Price = o.price.amount,
+						DateUpdated = o.updateDate,
+						Link = $"/properties/{o.id}",
+						Agent = o.formattedBranchName?.Trim().StartsWith("by ") ?? false ? o.formattedBranchName.Trim().Substring(3) : o.formattedBranchName?.Trim(),
 						ImageUrl = o.images.Select(img => $"https://media.rightmove.co.uk:443/dir/{img.url}").ToArray(),
 					});
-
 					results.AddRange(rightMoveProperties);
 				}
 			}

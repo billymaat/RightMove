@@ -29,6 +29,18 @@
                       behaviours:ListViewItemDoubleClickBehavior.Command="{Binding OpenLink}"
                       behaviours:GridViewSortBehavior.EnableSorting="True"
                       >
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource PriceRangeToBackgroundConverter}">
+                                    <Binding Path="Price"/>
+                                    <Binding Path="DataContext.RightMoveSelectedItem.Price" RelativeSource="{RelativeSource AncestorType=ListView}"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <!--<b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
                         <b:InvokeCommandAction Command="{Binding OpenLink}" 

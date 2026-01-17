@@ -168,7 +168,7 @@ namespace RightMove.Db.Services
 				Address = property.Address,
 				HouseInfo = property.HouseInfo,
 				DateAdded = property.DateAdded.ToUniversalTime(),
-				DateReduced = property.DateReduced.ToUniversalTime(),
+				DateReduced = property.DateUpdated.ToUniversalTime(),
 				Date = DateTime.Now.ToUniversalTime(),
 				Prices = new List<DatePrice>()
 				{

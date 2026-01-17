@@ -98,7 +98,7 @@ namespace RightMove.Services
 			property.Agent = json.propertyData.customer.branchDisplayName;
 			property.Price = RightMoveParserHelper.ParsePrice(json.propertyData.prices.primaryPrice);
 			property.DateAdded = RightMoveParserHelper.ParseDateAdded(json.propertyData.listingHistory.listingUpdateReason);
-			property.DateReduced = RightMoveParserHelper.ParseDateReduced(json.propertyData.listingHistory.listingUpdateReason);
+			property.DateUpdated = RightMoveParserHelper.ParseDateReduced(json.propertyData.listingHistory.listingUpdateReason);
 			property.ImageUrl = json.propertyData.images.Select(o => o.url).ToArray();
 			property.NearbySoldPricesUrl = json.propertyData.propertyUrls?.nearbySoldPropertiesUrl;
 

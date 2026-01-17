@@ -20,9 +20,9 @@ namespace RightMove.Desktop.ValueConverters
 				return rightMoveProperty.DateAdded.ToString("dd-MM-yyyy");
 			}
 
-			if (!rightMoveProperty.DateReduced.Equals(DateTime.MinValue))
+			if (!rightMoveProperty.DateUpdated.Equals(DateTime.MinValue))
 			{
-				var dateString = rightMoveProperty.DateReduced.ToString("dd-MM-yyyy");
+				var dateString = rightMoveProperty.DateUpdated.ToString("dd-MM-yyyy");
 				return $"{dateString} (r)";
 			}
 
