@@ -82,6 +82,7 @@ namespace RightMove.Services
 						Link = $"/properties/{o.id}",
 						Agent = o.formattedBranchName?.Trim().StartsWith("by ") ?? false ? o.formattedBranchName.Trim().Substring(3) : o.formattedBranchName?.Trim(),
 						ImageUrl = o.images.Select(img => $"https://media.rightmove.co.uk:443/dir/{img.url}").ToArray(),
+						Price = o.price.amount,
 					});
 					results.AddRange(rightMoveProperties);
 				}

@@ -65,19 +65,19 @@
                         <GridViewColumn Width="100">
                             <GridViewColumnHeader Content="Bedrooms" Tag="Bedrooms"/>
                             <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="Bedrooms"/>
+                                <Binding Path="Bedrooms" Converter="{StaticResource NegativeOneToNAConverter}"/>
                             </GridViewColumn.DisplayMemberBinding>
                         </GridViewColumn>
                         <GridViewColumn Width="100">
                             <GridViewColumnHeader Content="Bathrooms" Tag="Bathrooms"/>
                             <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="Bathrooms"/>
+                                <Binding Path="Bathrooms" Converter="{StaticResource NegativeOneToNAConverter}"/>
                             </GridViewColumn.DisplayMemberBinding>
                         </GridViewColumn>
                         <GridViewColumn Width="120">
                             <GridViewColumnHeader Content="Date Sold" Tag="DateSold"/>
                             <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="DateSold" StringFormat="dd-MM-yyyy"/>
+                                <Binding Path="DateSold" StringFormat="dd-MM-yyyy" Converter="{StaticResource NullToNAConverter}"/>
                             </GridViewColumn.DisplayMemberBinding>
                         </GridViewColumn>
                     </GridView>
